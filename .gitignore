@@ -1,0 +1,31 @@
+# Dependencias de Composer
+/vendor/
+
+# Archivos temporales
+/tmp/
+
+# Logs
+*.log
+
+# Respaldos
+*.sql
+*.zip
+*.rar
+*.bak
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Configuración de VS Code
+.vscode/
+
+# Configuración de Windows
+desktop.ini
+
+# Configuración de las credencial
+includes/config.php
+
+# Datos privados de usuarios
+/uploads/firmas/
+/firmas/

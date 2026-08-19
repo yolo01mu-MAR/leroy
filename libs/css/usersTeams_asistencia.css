@@ -1,0 +1,38 @@
+
+.radio-asistencia{
+    display:flex;
+    justify-content:center;
+    margin:0;
+    cursor:pointer;
+}
+.radio-asistencia input{
+    display:none;
+}
+.radio-asistencia span{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    border:2px solid #ccc;
+    background:white;
+    transition:.2s;
+}
+.radio-a input:checked + span{
+    background:#5cb85c;
+    border-color:#5cb85c;
+}
+.radio-fi input:checked + span{
+    background:#d9534f;
+    border-color:#d9534f;
+}
+.radio-tpt input:checked + span{
+    background:#f0ad4e;
+    border-color:#f0ad4e;
+}
+.radio-inc input:checked + span{
+    background:#5bc0de;
+    border-color:#5bc0de;
+}
+.radio-vac input:checked + span{
+    background:#337ab7;
+    border-color:#337ab7;
+}

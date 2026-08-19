@@ -1,0 +1,57 @@
+.panel-heading .form-control {
+  margin-top: 15px;
+}
+.buscador-fino .form-control,
+.buscador-fino .input-group-addon {
+  height: 34px;          /* misma altura exacta */
+  line-height: 34px;     /* centra vertical */
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 13px;
+}
+.btn-accion{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-weight: 500;
+  min-width: 90px;
+  justify-content: center;
+}
+.btn-accion i{
+  font-size: 18px;   /* iconos más grandes */
+  line-height: 1;
+}
+
+/* Opcional: mismo color de icono que el texto */
+.btn-accion i{
+  color: inherit;
+}
+.btn-info i,
+.btn-warning i,
+.btn-danger i{
+  opacity: 0.9;
+}
+.btn[disabled]{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-finalizar{
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 25px;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.btn-finalizar:hover{
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.btn-finalizar:disabled{
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+

@@ -1,0 +1,63 @@
+.foto-perfil{
+position:relative;
+width:170px;
+margin:auto;
+}
+.perfil-img{
+width:170px;
+height:170px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid #ddd;
+transition:.3s;
+}
+.foto-overlay{
+position:absolute;
+inset:0;
+border-radius:50%;
+background:rgba(0,0,0,.65);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:.3s;
+padding:15px;
+}
+.foto-perfil:hover .foto-overlay{
+opacity:1;
+}
+.foto-overlay .btn{
+width:120px;
+}
+
+/* Chips de estatus laboral: una sola forma de ocultar el radio (antes
+    había dos técnicas encimadas), y la regla :checked ya no duplicada. */
+.estatus-laboral{
+display:flex;
+gap:15px;
+}
+.estatus-laboral input{
+position:absolute;
+opacity:0;
+pointer-events:none;
+}
+.estatus-laboral label{
+margin:0;
+cursor:pointer;
+}
+.estatus-laboral span{
+display:block;
+padding:8px 18px;
+border:1px solid #ddd;
+border-radius:4px;
+background:#fff;
+color:#777;
+transition:.2s;
+font-weight:600;
+}
+.estatus-laboral input:checked + span{
+background:#337ab7;
+color:#fff;
+border-color:#337ab7;
+}

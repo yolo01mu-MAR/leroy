@@ -1,0 +1,12 @@
+.tarjeta-opcion{
+    transition:.25s;
+    cursor:pointer;
+    border-radius:15px;
+}
+.tarjeta-opcion:hover{
+    transform:translateY(-6px);
+    box-shadow:0 12px 25px rgba(0,0,0,.15);
+}
+.tarjeta-opcion i{
+    font-size:70px;
+}

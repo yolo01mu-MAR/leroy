@@ -1,0 +1,52 @@
+.calendario-semana {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.dia-col {
+    flex: 0 0 110px;   /* ancho uniforme */
+}
+.dia-card {
+    border-radius: 10px;
+    padding: 12px 8px;
+    color: #fff;
+    text-align: center;
+    min-height: 110px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.dia-nombre {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+.dia-fecha {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+.dia-estado {
+    font-size: 12px;
+    opacity: 0.95;
+}
+/* Estados */
+.estado-ok    { background: #5cb85c; }
+.estado-bad   { background: #d9534f; }
+.estado-warn  { background: #f0ad4e; }
+.estado-info  { background: #c66efd; }
+.estado-none  { background: #777; }
+
+.filtro-resumen {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #555;
+  background: #fff8dc;
+  border-left: 4px solid #f0ad4e;
+  padding: 6px 10px;
+  display: inline-block;
+  border-radius: 4px;
+}

@@ -1,0 +1,263 @@
+body{
+    background:#f5f6f8;
+}
+
+.solicitudes-container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.titulo-pagina{
+    font-weight:700;
+}
+
+.subtitulo{
+    color:#6c757d;
+}
+
+/* =========================================
+ESTADÍSTICAS
+========================================= */
+
+.stat-card{
+
+    border:0;
+    border-radius:14px;
+
+    background:#fff;
+
+    box-shadow:
+        0 3px 12px rgba(0,0,0,.06);
+
+    transition:.2s;
+
+}
+
+.stat-card:hover{
+    transform:translateY(-2px);
+}
+
+.stat-icon{
+
+    width:45px;
+    height:45px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    font-size:1.3rem;
+
+}
+
+.stat-number{
+    font-size:1.5rem;
+    font-weight:700;
+}
+
+/* =========================================
+FILTROS
+========================================= */
+
+.filtro-solicitudes{
+
+    background:#fff;
+
+    border-radius:12px;
+
+    padding:6px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.05);
+
+}
+
+.filtro-solicitudes .btn{
+
+    border:0;
+
+    border-radius:8px;
+
+    font-weight:500;
+
+}
+
+.filtro-solicitudes .btn.active{
+
+    background:#f1c40f;
+
+    color:#212529;
+
+}
+
+/* =========================================
+TARJETAS
+========================================= */
+
+.solicitud-card{
+
+    background:#fff;
+
+    border:0;
+
+    border-radius:14px;
+
+    box-shadow:
+        0 3px 12px rgba(0,0,0,.06);
+
+    transition:.2s;
+
+}
+
+.solicitud-card:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 5px 16px rgba(0,0,0,.09);
+
+}
+
+.solicitud-icon{
+
+    width:48px;
+    height:48px;
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:1.4rem;
+
+}
+
+.solicitud-titulo{
+
+    font-weight:600;
+
+    margin-bottom:2px;
+
+}
+
+.solicitud-fecha{
+
+    font-size:.9rem;
+
+    color:#6c757d;
+
+}
+
+/* =========================================
+ESTADOS
+========================================= */
+
+.estado{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    font-size:.78rem;
+
+    font-weight:600;
+
+}
+
+.estado-pendiente{
+
+    background:#fff3cd;
+
+    color:#856404;
+
+}
+
+.estado-aprobada{
+
+    background:#d1e7dd;
+
+    color:#0f5132;
+
+}
+
+.estado-rechazada{
+
+    background:#f8d7da;
+
+    color:#842029;
+
+}
+
+.estado-completada{
+
+    background:#cff4fc;
+
+    color:#055160;
+
+}
+
+/* =========================================
+VACÍO
+========================================= */
+
+.sin-solicitudes{
+
+    background:#fff;
+
+    border-radius:14px;
+
+    padding:45px 20px;
+
+    text-align:center;
+
+    box-shadow:
+        0 3px 12px rgba(0,0,0,.05);
+
+}
+
+.sin-solicitudes i{
+
+    font-size:3rem;
+
+    color:#adb5bd;
+
+}
+
+/* =========================================
+RESPONSIVE
+========================================= */
+
+@media(max-width:576px){
+
+    .stat-card{
+        padding:12px !important;
+    }
+
+    .stat-number{
+        font-size:1.25rem;
+    }
+
+    .filtro-solicitudes{
+
+        overflow-x:auto;
+
+        white-space:nowrap;
+
+    }
+
+    .filtro-solicitudes .btn{
+        font-size:.85rem;
+    }
+
+}

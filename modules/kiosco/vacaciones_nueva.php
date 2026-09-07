@@ -22,6 +22,8 @@
     $anio = isset($_GET['anio']) ? (int)$_GET['anio'] : $anioMinimo;
     $mes  = isset($_GET['mes']) ? (int)$_GET['mes'] : $mesMinimo;
 
+    $inicioSeleccionado = $_GET['inicio'] ?? null;
+
     // Mes anterior
     $mesAnterior  = $mes - 1;
     $anioAnterior = $anio;
@@ -170,37 +172,65 @@
                         <div class="card border-0 shadow-sm mb-3">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <input
+                                        type="hidden"
+                                        id="inicioGuardado"
+                                        value="<?= htmlspecialchars($inicioSeleccionado ?? '') ?>">
+
                                     <?php if($permitirAnterior){ ?>
-                                        <a class="btn btn-light shadow-sm"
-                                        href="?mes=<?php echo $mesAnterior; ?>&anio=<?php echo $anioAnterior; ?>">
-                                            <i class="bi bi-chevron-left"></i>
-                                        </a>
-                                    <?php }else{ ?>
-                                        <button class="btn btn-light shadow-sm" disabled>
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-light shadow-sm"
+                                            id="btnMesAnterior"
+                                            data-mes="<?= $mesAnterior ?>"
+                                            data-anio="<?= $anioAnterior ?>"
+                                        >
                                             <i class="bi bi-chevron-left"></i>
                                         </button>
+
+                                    <?php }else{ ?>
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-light shadow-sm"
+                                            id="btnMesAnterior"
+                                            disabled
+                                        >
+                                            <i class="bi bi-chevron-left"></i>
+                                        </button>
+
                                     <?php } ?>
                                     <div class="text-center">
-                                        <h4 class="mb-1">
+                                        <h4 class="mb-1" id="tituloMes">
                                             <?php echo $nombre_mes; ?>
                                         </h4>
                                         <small class="text-muted">
                                             Selecciona un periodo de vacaciones
                                         </small>
                                     </div>
-                                    <a class="btn btn-light shadow-sm"
-                                    href="?mes=<?php echo $mesSiguiente; ?>&anio=<?php echo $anioSiguiente; ?>">
+                                    <button
+                                        type="button"
+                                        class="btn btn-light shadow-sm"
+                                        id="btnMesSiguiente"
+                                        data-mes="<?= $mesSiguiente ?>"
+                                        data-anio="<?= $anioSiguiente ?>"
+                                    >
                                         <i class="bi bi-chevron-right"></i>
-                                    </a>
+                                    </button>
                                 </div>
-
                                 <div class="calendario-grid mb-2">
                                     <?php foreach (['L','M','X','J','V','S','D'] as $dia_letra): ?>
                                         <div class="dia-letra"><?php echo $dia_letra; ?></div>
                                     <?php endforeach; ?>
                                 </div>
 
-                                <div class="calendario-grid">
+                                <div
+                                    class="calendario-grid"
+                                    id="calendarioGridDias"
+                                    data-mes="<?= $mes ?>"
+                                    data-anio="<?= $anio ?>"
+                                >
                                     <?php for ($i = 0; $i < $primer_dia_semana; $i++): ?>
                                         <div class="celda-dia vacia"></div>
                                     <?php endfor; ?>
@@ -240,10 +270,6 @@
                                             <div class="dia-numero">
                                                 <?= $d ?>
                                             </div>
-
-                                            <?php if($estado != 'no_laborable'){ ?>
-                                                <small><?= $ocupados ?>/<?= CUPO_MAXIMO_VACACIONES ?></small>
-                                            <?php } ?>
                                         </div>
                                     <?php endfor; ?>
                                 </div>
@@ -357,8 +383,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="libs/js/kiosco.js"></script>
-        <script src="libs/js/vacaciones_nueva.js"></script>
         <script src="libs/js/calendario.js"></script>
+        <script src="libs/js/vacaciones_nueva.js"></script>
         <script src="<?= BASE_URL ?>/firmas/firmas/assets/js/signature_pad.min.js"></script>
         <script src="<?= BASE_URL ?>/firmas/firmas/assets/js/firmas.js"></script>
         <script src="<?= BASE_URL ?>/firmas/vacaciones/assets/js/vacaciones.js"></script>

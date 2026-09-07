@@ -89,7 +89,7 @@ function consultaXnomina(){
         Swal.fire({
             icon: "info",
             title: "¿Quieres continuar?",
-            text: "Sin contraseña solo podrás consultar tus vacaciones. Para solicitar vacaciones necesitas validar tu identidad.",
+            text: "Sin contraseña solo podrás consultar tus tramites. Para solicitar algun tramite necesitas validar tu identidad.",
             showCancelButton: true,
             confirmButtonText: "Ingresar contraseña",
             cancelButtonText: "Solo consultar",

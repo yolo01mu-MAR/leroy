@@ -1,14 +1,29 @@
-.panel-heading .form-control {
-  margin-top: 15px;
+/* =========================================
+   BUSCADOR GENÉRICO PARA PANEL
+   ========================================= */
+
+.buscador-panel {
+    width: 300px;
+    max-width: 100%;
 }
-.buscador-fino .form-control,
-.buscador-fino .input-group-addon {
-  height: 34px;          /* misma altura exacta */
-  line-height: 34px;     /* centra vertical */
-  padding-top: 0;
-  padding-bottom: 0;
-  font-size: 13px;
+
+.buscador-panel .input-group {
+    width: 100%;
 }
+
+.buscador-panel .form-control,
+.buscador-panel .input-group-addon {
+    height: 34px;
+    line-height: 34px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 13px;
+}
+
+.buscador-panel .form-control {
+    margin-top: 0;
+}
+
 .btn-accion{
   display: inline-flex;
   align-items: center;

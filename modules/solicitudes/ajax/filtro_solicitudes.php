@@ -76,22 +76,16 @@ $sql = "
         v.fecha_inicio,
         v.dias,
         v.estatus,
-
         vu.nombre,
         vu.puesto,
         vu.departamentos,
         vu.dep_cuadrilla,
         vu.grupos
-
     FROM vacaciones v
-
     INNER JOIN vw_usuarios_completos vu
         ON v.usuario_id = vu.id
-
     WHERE v.jefe_id = {$jefe_id}
-
     {$condicion}
-
     ORDER BY v.fecha_solicitud ASC
 ";
 
@@ -108,7 +102,7 @@ $solicitudes = find_by_sql($sql);
 $estatus_meta = [
 
     'PENDIENTE_JEFE' => [
-        'label' => 'Pendiente',
+        'label' => 'Pendientes',
         'clase' => 'estatus-pendiente',
         'icono' => 'glyphicon-time'
     ],
@@ -181,7 +175,7 @@ foreach ($solicitudes as $indice => $solicitud):
 ?>
 
 <div
-    class="vacaciones-item <?= $indice === 0 ? 'seleccionado' : ''; ?>"
+    class="vacaciones-item"
 
     data-id="<?= (int)$solicitud['id']; ?>"
 
@@ -223,7 +217,7 @@ foreach ($solicitudes as $indice => $solicitud):
     data-dias="<?= (int)$solicitud['dias']; ?>"
 
     data-estatus="<?= htmlspecialchars(
-        $meta['label'],
+        $solicitud['estatus'],
         ENT_QUOTES
     ); ?>"
 

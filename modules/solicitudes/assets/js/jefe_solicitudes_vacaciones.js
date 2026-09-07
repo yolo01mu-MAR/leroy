@@ -1,5 +1,13 @@
-document.addEventListener('DOMContentLoaded', function () {
+/**
+ * ============================================================
+ * ESTADO JEFE
+ * ============================================================
+ */
 
+let solicitudes = [];
+let estatusActual = 'PENDIENTE_JEFE';
+
+document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .join('');
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | MOSTRAR DETALLE
@@ -104,6 +111,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var dias =
             item.dataset.dias || '';
 
+        var id =
+            item.dataset.id || '';
+
         var estatus =
             item.dataset.estatus || '';
 
@@ -120,144 +130,169 @@ document.addEventListener('DOMContentLoaded', function () {
         |--------------------------------------------------------------------------
         */
 
-        detalle.innerHTML =
-
-            '<div class="detalle-encabezado">' +
-
-                '<div class="detalle-avatar">' +
-
-                    obtenerIniciales(nombre) +
-
-                '</div>' +
-
-                '<div>' +
-
-                    '<div class="detalle-nombre">' +
-
-                        nombre +
-
-                    '</div>' +
-
-                    '<div class="detalle-puesto">' +
-
-                        puesto +
-
-                    '</div>' +
-
-                '</div>' +
-
-            '</div>' +
-
-
-            '<div class="detalle-datos">' +
-
-
-                '<div class="detalle-dato">' +
-
-                    '<div class="detalle-dato-label">' +
-                        'Estatus' +
-                    '</div>' +
-
-                    '<div class="detalle-dato-valor">' +
-
-                        '<span class="vacaciones-status ' +
-                            estatusClase +
-                        '">' +
-
-                            '<span class="glyphicon ' +
-                                estatusIcono +
-                            '"></span> ' +
-
-                            estatus +
-
-                        '</span>' +
-
-                    '</div>' +
-
-                '</div>' +
-
-
-                '<div class="detalle-dato">' +
-
-                    '<div class="detalle-dato-label">' +
-                        'Fecha solicitud' +
-                    '</div>' +
-
-                    '<div class="detalle-dato-valor">' +
-
-                        fechaSolicitud +
-
-                    '</div>' +
-
-                '</div>' +
-
-
-                '<div class="detalle-dato">' +
-
-                    '<div class="detalle-dato-label">' +
-                        'Inicio vacaciones' +
-                    '</div>' +
-
-                    '<div class="detalle-dato-valor">' +
-
-                        fechaInicio +
-
-                    '</div>' +
-
-                '</div>' +
-
-
-                '<div class="detalle-dato">' +
-
-                    '<div class="detalle-dato-label">' +
-                        'Días solicitados' +
-                    '</div>' +
-
-                    '<div class="detalle-dato-valor">' +
-
-                        dias +
-
-                    '</div>' +
-
-                '</div>' +
-
-
-                '<div class="detalle-dato">' +
-
-                    '<div class="detalle-dato-label">' +
-                        'Departamento' +
-                    '</div>' +
-
-                    '<div class="detalle-dato-valor">' +
-
-                        departamento +
-
-                    '</div>' +
-
-                '</div>' +
-
-
-                '<div class="detalle-dato">' +
-
-                    '<div class="detalle-dato-label">' +
-                        'Cuadrilla' +
-                    '</div>' +
-
-                    '<div class="detalle-dato-valor">' +
-
-                        grupo +
-
-                        ' · ' +
-
-                        cuadrilla +
-
-                    '</div>' +
-
-                '</div>' +
-
-
-            '</div>';
-
+        detalle.innerHTML = `
+
+            <div class="detalle-encabezado">
+                <div class="detalle-avatar">
+                    ${obtenerIniciales(nombre)}
+                </div>
+                <div>
+                    <div class="detalle-nombre">
+                        ${nombre}
+                    </div>
+                    <div class="detalle-puesto">
+                        ${puesto}
+                    </div>
+                </div>
+            </div>
+            <div class="detalle-datos">
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Estatus
+                    </div>
+                    <div class="detalle-dato-valor">
+                        <span class="vacaciones-status ${estatusClase}">
+                            <span class="glyphicon ${estatusIcono}"></span>
+                            ${estatus}
+                        </span>
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Fecha solicitud
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${fechaSolicitud}
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Inicio vacaciones
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${fechaInicio}
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Días solicitados
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${dias}
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Departamento
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${departamento}
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Cuadrilla
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${grupo} · ${cuadrilla}
+                    </div>
+                </div>
+            </div>
+
+            ${
+                estatus === 'PENDIENTE_JEFE' ||
+                estatus === 'Pendientes'
+                ?
+
+                `
+                    <div class="detalle-acciones">
+
+                        <button
+                            type="button"
+                            class="
+                                btn
+                                btn-vacaciones
+                                btn-rechazar-rh
+                            "
+                            data-id="${id}"
+                        >
+                            <span class="glyphicon glyphicon-remove"></span>
+                            No aprobar
+                        </button>
+
+                        <button
+                            type="button"
+                            class="
+                                btn
+                                btn-vacaciones
+                                btn-vacaciones-primary
+                                btn-aprobar-rh
+                            "
+                            data-id="${id}"
+                        >
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Aprobar
+                        </button>
+
+                    </div>
+                `
+                :
+                ''
+            }
+
+        `;
+
+    /*
+    |--------------------------------------------------------------------------
+    | BOTÓN APROBAR
+    |--------------------------------------------------------------------------
+    */
+
+    const botonAprobar =
+        detalle.querySelector(
+            '.btn-aprobar-rh'
+        );
+
+
+    if (botonAprobar) {
+
+        botonAprobar.addEventListener(
+            'click',
+            function (e) {
+
+                e.stopPropagation();
+
+                confirmarFirmaVacacionesRH(id);
+
+            }
+        );
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | BOTÓN RECHAZAR
+    |--------------------------------------------------------------------------
+    */
+
+    const botonRechazar =
+        detalle.querySelector(
+            '.btn-rechazar-rh'
+        );
+
+
+    if (botonRechazar) {
+        botonRechazar.addEventListener(
+            'click',
+            function (e) {
+                e.stopPropagation();
+                confirmarDecisionRH(
+                    id,
+                    'rechazar'
+                );
+            }
+        );
+    }
 
     }
     function limpiarDetalle() {
@@ -314,6 +349,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
+    | ABRIR SOLICITUD DESDE URL
+    |--------------------------------------------------------------------------
+    */
+
+    function abrirSolicitudDesdeURL() {
+
+        var parametros =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        var solicitudId =
+            parametros.get('id');
+
+        if (!solicitudId) {
+            return;
+        }
+
+
+        var solicitud =
+            document.querySelector(
+                '.vacaciones-item[data-id="' +
+                solicitudId +
+                '"]'
+            );
+
+
+        if (!solicitud) {
+
+            console.warn(
+                'No se encontró la solicitud:',
+                solicitudId
+            );
+
+            return;
+        }
+
+
+        mostrarDetalle(solicitud);
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | FILTROS AJAX
     |--------------------------------------------------------------------------
     */
@@ -330,6 +409,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 var estatus =
                     filtro.dataset.estatus;
+                    
                 
                     limpiarDetalle();
 
@@ -523,5 +603,6 @@ document.addEventListener('DOMContentLoaded', function () {
     */
 
     registrarSolicitudes();
+    abrirSolicitudDesdeURL();
 
 });

@@ -1,67 +1,94 @@
 const Calendario = {
 
-    //==============================
-    // Configuración
-    //==============================
-    config:{
+    //==================================================
+    // CONFIGURACIÓN
+    //==================================================
 
-        bloqueados:[
-            "lleno",
-            "bloqueado",
-            "pasado",
-            "no_laborable"
-        ]
+    config: {
+
+        bloqueados: []
 
     },
 
-    //==============================
-    // Configuración
-    //==============================
+
+    //==================================================
+    // CONFIGURACIÓN GENERAL
+    //==================================================
+
     modo: "simple",
+
     onChange: null,
 
-    //==============================
-    // Estado actual
-    //==============================
+
+    //==================================================
+    // ESTADO
+    //==================================================
+
     estado: null,
 
-    //==============================
-    // Estado
-    //==============================
     inicio: null,
+
     fin: null,
 
-    //==============================
-    // Inicializar
-    //==============================
-    init(config = {}){
 
-        this.modo = config.modo ?? "simple";
-        this.onChange = config.onChange ?? function(){};
+    //==================================================
+    // INICIALIZAR
+    //==================================================
 
-        this.inicio = null;
-        this.fin = null;
+    init(config = {}) {
+
+        this.modo =
+            config.modo ?? "simple";
+
+        this.onChange =
+            config.onChange ?? function () {};
+
+
+        this.config.bloqueados =
+            config.bloqueados ?? [];
+
+
+        this.inicio =
+            config.inicio ?? null;
+
+        this.fin =
+            config.fin ?? null;
+
 
         this.eventos();
 
+        this.pintar();
+
+        this.emitir();
+
     },
 
-    //==============================
-    // Eventos
-    //==============================
-    eventos(){
+
+    //==================================================
+    // EVENTOS
+    //==================================================
+
+    eventos() {
 
         const self = this;
 
+
         $(".celda-dia")
             .off("click.calendario")
-            .on("click.calendario", function(){
+            .on("click.calendario", function () {
 
-                const celda = $(this);
+                const celda =
+                    $(this);
 
-                if(!celda.data("seleccionable")){
+
+                if (
+                    !celda.data("seleccionable")
+                ) {
+
                     return;
+
                 }
+
 
                 self.seleccionar(
                     celda.data("fecha")
@@ -71,67 +98,102 @@ const Calendario = {
 
     },
 
-    //==============================
-    // Selección
-    //==============================
-    seleccionar(fecha){
 
-        // -----------------------------
+    //==================================================
+    // SELECCIONAR
+    //==================================================
+
+    seleccionar(fecha) {
+
+
+        //================================================
         // MODO SIMPLE
-        // -----------------------------
-        if(this.modo === "simple"){
+        //================================================
+
+        if (this.modo === "simple") {
 
             this.inicio = fecha;
+
             this.fin = fecha;
 
             this.pintar();
+
             this.emitir();
 
             return;
 
         }
 
-        // -----------------------------
-        // MODO RANGO
-        // -----------------------------
 
-        // Primer clic
-        if(this.inicio === null){
+        //================================================
+        // PRIMER CLIC
+        //================================================
 
-            this.inicio = fecha;
-            this.fin = null;
-
-        }
-
-        // Segundo clic
-        else if(this.fin === null){
-
-            this.fin = fecha;
-
-            if(this.inicio > this.fin){
-                [this.inicio,this.fin] = [this.fin,this.inicio];
-            }
-
-            if(!this.validarRango(this.inicio,this.fin)){
-
-                this.limpiar();
-                this.emitir("rango");
-
-                return;
-
-            }
-
-        }
-
-        // Tercer clic
-        else{
-
-            this.limpiar();
+        if (this.inicio === null) {
 
             this.inicio = fecha;
+
             this.fin = null;
 
+            this.pintar();
+
+            this.emitir();
+
+            return;
+
         }
+
+
+        //================================================
+        // TERCER CLIC
+        // NUEVA SELECCIÓN
+        //================================================
+
+        if (this.fin !== null) {
+
+            this.inicio = fecha;
+
+            this.fin = null;
+
+            this.pintar();
+
+            this.emitir();
+
+            return;
+
+        }
+
+
+        //================================================
+        // SEGUNDO CLIC
+        //================================================
+
+        let inicio =
+            this.inicio;
+
+        let fin =
+            fecha;
+
+
+        if (inicio > fin) {
+
+            [
+                inicio,
+                fin
+            ] = [
+                fin,
+                inicio
+            ];
+
+        }
+
+
+        this.inicio =
+            inicio;
+
+        this.fin =
+            fin;
+
 
         this.pintar();
 
@@ -139,32 +201,57 @@ const Calendario = {
 
     },
 
-    //==============================
-    // Pintar selección
-    //==============================
-    pintar(){
+
+    //==================================================
+    // PINTAR
+    //==================================================
+
+    pintar() {
 
         $(".celda-dia")
             .removeClass("seleccionado");
 
-        if(!this.inicio){
+
+        if (!this.inicio) {
+
             return;
+
         }
 
-        let inicio = this.inicio;
-        let fin = this.fin ?? this.inicio;
 
-        if(inicio > fin){
-            [inicio, fin] = [fin, inicio];
+        let inicio =
+            this.inicio;
+
+        let fin =
+            this.fin ?? this.inicio;
+
+
+        if (inicio > fin) {
+
+            [
+                inicio,
+                fin
+            ] = [
+                fin,
+                inicio
+            ];
+
         }
 
-        $(".celda-dia").each(function(){
 
-            const fecha = $(this).data("fecha");
+        $(".celda-dia").each(function () {
 
-            if(fecha >= inicio && fecha <= fin){
+            const fecha =
+                $(this).data("fecha");
 
-                $(this).addClass("seleccionado");
+
+            if (
+                fecha >= inicio &&
+                fecha <= fin
+            ) {
+
+                $(this)
+                    .addClass("seleccionado");
 
             }
 
@@ -172,111 +259,110 @@ const Calendario = {
 
     },
 
-    //==============================
-    // Limpiar selección
-    //==============================
-    limpiar(){
+
+    //==================================================
+    // LIMPIAR
+    //==================================================
+
+    limpiar() {
 
         this.inicio = null;
+
         this.fin = null;
+
 
         $(".celda-dia")
             .removeClass("seleccionado");
+
 
         this.emitir();
 
     },
 
-    //==============================
-    // Emitir cambios
-    //==============================
-    emitir(error = null){
+
+    //==================================================
+    // EMITIR ESTADO
+    //==================================================
+
+    emitir(error = null) {
 
         let dias = 0;
 
-        if(this.inicio && this.fin){
+
+        if (
+            this.inicio &&
+            this.fin
+        ) {
 
             dias =
                 Math.floor(
-                    (new Date(this.fin) - new Date(this.inicio)) / 86400000
+                    (
+                        new Date(this.fin) -
+                        new Date(this.inicio)
+                    ) /
+                    86400000
                 ) + 1;
 
         }
 
+
         this.estado = {
 
-            inicio: this.inicio,
+            inicio:
+                this.inicio,
 
-            fin: this.fin,
+            fin:
+                this.fin,
 
-            dias: dias,
+            dias:
+                dias,
 
-            inicioTexto: this.inicio
-                ? this.formatear(this.inicio)
-                : "—",
+            inicioTexto:
+                this.inicio
+                    ? this.formatear(this.inicio)
+                    : "—",
 
-            finTexto: this.fin
-                ? this.formatear(this.fin)
-                : "—",
+            finTexto:
+                this.fin
+                    ? this.formatear(this.fin)
+                    : "—",
 
             completo:
                 this.inicio !== null &&
                 this.fin !== null,
 
-            error: error
+            error:
+                error
 
         };
 
-        this.onChange(this.estado);
+
+        this.onChange(
+            this.estado
+        );
 
     },
 
-    //==============================
-    // Formatear fecha
-    //==============================
-    formatear(fecha){
 
-        if(!fecha){
+    //==================================================
+    // FORMATEAR
+    //==================================================
+
+    formatear(fecha) {
+
+        if (!fecha) {
+
             return "—";
+
         }
 
-        const p = fecha.split("-");
 
-        return `${p[2]}/${p[1]}/${p[0]}`;
+        const partes =
+            fecha.split("-");
 
-    },
 
-    //==============================
-    // Validar rango
-    //==============================
-    validarRango(inicio, fin){
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
 
-        let valido = true;
-
-        const bloqueados = this.config.bloqueados;
-
-        $(".celda-dia").each(function(){
-
-            const fecha = $(this).data("fecha");
-
-            if(fecha >= inicio && fecha <= fin){
-
-                const estado = $(this).data("estado");
-
-                if(bloqueados.includes(estado)){
-
-                    valido = false;
-
-                    return false;
-
-                }
-
-            }
-
-        });
-
-        return valido;
-
-    },
+    }
 
 };

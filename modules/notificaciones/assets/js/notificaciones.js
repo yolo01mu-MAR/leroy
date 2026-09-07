@@ -12,13 +12,9 @@
             window.BASE_URL +
             '/modules/notificaciones/ajax/obtener_notificaciones.php',
 
-        urlMarcarVistas:
+        urlEliminar:
             window.BASE_URL +
-            '/modules/notificaciones/ajax/marcar_vistas.php',
-
-        urlMarcarLeida:
-            window.BASE_URL +
-            '/modules/notificaciones/ajax/marcar_leida.php',
+            '/modules/notificaciones/ajax/eliminar_notificacion.php',
 
         intervalo: 30000
     };
@@ -164,43 +160,66 @@
                         '.notificacion-item'
                     );
 
-
                 if (!item) {
                     return;
                 }
 
-
                 event.preventDefault();
                 event.stopPropagation();
-
 
                 const id =
                     item.dataset.id;
 
-                const url =
-                    item.dataset.url;
+                const eliminada =
+                    await eliminarNotificacion(id);
+
+                if (!eliminada) {
+                    return;
+                }
 
 
-                const marcada =
-                    await marcarNotificacionLeida(id);
+                /*
+                |--------------------------------------------------------------------------
+                | QUITAR VISUALMENTE
+                |--------------------------------------------------------------------------
+                */
+
+                item.remove();
 
 
-                if (marcada) {
+                /*
+                |--------------------------------------------------------------------------
+                | ACTUALIZAR CONTADOR
+                |--------------------------------------------------------------------------
+                */
 
-                    item.classList.remove(
-                        'no-leida'
+                const contador =
+                    document.getElementById(
+                        'notificacionesContador'
                     );
 
+                if (contador) {
 
-                    if (url) {
+                    let total =
+                        parseInt(
+                            contador.textContent,
+                            10
+                        ) || 0;
 
-                        window.location.href =
-                            url;
+                    total = Math.max(0, total - 1);
 
-                    }
+                    actualizarContador(total);
 
                 }
 
+
+                /*
+                |--------------------------------------------------------------------------
+                | ABRIR DESTINO
+                |--------------------------------------------------------------------------
+                */
+
+                abrirNotificacion(item);
             }
         );
 
@@ -217,10 +236,6 @@
             if (overlay) {
                 overlay.classList.add('abierto');
             }
-
-            // Al abrir:
-            // las nuevas pasan a vistas.
-            marcarNotificacionesVistas();
 
         }
 
@@ -292,51 +307,7 @@
 
     }
 
-    async function marcarNotificacionesVistas() {
-
-        try {
-
-            const respuesta = await fetch(
-                CONFIG.urlMarcarVistas,
-                {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                }
-            );
-
-            if (!respuesta.ok) {
-                throw new Error(
-                    'Error HTTP: ' + respuesta.status
-                );
-            }
-
-            const datos = await respuesta.json();
-
-            if (!datos.ok) {
-                console.error(
-                    'No se pudieron marcar como vistas.'
-                );
-
-                return;
-            }
-
-            // El contador debe quedar inmediatamente en 0
-            actualizarContador(0);
-
-        } catch (error) {
-
-            console.error(
-                'Error al marcar notificaciones como vistas:',
-                error
-            );
-
-        }
-    }
-
-    async function marcarNotificacionLeida(id) {
+    async function eliminarNotificacion(id) {
 
         try {
 
@@ -345,7 +316,7 @@
             formulario.append('id', id);
 
             const respuesta = await fetch(
-                CONFIG.urlMarcarLeida,
+                CONFIG.urlEliminar,
                 {
                     method: 'POST',
                     credentials: 'same-origin',
@@ -357,19 +328,23 @@
             );
 
             if (!respuesta.ok) {
+
                 throw new Error(
                     'Error HTTP: ' + respuesta.status
                 );
+
             }
 
             const datos = await respuesta.json();
 
             if (!datos.ok) {
+
                 console.error(
-                    'No se pudo marcar la notificación.'
+                    'No se pudo eliminar la notificación.'
                 );
 
                 return false;
+
             }
 
             return true;
@@ -377,12 +352,83 @@
         } catch (error) {
 
             console.error(
-                'Error al marcar notificación:',
+                'Error al eliminar notificación:',
                 error
             );
 
             return false;
+
         }
+
+    }
+
+    function abrirNotificacion(notificacion) {
+
+        const tipo =
+            notificacion.dataset.tipo;
+
+        const solicitudId =
+            notificacion.dataset.solicitudId;
+
+
+        if (!solicitudId) {
+
+            console.warn(
+                'La notificación no tiene solicitud_id.'
+            );
+
+            return;
+
+        }
+
+        switch (tipo) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | VACACIONES - PENDIENTE JEFE
+            |--------------------------------------------------------------------------
+            */
+
+            case 'VACACIONES_PENDIENTE':
+
+                window.location.href =
+                    window.BASE_URL +
+                    '/modules/solicitudes/jefe_solicitudes_vacaciones.php' +
+                    '?id=' +
+                    encodeURIComponent(solicitudId) +
+                    '&estatus=PENDIENTE_JEFE';
+
+                break;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | VACACIONES - ENVIADA A RH
+            |--------------------------------------------------------------------------
+            */
+
+            case 'VACACIONES_ENVIADA_RH':
+
+                window.location.href =
+                    window.BASE_URL +
+                    '/modules/solicitudes/rh_solicitudes_vacaciones.php' +
+                    '?id=' +
+                    encodeURIComponent(solicitudId) +
+                    '&estatus=PENDIENTE_RH';
+
+                break;
+
+
+            default:
+
+                console.warn(
+                    'Tipo de notificación sin navegación:',
+                    tipo
+                );
+
+                break;
+        }
+
     }
 
 
@@ -471,13 +517,18 @@
         notificacion
     ) {
 
-        const clase =
-            parseInt(notificacion.leida, 10) === 0
-                ? 'no-leida'
-                : '';
-
         const id =
             escaparHTML(notificacion.id);
+
+        const tipo =
+            escaparHTML(
+                notificacion.tipo || ''
+            );
+
+        const solicitudId =
+            escaparHTML(
+                notificacion.solicitud_id || ''
+            );
 
         const titulo =
             escaparHTML(notificacion.titulo);
@@ -492,13 +543,10 @@
 
         return `
             <div
-                class="notificacion-item ${clase}"
+                class="notificacion-item"
                 data-id="${id}"
-                data-url="${
-                    escaparHTML(
-                        notificacion.url || ''
-                    )
-                }"
+                data-tipo="${tipo}"
+                data-solicitud-id="${solicitudId}"
             >
 
                 <div class="notificacion-icono">

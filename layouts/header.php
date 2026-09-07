@@ -123,13 +123,6 @@ if(isset($nombrePartes[1])){
         <div class="notificaciones-panel-acciones">
           <button
               type="button"
-              id="notificacionesMarcarTodas"
-              class="notificaciones-marcar-todas"
-          >
-            Marcar todas como leídas
-          </button>
-          <button
-              type="button"
               id="notificacionesCerrar"
               class="notificaciones-cerrar"
               aria-label="Cerrar notificaciones"

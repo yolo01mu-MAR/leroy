@@ -7,7 +7,7 @@ function reiniciarTiempo() {
 }
 
 function cerrarSesion() {
-    fetch('ajax/logout_inactividad.php')
+    fetch(BASE_URL + '/ajax/logout_inactividad.php')
         .then(() => {
             Swal.fire({
                 icon: 'warning',

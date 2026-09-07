@@ -16,13 +16,14 @@ function crear_notificacion(
     $solicitud_id,
     $tipo,
     $titulo,
-    $mensaje,
-    $url = null
+    $mensaje
 ) {
     global $db;
 
-    $usuario_id  = (int)$usuario_id;
-    $solicitud_id = $solicitud_id !== null ? (int)$solicitud_id : null;
+    $usuario_id   = (int)$usuario_id;
+    $solicitud_id = $solicitud_id !== null
+        ? (int)$solicitud_id
+        : null;
 
     if ($usuario_id <= 0) {
         return false;
@@ -33,17 +34,17 @@ function crear_notificacion(
                 solicitud_id,
                 tipo,
                 titulo,
-                mensaje,
-                url
+                mensaje
             ) VALUES (
                 '{$usuario_id}',
-                " . ($solicitud_id !== null ? "'{$solicitud_id}'" : "NULL") . ",
+                " . (
+                    $solicitud_id !== null
+                        ? "'{$solicitud_id}'"
+                        : "NULL"
+                ) . ",
                 '" . $db->escape($tipo) . "',
                 '" . $db->escape($titulo) . "',
-                '" . $db->escape($mensaje) . "',
-                " . ($url !== null
-                    ? "'" . $db->escape($url) . "'"
-                    : "NULL") . "
+                '" . $db->escape($mensaje) . "'
             )";
 
     if ($db->query($sql)) {
@@ -60,8 +61,7 @@ function crear_notificacion(
  * @param int $limite
  * @return array
  */
-function obtener_notificaciones_usuario($usuario_id, $limite = 20)
-{
+function obtener_notificaciones_usuario($usuario_id, $limite = 10){
     global $db;
 
     $usuario_id = (int)$usuario_id;
@@ -72,7 +72,7 @@ function obtener_notificaciones_usuario($usuario_id, $limite = 20)
     }
 
     if ($limite <= 0) {
-        $limite = 20;
+        $limite = 10;
     }
 
     $sql = "SELECT
@@ -82,28 +82,13 @@ function obtener_notificaciones_usuario($usuario_id, $limite = 20)
                 tipo,
                 titulo,
                 mensaje,
-                url,
-                leida,
-                fecha_creacion,
-                fecha_lectura
+                fecha_creacion
             FROM notificaciones
-            WHERE usuario_id = '{$usuario_id}'
+            WHERE usuario_id = {$usuario_id}
             ORDER BY fecha_creacion DESC
             LIMIT {$limite}";
 
-    $resultado = $db->query($sql);
-
-    if (!$resultado) {
-        return [];
-    }
-
-    $notificaciones = [];
-
-    while ($fila = $db->fetch_assoc($resultado)) {
-        $notificaciones[] = $fila;
-    }
-
-    return $notificaciones;
+    return find_by_sql($sql);
 }
 
 /**
@@ -123,18 +108,11 @@ function contar_notificaciones_no_leidas($usuario_id){
 
     $sql = "SELECT COUNT(*) AS total
             FROM notificaciones
-            WHERE usuario_id = '{$usuario_id}'
-            AND vista = 0";
+            WHERE usuario_id = {$usuario_id}";
 
-    $resultado = $db->query($sql);
+    $resultado = find_by_sql($sql);
 
-    if (!$resultado) {
-        return 0;
-    }
-
-    $fila = $db->fetch_assoc($resultado);
-
-    return (int)$fila['total'];
+    return (int)($resultado[0]['total'] ?? 0);
 }
 
 /**
@@ -214,4 +192,158 @@ function marcar_todas_notificaciones_leidas($usuario_id){
             AND leida = 0";
 
     return (bool)$db->query($sql);
+}
+
+/**
+ * Elimina una notificación del usuario.
+ *
+ * @param int $notificacion_id
+ * @param int $usuario_id
+ *
+ * @return bool
+ */
+function eliminar_notificacion($notificacion_id, $usuario_id){
+    global $db;
+
+    $notificacion_id = (int)$notificacion_id;
+    $usuario_id = (int)$usuario_id;
+
+    if ($notificacion_id <= 0 || $usuario_id <= 0) {
+        return false;
+    }
+
+    $sql = "DELETE FROM notificaciones
+            WHERE id = '{$notificacion_id}'
+            AND usuario_id = '{$usuario_id}'";
+
+    return (bool)$db->query($sql);
+}
+
+function obtener_usuarios_por_nivel($nivel){
+    global $db;
+
+    $nivel = (int)$nivel;
+
+    if ($nivel <= 0) {
+        return [];
+    }
+
+    $sql = "SELECT
+                id,
+                name,
+                email
+            FROM users
+            WHERE user_level = {$nivel}
+              AND statusLaboral_id = 1
+            ORDER BY id";
+
+    return find_by_sql($sql);
+}
+function notificar_por_nivel($nivel, $solicitud_id, $tipo, $titulo, $mensaje) {
+    
+    $usuarios = obtener_usuarios_por_nivel($nivel);
+
+    $destinatarios = [];
+
+    foreach ($usuarios as $usuario) {
+
+        $notificacion_id = crear_notificacion(
+            $usuario['id'],
+            $solicitud_id,
+            $tipo,
+            $titulo,
+            $mensaje
+        );
+
+        if ($notificacion_id) {
+
+            $destinatarios[] = [
+                'id'    => (int)$usuario['id'],
+                'nombre'=> $usuario['name'],
+                'email' => trim($usuario['email'] ?? '')
+            ];
+
+        }
+    }
+
+    return $destinatarios;
+}
+function obtener_usuarios_por_responsabilidad($responsabilidad){
+    global $db;
+
+    $responsabilidad = $db->escape(
+        trim($responsabilidad)
+    );
+
+    if(empty($responsabilidad)){
+        return [];
+    }
+
+    $sql = "
+        SELECT
+            u.id,
+            u.name,
+            u.email
+
+        FROM users u
+
+        INNER JOIN user_responsabilidad ur
+            ON ur.usuario_id = u.id
+
+        INNER JOIN responsabilidades r
+            ON r.id = ur.responsabilidad_id
+
+        WHERE r.nombre = '{$responsabilidad}'
+          AND r.activo = 1
+          AND u.statusLaboral_id = 1
+
+        ORDER BY u.name ASC
+    ";
+
+    return find_by_sql($sql);
+}
+function notificar_por_responsabilidad(
+    $responsabilidad,
+    $solicitud_id,
+    $tipo,
+    $titulo,
+    $mensaje
+){
+
+    $usuarios =
+        obtener_usuarios_por_responsabilidad(
+            $responsabilidad
+        );
+
+    $destinatarios = [];
+
+    foreach($usuarios as $usuario){
+
+        $notificacion_id =
+            crear_notificacion(
+                (int)$usuario['id'],
+                $solicitud_id,
+                $tipo,
+                $titulo,
+                $mensaje
+            );
+
+        if($notificacion_id){
+
+            $destinatarios[] = [
+                'id' =>
+                    (int)$usuario['id'],
+
+                'nombre' =>
+                    $usuario['name'],
+
+                'email' =>
+                    trim($usuario['email'] ?? '')
+            ];
+
+        }
+
+    }
+
+    return $destinatarios;
 }

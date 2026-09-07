@@ -1,10 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../app/bootstrap.php';
 
-$scripts = [
-  'buscar_usuario'
-];
-
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 
 if ($q === '') {

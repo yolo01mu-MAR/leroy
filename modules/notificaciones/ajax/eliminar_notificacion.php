@@ -12,7 +12,7 @@ if ($usuario_id <= 0) {
     echo json_encode([
         'ok' => false,
         'mensaje' => 'Usuario no autenticado'
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 
     exit;
 }
@@ -21,12 +21,12 @@ if ($notificacion_id <= 0) {
     echo json_encode([
         'ok' => false,
         'mensaje' => 'Notificación inválida'
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 
     exit;
 }
 
-$resultado = marcar_notificacion_leida(
+$resultado = eliminar_notificacion(
     $notificacion_id,
     $usuario_id
 );

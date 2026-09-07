@@ -1148,6 +1148,29 @@ function find_asistencia_filtrada() {
 
   return find_by_sql($sql);
 }
+/*--------------------------------------------------------------*/
+/* Funciones usadas para Saldo Vacaciones
+/*--------------------------------------------------------------*/
+function get_saldo_vacaciones(){
+  
+  $sql = "SELECT 
+            vs.usuario_id AS nomina,
+            u.`name` AS nombre,
+            u.fecha_ingreso AS ingreso,
+            vs.periodo_inicio AS inicio,
+            vs.periodo_fin AS fin,
+            vs.estatus,
+            vs.fecha_generacion as creates,
+            vs.updated_at AS updates
+          FROM vacaciones_saldo vs
+          INNER JOIN users u ON vs.usuario_id = u.id";
+
+  return find_by_sql($sql);
+
+}
+function update_saldo_vacaciones(){
+
+}
 
 /*--------------------------------------------------------------*/
 /* Funciones usadas en reporte de produccion
@@ -2041,4 +2064,30 @@ function get_disponibilidad_vacaciones($departamento, $fechaInicio, $fechaFin){
     return find_by_sql($sql);
 }
 
+// Funciones usadas para el modulo de normas de seguridad e higiene
+function find_all_normas(){
+  
+  global $db;
+  
+  $sql = "SELECT
+            sn.ID,
+            sc.nombre AS clasificacion,
+            sn.codigo_norma,
+            sn.nombre_norma,
+            sn.imagen,
+            COUNT(snp.id) AS puntos
+          FROM seguridad_normas sn
+          INNER JOIN seguridad_clasificacion sc ON sc.id = sn.id_clasificacion
+          LEFT JOIN seguridad_normas_p snp ON snp.id_norma = sn.id
+          GROUP BY
+            sn.ID,
+            sc.nombre,
+            sn.codigo_norma,
+            sn.nombre_norma,
+            sn.imagen
+          ORDER BY 
+            sn.ID ASC";
+
+  return find_by_sql($sql);
+}
 ?>

@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../../../firmas/firmas/includes/firmas.php';
+require_once __DIR__ . '/../../notificaciones/includes/notificaciones_helper.php';
+require_once __DIR__ . '/../../../modules/correo/includes/correo_helper.php';
 
 // Cupo máximo de personas simultáneas por departamento
 define('CUPO_MAXIMO_VACACIONES', 2);
@@ -12,7 +14,19 @@ define('DIAS_ANTICIPACION', 8);
  * Convierte los rangos (fecha_inicio, fecha_fin) en un arreglo
  * ['YYYY-MM-DD' => 'estado'] para pintar el calendario.
  */
-function crear_solicitud_vacaciones($usuario_id, $departamento_id, $fechaInicio, $fechaFin, $firma){
+function crear_solicitud_vacaciones(
+    $usuario_id,
+    $departamento_id,
+    $fechaInicio,
+    $fechaFin,
+    $firma
+){
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR FECHAS
+    |--------------------------------------------------------------------------
+    */
 
     if(empty($fechaInicio) || empty($fechaFin)){
 
@@ -23,6 +37,7 @@ function crear_solicitud_vacaciones($usuario_id, $departamento_id, $fechaInicio,
 
     }
 
+
     if($fechaInicio > $fechaFin){
 
         return [
@@ -32,10 +47,19 @@ function crear_solicitud_vacaciones($usuario_id, $departamento_id, $fechaInicio,
 
     }
 
+
     global $db;
 
-    // Obtener saldo
-    $resultado = obtener_saldo_vigente($usuario_id);
+
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER SALDO
+    |--------------------------------------------------------------------------
+    */
+
+    $resultado = obtener_saldo_vigente(
+        $usuario_id
+    );
 
     if(!$resultado['ok']){
         return $resultado;
@@ -43,47 +67,172 @@ function crear_solicitud_vacaciones($usuario_id, $departamento_id, $fechaInicio,
 
     $saldo = $resultado['saldo'];
 
-    // Calcular días
-    $dias = calcular_dias_vacaciones($fechaInicio,$fechaFin);
 
-    // Fecha de regreso
-    $fechaRegreso = calcular_fecha_regreso($fechaFin);
+    /*
+    |--------------------------------------------------------------------------
+    | CALCULAR DÍAS
+    |--------------------------------------------------------------------------
+    */
 
-    // Validar saldo
-    $resultado = validar_saldo($saldo,$dias);
+    $dias = calcular_dias_vacaciones(
+        $fechaInicio,
+        $fechaFin
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FECHA DE REGRESO
+    |--------------------------------------------------------------------------
+    */
+
+    $fechaRegreso = calcular_fecha_regreso(
+        $fechaFin
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR SALDO
+    |--------------------------------------------------------------------------
+    */
+
+    $resultado = validar_saldo(
+        $saldo,
+        $dias
+    );
 
     if(!$resultado['ok']){
         return $resultado;
     }
 
-    // Traslape
-    $validacion = validar_traslape($usuario_id, $fechaInicio, $fechaFin);
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR TRASLAPE
+    |--------------------------------------------------------------------------
+    */
+
+    $validacion = validar_traslape(
+        $usuario_id,
+        $fechaInicio,
+        $fechaFin
+    );
 
     if(!$validacion['ok']){
         return $validacion;
     }
 
-    // Validar cupo
-    $resultado = validar_cupo($departamento_id,$fechaInicio,$fechaFin);
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDAR CUPO
+    |--------------------------------------------------------------------------
+    */
+
+    $resultado = validar_cupo(
+        $departamento_id,
+        $fechaInicio,
+        $fechaFin
+    );
 
     if(!$resultado['ok']){
         return $resultado;
     }
 
-    // Validar Jefe
-    $jefe = obtener_jefe($usuario_id);
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER JEFE
+    |--------------------------------------------------------------------------
+    */
+
+    $jefe = obtener_jefe(
+        $usuario_id
+    );
 
     if(empty($jefe)){
+
         return [
             'ok' => false,
             'mensaje' => 'El colaborador no tiene un jefe asignado.'
         ];
+
     }
 
-    $fechaInicio = $db->escape($fechaInicio);
-    $fechaFin    = $db->escape($fechaFin);
+    /*
+    |--------------------------------------------------------------------------
+    | DATOS DEL COLABORADOR
+    |--------------------------------------------------------------------------
+    */
 
-    $db->query("START TRANSACTION");
+    $colaborador = obtener_datos_usuario(
+        $usuario_id
+    );
+
+    $nombre_colaborador =
+        $colaborador['name']
+        ?? 'Un colaborador';
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATOS DEL JEFE
+    |--------------------------------------------------------------------------
+    */
+
+    $datos_jefe = obtener_datos_usuario(
+        $jefe
+    );
+
+    $nombre_jefe =
+        $datos_jefe['name']
+        ?? 'Jefe';
+
+    $correo_jefe =
+        !empty($datos_jefe['email'])
+        ? trim($datos_jefe['email'])
+        : null;
+
+    /*
+    |--------------------------------------------------------------------------
+    | GUARDAR FECHAS ORIGINALES
+    |--------------------------------------------------------------------------
+    |
+    | Las conservamos para mostrar correctamente
+    | la información en el correo.
+    |
+    */
+
+    $fechaInicioOriginal = $fechaInicio;
+    $fechaFinOriginal = $fechaFin;
+
+    /*
+    |--------------------------------------------------------------------------
+    | ESCAPAR FECHAS PARA SQL
+    |--------------------------------------------------------------------------
+    */
+
+    $fechaInicio = $db->escape(
+        $fechaInicio
+    );
+
+    $fechaFin = $db->escape(
+        $fechaFin
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | INICIAR TRANSACCIÓN
+    |--------------------------------------------------------------------------
+    */
+
+    $db->query(
+        "START TRANSACTION"
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | CREAR SOLICITUD
+    |--------------------------------------------------------------------------
+    */
 
     $sql = "INSERT INTO vacaciones(
 
@@ -108,71 +257,825 @@ function crear_solicitud_vacaciones($usuario_id, $departamento_id, $fechaInicio,
                 '{$jefe}'
 
             )";
-    
+
     if(!$db->query($sql)){
 
-        $db->query("ROLLBACK");
+        $db->query(
+            "ROLLBACK"
+        );
 
         return [
-            'ok'=>false,
-            'mensaje'=>'No fue posible guardar la solicitud.'
+            'ok' => false,
+            'mensaje' => 'No fue posible guardar la solicitud.'
         ];
 
     }
 
-    $vacacionId = $db->insert_id();
+    /*
+    |--------------------------------------------------------------------------
+    | ID DE LA SOLICITUD
+    |--------------------------------------------------------------------------
+    */
+
+    $vacacionId =
+        $db->insert_id();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GUARDAR FIRMA
+    |--------------------------------------------------------------------------
+    */
 
     $datosFirma = [
-        'modulo'      => 'VACACIONES',
-        'registro_id' => $vacacionId,
-        'tipo'        => 'EMPLEADO',
-        'usuario_id'  => $usuario_id,
-        'firma'       => $firma
+
+        'modulo' => 'VACACIONES',
+
+        'registro_id' =>
+            $vacacionId,
+
+        'tipo' =>
+            'EMPLEADO',
+
+        'usuario_id' =>
+            $usuario_id,
+
+        'firma' =>
+            $firma
+
     ];
 
     $resultadoFirma = guardar_firma($datosFirma);
 
     if(!$resultadoFirma['ok']){
 
-        $db->query("ROLLBACK");
+        $db->query(
+            "ROLLBACK"
+        );
 
         return [
             'ok' => false,
-            'mensaje' => $resultadoFirma['mensaje']
+            'mensaje' =>
+                $resultadoFirma['mensaje']
         ];
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | ACTUALIZAR SALDO
+    |--------------------------------------------------------------------------
+    */
+
     $sql = "UPDATE vacaciones_saldo
-            SET dias_pendientes = dias_pendientes + {$dias}
+            SET dias_pendientes =
+                dias_pendientes + {$dias}
             WHERE id = {$saldo['id']}";
+
 
     if(!$db->query($sql)){
 
-        $db->query("ROLLBACK");
+        $db->query(
+            "ROLLBACK"
+        );
 
         return [
-            'ok'=>false,
-            'mensaje'=>'No fue posible actualizar el saldo.'
-        ];
-
-    }   
-    
-    if(!$db->query("COMMIT")){
-
-        return [
-            'ok'=>false,
-            'mensaje'=>'No fue posible confirmar la transacción.'
+            'ok' => false,
+            'mensaje' =>
+                'No fue posible actualizar el saldo.'
         ];
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | CREAR NOTIFICACIÓN INTERNA
+    |--------------------------------------------------------------------------
+    */
+
+    $notificacion_id =
+        crear_notificacion(
+            $jefe,
+            $vacacionId,
+            'VACACIONES_PENDIENTE',
+            'Nueva solicitud de vacaciones',
+            $nombre_colaborador .
+            ' solicita vacaciones del ' .
+            date(
+                'd/m/Y',
+                strtotime($fechaInicioOriginal)
+            ) .
+            ' al ' .
+            date(
+                'd/m/Y',
+                strtotime($fechaFinOriginal)
+            ) .
+            '.'
+        );
+
+    /*
+    |--------------------------------------------------------------------------
+    | LA NOTIFICACIÓN INTERNA SÍ ES CRÍTICA
+    |--------------------------------------------------------------------------
+    */
+
+    if(!$notificacion_id){
+
+        $db->query(
+            "ROLLBACK"
+        );
+
+        return [
+            'ok' => false,
+            'mensaje' =>
+                'No fue posible generar la notificación al jefe.'
+        ];
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CORREO AL JEFE
+    |--------------------------------------------------------------------------
+    |
+    | El correo NO es crítico.
+    | Si falla, la solicitud continúa.
+    |
+    */
+
+    if(!empty($correo_jefe)){
+
+        try {
+
+            /*
+            |--------------------------------------------------------------------------
+            | URL DE LA SOLICITUD
+            |--------------------------------------------------------------------------
+            */
+
+            $url_solicitud =
+                BASE_URL .
+                '/modules/solicitudes/solicitudes_vacaciones.php' .
+                '?id=' .
+                $vacacionId;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | GENERAR CORREO CON PLANTILLA
+            |--------------------------------------------------------------------------
+            */
+
+            $contenido_correo =
+                generar_correo_vacaciones([
+                    'titulo' => 'Nueva solicitud de vacaciones',
+                    'nombre_colaborador' => $nombre_colaborador,
+                    'mensaje' => 'El colaborador ha generado una nueva solicitud de vacaciones y está pendiente de tu revisión.',
+                    'fecha_inicio' => date('d/m/Y', strtotime($fechaInicioOriginal)),
+                    'fecha_fin' => date('d/m/Y', strtotime($fechaFinOriginal)),
+                    'dias' => $dias,
+                    'estado' => 'Pendiente de revisión',
+                    'estado_color' => 'azul',
+                    'url' => $url_solicitud,
+                    'texto_boton' => 'Ver solicitud'
+                ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | ENVIAR CORREO
+            |--------------------------------------------------------------------------
+            */
+
+            $resultadoCorreo =
+                enviar_correo_a_usuarios(
+
+                    [
+                        [
+                            'id' => (int)$jefe,
+                            'nombre' => $nombre_jefe,
+                            'email' => $correo_jefe
+                        ]
+                    ],
+                    'Nueva solicitud de vacaciones',
+                    $contenido_correo
+                );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | REGISTRAR ERROR
+            |--------------------------------------------------------------------------
+            */
+
+            if(!$resultadoCorreo){
+
+                error_log(
+                    'Correo de solicitud de vacaciones no enviado. ' .
+                    'Solicitud: ' .
+                    $vacacionId
+                );
+
+            }
+
+        } catch(Throwable $e){
+
+            error_log(
+                'Excepción enviando correo de vacaciones. ' .
+                'Solicitud: ' .
+                $vacacionId .
+                '. Error: ' .
+                $e->getMessage()
+            );
+
+        }
+
+    } else {
+
+        error_log(
+            'El jefe no tiene correo registrado. ' .
+            'Solicitud: ' .
+            $vacacionId
+        );
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONFIRMAR TRANSACCIÓN
+    |--------------------------------------------------------------------------
+    */
+
+    if(!$db->query(
+        "COMMIT"
+    )){
+
+        return [
+            'ok' => false,
+            'mensaje' =>
+                'No fue posible confirmar la transacción.'
+        ];
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ÉXITO
+    |--------------------------------------------------------------------------
+    */
+
     return [
         'ok' => true,
-        'mensaje' => 'La solicitud fue registrada correctamente.'
+        'mensaje' =>
+            'La solicitud fue registrada correctamente.'
     ];
 
 }
+// function crear_solicitud_vacaciones($usuario_id, $departamento_id, $fechaInicio, $fechaFin, $firma){
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | VALIDAR FECHAS
+//     |--------------------------------------------------------------------------
+//     */
+
+//     if(empty($fechaInicio) || empty($fechaFin)){
+
+//         return [
+//             'ok' => false,
+//             'mensaje' => 'Debe seleccionar un rango de fechas.'
+//         ];
+
+//     }
+
+
+//     if($fechaInicio > $fechaFin){
+
+//         return [
+//             'ok' => false,
+//             'mensaje' => 'La fecha inicial no puede ser mayor a la fecha final.'
+//         ];
+
+//     }
+
+
+//     global $db;
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | OBTENER SALDO
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $resultado = obtener_saldo_vigente(
+//         $usuario_id
+//     );
+
+//     if(!$resultado['ok']){
+//         return $resultado;
+//     }
+
+//     $saldo = $resultado['saldo'];
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | CALCULAR DÍAS
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $dias = calcular_dias_vacaciones(
+//         $fechaInicio,
+//         $fechaFin
+//     );
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | FECHA DE REGRESO
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $fechaRegreso = calcular_fecha_regreso(
+//         $fechaFin
+//     );
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | VALIDAR SALDO
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $resultado = validar_saldo(
+//         $saldo,
+//         $dias
+//     );
+
+//     if(!$resultado['ok']){
+//         return $resultado;
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | VALIDAR TRASLAPE
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $validacion = validar_traslape(
+//         $usuario_id,
+//         $fechaInicio,
+//         $fechaFin
+//     );
+
+//     if(!$validacion['ok']){
+//         return $validacion;
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | VALIDAR CUPO
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $resultado = validar_cupo(
+//         $departamento_id,
+//         $fechaInicio,
+//         $fechaFin
+//     );
+
+//     if(!$resultado['ok']){
+//         return $resultado;
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | OBTENER JEFE
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $jefe = obtener_jefe(
+//         $usuario_id
+//     );
+
+//     if(empty($jefe)){
+
+//         return [
+//             'ok' => false,
+//             'mensaje' => 'El colaborador no tiene un jefe asignado.'
+//         ];
+
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | DATOS DEL COLABORADOR
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $colaborador = obtener_datos_usuario(
+//         $usuario_id
+//     );
+
+//     $nombre_colaborador =
+//         $colaborador['name']
+//         ?? 'Un colaborador';
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | DATOS DEL JEFE
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $datos_jefe = obtener_datos_usuario(
+//         $jefe
+//     );
+
+//     $nombre_jefe =
+//         $datos_jefe['name']
+//         ?? 'Jefe';
+
+//     $correo_jefe =
+//         !empty($datos_jefe['email'])
+//         ? trim($datos_jefe['email'])
+//         : null;
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | ESCAPAR FECHAS
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $fechaInicio = $db->escape(
+//         $fechaInicio
+//     );
+
+//     $fechaFin = $db->escape(
+//         $fechaFin
+//     );
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | INICIAR TRANSACCIÓN
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $db->query(
+//         "START TRANSACTION"
+//     );
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | CREAR SOLICITUD
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $sql = "INSERT INTO vacaciones(
+
+//                 usuario_id,
+//                 saldo_id,
+//                 fecha_inicio,
+//                 fecha_fin,
+//                 fecha_regreso,
+//                 dias,
+//                 estatus,
+//                 jefe_id
+
+//             ) VALUES(
+
+//                 '{$usuario_id}',
+//                 '{$saldo['id']}',
+//                 '{$fechaInicio}',
+//                 '{$fechaFin}',
+//                 '{$fechaRegreso}',
+//                 '{$dias}',
+//                 'PENDIENTE_JEFE',
+//                 '{$jefe}'
+
+//             )";
+
+
+//     if(!$db->query($sql)){
+
+//         $db->query(
+//             "ROLLBACK"
+//         );
+
+//         return [
+//             'ok' => false,
+//             'mensaje' => 'No fue posible guardar la solicitud.'
+//         ];
+
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | ID DE LA SOLICITUD
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $vacacionId =
+//         $db->insert_id();
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | GUARDAR FIRMA
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $datosFirma = [
+//         'modulo' => 'VACACIONES',
+//         'registro_id' => $vacacionId,
+//         'tipo' => 'EMPLEADO',
+//         'usuario_id' => $usuario_id,
+//         'firma' => $firma
+//     ];
+
+
+//     $resultadoFirma =
+//         guardar_firma(
+//             $datosFirma
+//         );
+
+
+//     if(!$resultadoFirma['ok']){
+
+//         $db->query(
+//             "ROLLBACK"
+//         );
+
+//         return [
+//             'ok' => false,
+//             'mensaje' =>
+//                 $resultadoFirma['mensaje']
+//         ];
+
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | ACTUALIZAR SALDO
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $sql = "UPDATE vacaciones_saldo
+//             SET dias_pendientes =
+//                 dias_pendientes + {$dias}
+//             WHERE id = {$saldo['id']}";
+
+
+//     if(!$db->query($sql)){
+
+//         $db->query(
+//             "ROLLBACK"
+//         );
+
+//         return [
+//             'ok' => false,
+//             'mensaje' =>
+//                 'No fue posible actualizar el saldo.'
+//         ];
+
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | CREAR NOTIFICACIÓN INTERNA
+//     |--------------------------------------------------------------------------
+//     */
+
+//     $notificacion_id =
+//         crear_notificacion(
+//             $jefe,
+//             $vacacionId,
+//             'VACACIONES_PENDIENTE',
+//             'Nueva solicitud de vacaciones',
+//             $nombre_colaborador .
+//             ' solicita vacaciones del ' .
+//             date(
+//                 'd/m/Y',
+//                 strtotime($fechaInicio)
+//             ) .
+//             ' al ' .
+//             date(
+//                 'd/m/Y',
+//                 strtotime($fechaFin)
+//             ) .
+//             '.'
+
+//         );
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | LA NOTIFICACIÓN INTERNA SÍ ES CRÍTICA
+//     |--------------------------------------------------------------------------
+//     */
+
+//     if(!$notificacion_id){
+
+//         $db->query(
+//             "ROLLBACK"
+//         );
+
+//         return [
+//             'ok' => false,
+//             'mensaje' =>
+//                 'No fue posible generar la notificación al jefe.'
+//         ];
+
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | CORREO AL JEFE
+//     |--------------------------------------------------------------------------
+//     |
+//     | El correo es secundario.
+//     | Si falla, NO afecta la solicitud.
+//     |
+//     */
+
+//     if (!empty($correo_jefe)) {
+
+//         try {
+
+//             /*
+//             |--------------------------------------------------------------------------
+//             | URL DE LA SOLICITUD
+//             |--------------------------------------------------------------------------
+//             */
+
+//             $url_solicitud =
+//                 BASE_URL .
+//                 '/modules/solicitudes/solicitudes_vacaciones.php' .
+//                 '?id=' .
+//                 $vacacionId;
+
+
+//             /*
+//             |--------------------------------------------------------------------------
+//             | GENERAR CORREO CON PLANTILLA
+//             |--------------------------------------------------------------------------
+//             */
+
+//             $contenido_correo =
+//                 generar_correo_vacaciones([
+
+//                     'titulo' =>
+//                         'Nueva solicitud de vacaciones',
+
+//                     'nombre_colaborador' =>
+//                         $nombre_colaborador,
+
+//                     'mensaje' =>
+//                         'El colaborador ha generado una nueva solicitud de vacaciones y está pendiente de tu revisión.',
+
+//                     'fecha_inicio' =>
+//                         date(
+//                             'd/m/Y',
+//                             strtotime($fechaInicio)
+//                         ),
+
+//                     'fecha_fin' =>
+//                         date(
+//                             'd/m/Y',
+//                             strtotime($fechaFin)
+//                         ),
+
+//                     'dias' =>
+//                         $dias,
+
+//                     'estado' =>
+//                         'Pendiente de revisión',
+
+//                     'estado_color' =>
+//                         'azul',
+
+//                     'url' =>
+//                         $url_solicitud,
+
+//                     'texto_boton' =>
+//                         'Ver solicitud'
+
+//                 ]);
+
+
+//             /*
+//             |--------------------------------------------------------------------------
+//             | ENVIAR
+//             |--------------------------------------------------------------------------
+//             */
+
+//             $resultadoCorreo =
+//                 enviar_correo_a_usuarios(
+
+//                     [
+//                         [
+//                             'id' =>
+//                                 (int)$jefe,
+
+//                             'nombre' =>
+//                                 $nombre_jefe,
+
+//                             'email' =>
+//                                 $correo_jefe
+//                         ]
+//                     ],
+
+//                     'Nueva solicitud de vacaciones',
+
+//                     $contenido_correo
+//                 );
+
+
+//             /*
+//             |--------------------------------------------------------------------------
+//             | REGISTRAR ERROR SIN AFECTAR SOLICITUD
+//             |--------------------------------------------------------------------------
+//             */
+
+//             if (!$resultadoCorreo) {
+
+//                 error_log(
+//                     'Correo de solicitud de vacaciones no enviado. ' .
+//                     'Solicitud: ' .
+//                     $vacacionId
+//                 );
+
+//             }
+
+//         } catch (Throwable $e) {
+
+//             error_log(
+//                 'Excepción enviando correo de vacaciones. ' .
+//                 'Solicitud: ' .
+//                 $vacacionId .
+//                 '. Error: ' .
+//                 $e->getMessage()
+//             );
+
+//         }
+
+//     } else {
+
+//         error_log(
+//             'El jefe no tiene correo registrado. ' .
+//             'Solicitud: ' .
+//             $vacacionId
+//         );
+
+//     }
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | CONFIRMAR TRANSACCIÓN
+//     |--------------------------------------------------------------------------
+//     */
+
+//     if(!$db->query(
+//         "COMMIT"
+//     )){
+
+//         return [
+//             'ok' => false,
+//             'mensaje' =>
+//                 'No fue posible confirmar la transacción.'
+//         ];
+
+//     }
+
+
+//     /*
+//     |--------------------------------------------------------------------------
+//     | ÉXITO
+//     |--------------------------------------------------------------------------
+//     */
+
+//     return [
+//         'ok' => true,
+//         'mensaje' =>
+//             'La solicitud fue registrada correctamente.'
+//     ];
+
+// }
 function validar_traslape($usuario_id, $fecha_inicio, $fecha_fin){
 
     global $db;
@@ -264,6 +1167,26 @@ function obtener_jefe($usuario_id){
     $resultado = $db->fetch_assoc($db->query($sql));
 
     return $resultado ? (int)$resultado['jefe'] : null;
+}
+function obtener_datos_usuario($usuario_id){
+
+    global $db;
+
+    $usuario_id = (int)$usuario_id;
+
+    $sql = "SELECT
+                id,
+                name,
+                email
+            FROM users
+            WHERE id = {$usuario_id}
+            LIMIT 1";
+
+    $resultado = $db->fetch_assoc(
+        $db->query($sql)
+    );
+
+    return $resultado ?: null;
 }
 function validar_saldo($saldo, $dias){
 

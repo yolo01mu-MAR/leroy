@@ -250,33 +250,33 @@ $faltas = get_faltas_tiempo($id);
         </div>
     </div>
 </div>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="libs/js/kiosco.js"></script>
-        <script src="<?= BASE_URL ?>/firmas/firmas/assets/js/signature_pad.min.js"></script>
-        <script src="<?= BASE_URL ?>/firmas/firmas/assets/js/firmas.js"></script>
-        <script>
-            let kioscoAutenticado =
-                <?= !empty($_SESSION['kiosco']['autenticado']) ? 'true' : 'false'; ?>;
-        </script>
-        <script src="<?= BASE_URL ?>/firmas/txt/assets/js/txt_falta.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                Kiosco.iniciar();
-            });
-        </script>
-        <script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="libs/js/kiosco.js"></script>
+<script src="<?= BASE_URL ?>/firmas/firmas/assets/js/signature_pad.min.js"></script>
+<script src="<?= BASE_URL ?>/firmas/firmas/assets/js/firmas.js"></script>
+<script>
+    let kioscoAutenticado =
+        <?= !empty($_SESSION['kiosco']['autenticado']) ? 'true' : 'false'; ?>;
+</script>
+<script src="<?= BASE_URL ?>/firmas/txt/assets/js/txt_falta.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        Kiosco.iniciar();
+    });
+</script>
+<script>
 
-            $(document).on("click",".btnSolicitar",function(){
+    $(document).on("click",".btnSolicitar",function(){
 
-                confirmarSolicitudTxt(
-                    $(this).data("id"),
-                    $(this).data("fecha")
-                );
+        confirmarSolicitudTxt(
+            $(this).data("id"),
+            $(this).data("fecha")
+        );
 
-            });
+    });
 
-        </script>
-    </body>
+</script>
+</body>
 </html>

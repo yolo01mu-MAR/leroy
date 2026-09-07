@@ -1,79 +1,49 @@
 <?php
+
 require_once __DIR__ . '/../../app/bootstrap.php';
 require_once __DIR__ . '/includes/notificaciones_helper.php';
-
-$usuario_id = 14566;
-
-// Crear notificación de prueba
-$id = crear_notificacion(
-    $usuario_id,
-    null,
-    'PRUEBA',
-    'Notificación de prueba',
-    'Esta es una notificación de prueba del sistema LE ROY.',
-    null
-);
-
-echo "<h3>Crear notificación</h3>";
-
-if ($id) {
-    echo "✅ Notificación creada. ID: " . $id;
-} else {
-    echo "❌ No se pudo crear la notificación.";
-}
+require_once __DIR__ . '/../correo/includes/correo_helper.php';
 
 
-// Contar no leídas
-$total = contar_notificaciones_no_leidas($usuario_id);
-
-echo "<hr>";
-echo "<h3>Notificaciones no leídas</h3>";
-echo "Total: " . $total;
-
-
-// Obtener notificaciones
-$notificaciones = obtener_notificaciones_usuario($usuario_id);
-
-echo "<hr>";
-echo "<h3>Notificaciones</h3>";
-
-foreach ($notificaciones as $notificacion) {
-
-    echo "<div style='
-        border:1px solid #ddd;
-        padding:10px;
-        margin-bottom:10px;
-    '>";
-
-    echo "<strong>" . htmlspecialchars($notificacion['titulo']) . "</strong><br>";
-
-    echo htmlspecialchars($notificacion['mensaje']) . "<br>";
-
-    echo "<small>";
-    echo "ID: " . $notificacion['id'];
-    echo " | Leída: " . $notificacion['leida'];
-    echo "</small>";
-
-    echo "</div>";
-}
-
-// echo "<hr>";
-// echo "<h3>Marcar notificación como leída</h3>";
-
-// $marcada = marcar_notificacion_leida($id, $usuario_id);
-
-// if ($marcada) {
-//     echo "✅ Notificación marcada como leída.";
-// } else {
-//     echo "❌ No se pudo marcar como leída.";
-// }
+$destinatarios =
+    notificar_por_responsabilidad(
+        'NOMINA',
+        999,
+        'PRUEBA',
+        'Prueba de notificación',
+        'Esta es una prueba del sistema de notificaciones.'
+    );
 
 
-// // ========================================
-// // VOLVER A CONTAR NO LEÍDAS
-// // ========================================
+echo '<pre>';
 
-// $total = contar_notificaciones_no_leidas($usuario_id);
+print_r($destinatarios);
 
-// echo "<br>";
-// echo "Notificaciones no leídas ahora: " . $total;
+echo '</pre>';
+
+$resultadosCorreo =
+    enviar_correo_a_usuarios(
+        $destinatarios,
+        'Prueba de correo - LE ROY',
+        '
+            <h2>Prueba de notificación</h2>
+
+            <p>
+                Esta es una prueba del sistema
+                de notificaciones de Asistencia LE ROY.
+            </p>
+
+            <p>
+                Si recibiste este correo,
+                la distribución por responsabilidad
+                está funcionando correctamente.
+            </p>
+        '
+    );
+
+
+echo '<hr>';
+
+echo '<h3>Resultado de correos</h3>';
+
+print_r($resultadosCorreo);

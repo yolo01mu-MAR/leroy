@@ -1,16 +1,3 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//   const buscador = document.getElementById("buscador");
-//   const filas = document.querySelectorAll("#tabla-usuarios tbody tr");
-
-//   buscador.addEventListener("keyup", function () {
-//     const texto = this.value.toLowerCase();
-
-//     filas.forEach(function (fila) {
-//       const contenido = fila.textContent.toLowerCase();
-//       fila.style.display = contenido.includes(texto) ? "" : "none";
-//     });
-//   });
-// });
 // document.addEventListener('DOMContentLoaded', function () {
 
 //   const btn = document.getElementById('toggleSidebar');

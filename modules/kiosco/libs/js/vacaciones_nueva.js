@@ -8,9 +8,18 @@ $(function () {
     //====================================================
     // Inicializar calendario
     //====================================================
+    const inicioGuardado =
+        $("#inicioGuardado").val();
+
+
     Calendario.init({
 
         modo: "rango",
+
+        inicio:
+            inicioGuardado || null,
+
+        fin: null,
 
         bloqueados: [
             "lleno",
@@ -19,7 +28,8 @@ $(function () {
             "no_laborable"
         ],
 
-        onChange: actualizarResumen
+        onChange:
+            actualizarResumen
 
     });
 
@@ -182,3 +192,180 @@ $(function () {
     });
 
 });
+//====================================================
+// NAVEGACIÓN DE MESES
+//====================================================
+
+function cargarMes(mes, anio){
+
+    $.ajax({
+
+        url: "ajax/calendario_mes.php",
+        type: "GET",
+        dataType: "json",
+
+        data: {
+            mes: mes,
+            anio: anio
+        },
+
+        beforeSend: function(){
+
+            $("#calendarioGridDias")
+                .css(
+                    "opacity",
+                    "0.5"
+                );
+
+        }
+
+    })
+
+    .done(function(resp){
+
+        if(!resp.ok){
+
+            Swal.fire({
+
+                icon:  "error",
+                title: "Error",
+                text: resp.mensaje,
+
+                confirmButtonColor:
+                    "#f1c40f"
+
+            });
+
+            return;
+
+        }
+
+        //============================================
+        // ACTUALIZAR TÍTULO
+        //============================================
+
+        $("#tituloMes")
+            .text(resp.nombre_mes);
+
+        //============================================
+        // ACTUALIZAR GRID
+        //============================================
+
+        $("#calendarioGridDias")
+
+            .html(resp.html_grid)
+            .attr("data-mes", resp.mes)
+            .attr("data-anio", resp.anio);
+
+        //============================================
+        // ACTUALIZAR MES ANTERIOR
+        //============================================
+
+        $("#btnMesAnterior")
+
+            .data("mes", resp.mesAnterior)
+            .data("anio", resp.anioAnterior)
+            .prop("disabled", !resp.permitirAnterior);
+
+        //============================================
+        // ACTUALIZAR MES SIGUIENTE
+        //============================================
+
+        $("#btnMesSiguiente")
+
+            .data("mes", resp.mesSiguiente)
+            .data("anio", resp.anioSiguiente);
+
+        //============================================
+        // VOLVER A CONECTAR CALENDARIO
+        //============================================
+
+        Calendario.eventos();
+        Calendario.pintar();
+
+    })
+
+
+    .fail(function(xhr){
+
+        console.error(
+            "Error AJAX calendario:",
+            xhr.responseText
+        );
+
+
+        Swal.fire({
+
+            icon: "error",
+            title: "Error",
+            text: "No fue posible cargar el mes.",
+            confirmButtonColor: "#f1c40f"
+
+        });
+
+    })
+
+
+    .always(function(){
+
+        $("#calendarioGridDias")
+            .css(
+                "opacity",
+                "1"
+            );
+
+    });
+
+}
+
+
+//====================================================
+// MES ANTERIOR
+//====================================================
+
+$(document).on(
+    "click",
+    "#btnMesAnterior",
+    function(e){
+
+        e.preventDefault();
+
+        if($(this).prop("disabled")){
+
+            return;
+
+        }
+
+        cargarMes(
+            $(this).data("mes"),
+            $(this).data("anio")
+        );
+
+    }
+);
+
+
+//====================================================
+// MES SIGUIENTE
+//====================================================
+
+$(document).on(
+    "click",
+    "#btnMesSiguiente",
+    function(e){
+
+        e.preventDefault();
+
+        if($(this).prop("disabled")){
+
+            return;
+
+        }
+
+        cargarMes(
+            $(this).data("mes"),
+            $(this).data("anio")
+        );
+
+    }
+);

@@ -87,3 +87,9 @@
     transform:scale(1.03);
 
 }
+.celda-dia.otro-mes {
+    opacity: 0.45;
+    background: #f8f9fa;
+    color: #adb5bd;
+    cursor: default;
+}

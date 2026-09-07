@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../../app/bootstrap.php';
-require_once('includes/barcode/autoload.php');
 require_once __DIR__ . '/../../includes/barcode/autoload.php';
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
@@ -89,7 +88,13 @@ $barcode = $generator->getBarcode(
     $generator::TYPE_CODE_128
 );
 
-$barcodeFile = 'tmp/barcode_'.$id.'.png';
+$carpetaTmp = __DIR__ . '/../../tmp';
+
+if (!is_dir($carpetaTmp)) {
+    mkdir($carpetaTmp, 0777, true);
+}
+
+$barcodeFile = $carpetaTmp . '/barcode_' . $id . '.png';
 
 file_put_contents(
     $barcodeFile,
@@ -102,13 +107,13 @@ file_put_contents(
 |--------------------------------------------------------------------------
 */
 
-$foto = 'uploads/users/'.$emp['image'];
+$foto = __DIR__ . '/../../uploads/users/' . $emp['image'];
 
-if(!file_exists($foto)){
-    $foto = 'uploads/users/no_image.jpg';
+if (!file_exists($foto)) {
+    $foto = __DIR__ . '/../../uploads/users/no_image.jpg';
 }
 
-if(!file_exists($foto)){
+if (!file_exists($foto)) {
     die('La foto no existe');
 }
 
@@ -130,11 +135,11 @@ if(!file_exists($template)){
 |--------------------------------------------------------------------------
 */
 
-if(!is_dir('tmp')){
-    mkdir('tmp', 0777, true);
+if (!is_dir($carpetaTmp)) {
+    mkdir($carpetaTmp, 0777, true);
 }
 
-$salida = 'tmp/credencial_'.$id.'.pptx';
+$salida = $carpetaTmp . '/credencial_' . $id . '.pptx';
 
 /*
 |--------------------------------------------------------------------------

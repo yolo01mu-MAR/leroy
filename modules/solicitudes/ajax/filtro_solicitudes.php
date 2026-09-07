@@ -4,6 +4,13 @@ require_once __DIR__ . '/../../../app/bootstrap.php';
 
 page_require_level(5);
 
+
+/*
+|--------------------------------------------------------------------------
+| INICIALES
+|--------------------------------------------------------------------------
+*/
+
 function iniciales_colaborador($nombre)
 {
     $partes = preg_split('/\s+/', trim($nombre));
@@ -21,18 +28,36 @@ function iniciales_colaborador($nombre)
     return $iniciales ?: '?';
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| JEFE ACTUAL
+|--------------------------------------------------------------------------
+*/
+
 $jefe_id = (int)$_SESSION['user_id'];
+
+
+/*
+|--------------------------------------------------------------------------
+| ESTATUS SOLICITADO
+|--------------------------------------------------------------------------
+*/
 
 $estatus = $_POST['estatus'] ?? 'PENDIENTE_JEFE';
 
 
+/*
+|--------------------------------------------------------------------------
+| ESTATUS PERMITIDOS
+|--------------------------------------------------------------------------
+*/
+
 $estatus_permitidos = [
     'TODAS',
     'PENDIENTE_JEFE',
-    'PENDIENTE_RH',
-    'APROBADA',
-    'RECHAZADA_JEFE',
-    'RECHAZADA_RH'
+    'APROBADAS_JEFE',
+    'RECHAZADAS'
 ];
 
 
@@ -51,13 +76,78 @@ if (!in_array($estatus, $estatus_permitidos, true)) {
 
 $condicion = '';
 
-if ($estatus !== 'TODAS') {
+switch ($estatus) {
 
-    $estatus_seguro = remove_junk($estatus);
 
-    $condicion = "
-        AND v.estatus = '{$estatus_seguro}'
-    ";
+    /*
+    |--------------------------------------------------------------------------
+    | PENDIENTES
+    |--------------------------------------------------------------------------
+    */
+
+    case 'PENDIENTE_JEFE':
+
+        $condicion = "
+            AND v.estatus = 'PENDIENTE_JEFE'
+        ";
+
+        break;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | APROBADAS POR EL JEFE
+    |--------------------------------------------------------------------------
+    |
+    | Incluye:
+    |
+    | PENDIENTE_RH
+    | APROBADA
+    |
+    */
+
+    case 'APROBADAS_JEFE':
+
+        $condicion = "
+            AND v.estatus IN (
+                'PENDIENTE_RH',
+                'APROBADA'
+            )
+        ";
+
+        break;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RECHAZADAS
+    |--------------------------------------------------------------------------
+    */
+
+    case 'RECHAZADAS':
+
+        $condicion = "
+            AND v.estatus IN (
+                'RECHAZADA_JEFE',
+                'RECHAZADA_RH'
+            )
+        ";
+
+        break;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TODAS
+    |--------------------------------------------------------------------------
+    */
+
+    case 'TODAS':
+    default:
+
+        $condicion = '';
+
+        break;
 
 }
 
@@ -68,26 +158,23 @@ if ($estatus !== 'TODAS') {
 |--------------------------------------------------------------------------
 */
 
-$sql = "
-    SELECT
-        v.id,
-        v.usuario_id,
-        v.fecha_solicitud,
-        v.fecha_inicio,
-        v.dias,
-        v.estatus,
-        vu.nombre,
-        vu.puesto,
-        vu.departamentos,
-        vu.dep_cuadrilla,
-        vu.grupos
-    FROM vacaciones v
-    INNER JOIN vw_usuarios_completos vu
-        ON v.usuario_id = vu.id
-    WHERE v.jefe_id = {$jefe_id}
-    {$condicion}
-    ORDER BY v.fecha_solicitud ASC
-";
+$sql = "SELECT
+            v.id,
+            v.usuario_id,
+            v.fecha_solicitud,
+            v.fecha_inicio,
+            v.dias,
+            v.estatus,
+            vu.nombre,
+            vu.puesto,
+            vu.departamentos,
+            vu.dep_cuadrilla,
+            vu.grupos
+        FROM vacaciones v
+            INNER JOIN vw_usuarios_completos vu ON v.usuario_id = vu.id
+        WHERE v.jefe_id = {$jefe_id}
+            {$condicion}
+        ORDER BY v.fecha_solicitud ASC";
 
 
 $solicitudes = find_by_sql($sql);
@@ -95,7 +182,7 @@ $solicitudes = find_by_sql($sql);
 
 /*
 |--------------------------------------------------------------------------
-| CATÁLOGO DE ESTATUS
+| CATÁLOGO DE ESTATUS REALES
 |--------------------------------------------------------------------------
 */
 
@@ -136,13 +223,14 @@ $estatus_meta = [
 
 /*
 |--------------------------------------------------------------------------
-| RESULTADO VACÍO
+| SIN RESULTADOS
 |--------------------------------------------------------------------------
 */
 
 if (empty($solicitudes)) {
 
     echo '
+
         <div class="vacaciones-vacio">
 
             <span class="glyphicon glyphicon-calendar"></span>
@@ -152,25 +240,38 @@ if (empty($solicitudes)) {
             </p>
 
         </div>
+
     ';
 
     exit;
+
 }
 
 
 /*
 |--------------------------------------------------------------------------
-| SOLICITUDES
+| MOSTRAR SOLICITUDES
 |--------------------------------------------------------------------------
 */
 
-foreach ($solicitudes as $indice => $solicitud):
+foreach ($solicitudes as $solicitud):
 
-    $meta = $estatus_meta[$solicitud['estatus']] ?? [
-        'label' => $solicitud['estatus'],
-        'clase' => 'estatus-default',
-        'icono' => 'glyphicon-question-sign'
-    ];
+
+    $meta =
+        $estatus_meta[$solicitud['estatus']]
+        ??
+        [
+
+            'label' =>
+                $solicitud['estatus'],
+
+            'clase' =>
+                'estatus-default',
+
+            'icono' =>
+                'glyphicon-question-sign'
+
+        ];
 
 ?>
 
@@ -233,6 +334,8 @@ foreach ($solicitudes as $indice => $solicitud):
 >
 
 
+    <!-- AVATAR -->
+
     <div class="vacaciones-avatar">
 
         <?= iniciales_colaborador(
@@ -241,6 +344,8 @@ foreach ($solicitudes as $indice => $solicitud):
 
     </div>
 
+
+    <!-- INFORMACIÓN -->
 
     <div class="vacaciones-item-info">
 
@@ -274,6 +379,8 @@ foreach ($solicitudes as $indice => $solicitud):
 
     </div>
 
+
+    <!-- ESTATUS -->
 
     <span class="vacaciones-status <?= $meta['clase']; ?>">
 

@@ -77,7 +77,7 @@ $equipo = $resEquipo->fetch_assoc();
 // =====================
 // LOGO BASE64
 // =====================
-$path = __DIR__ . '/libs/images/Laboratorios2.jpg';
+$path = BASE_PATH . '/libs/images/Laboratorios.jpg';
 $type = pathinfo($path, PATHINFO_EXTENSION);
 $data = file_get_contents($path);
 $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);

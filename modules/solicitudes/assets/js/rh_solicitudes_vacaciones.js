@@ -668,25 +668,19 @@ function mostrarDetalleRH(item) {
     |--------------------------------------------------------------------------
     */
 
-    const botonAprobar =
-        detalle.querySelector(
-            '.btn-aprobar-rh'
-        );
-
+    const botonAprobar = detalle.querySelector('.btn-aprobar-rh');
 
     if (botonAprobar) {
-
         botonAprobar.addEventListener(
             'click',
             function (e) {
-
                 e.stopPropagation();
-
-                confirmarFirmaVacacionesRH(id);
-
+                confirmarDecisionRH(
+                    id,
+                    'aprobar'
+                );
             }
         );
-
     }
 
 
@@ -696,11 +690,7 @@ function mostrarDetalleRH(item) {
     |--------------------------------------------------------------------------
     */
 
-    const botonRechazar =
-        detalle.querySelector(
-            '.btn-rechazar-rh'
-        );
-
+    const botonRechazar = detalle.querySelector('.btn-rechazar-rh');
 
     if (botonRechazar) {
         botonRechazar.addEventListener(
@@ -750,112 +740,177 @@ function obtenerInicialesRH(nombre) {
  * ============================================================
  */
 
+/**
+ * ============================================================
+ * CONFIRMAR DECISIÓN RH
+ * ============================================================
+ */
+
 async function confirmarDecisionRH(id, accion) {
 
-    if (accion !== 'rechazar') {
+    //===========================================================
+    // APROBAR
+    //===========================================================
+
+    if (accion === 'aprobar') {
+
+        const resultado = await Swal.fire({
+
+            icon: 'question',
+
+            title: 'Aprobar solicitud',
+
+            text:
+                '¿Estás seguro de que deseas aprobar esta solicitud?',
+
+            showCancelButton: true,
+
+            confirmButtonText:
+                'Sí, aprobar',
+
+            cancelButtonText:
+                'Cancelar',
+
+            confirmButtonColor:
+                '#198754',
+
+            cancelButtonColor:
+                '#6c757d'
+
+        });
+
+
+        if (!resultado.isConfirmed) {
+
+            return;
+
+        }
+
+
+        enviarDecisionRH(
+            id,
+            'aprobar',
+            ''
+        );
+
         return;
+
     }
 
 
-    const resultado = await Swal.fire({
+    //===========================================================
+    // RECHAZAR
+    //===========================================================
 
-        title:
-            'No aprobar solicitud',
+    if (accion === 'rechazar') {
 
-        width:
-            '600px',
+        const resultado = await Swal.fire({
 
-        html: `
+            title:
+                'No aprobar solicitud',
 
-            <div style="text-align:left;">
+            width:
+                '600px',
 
-                <p>
-                    Indica el motivo por el cual
-                    no se aprueba esta solicitud.
-                </p>
+            html: `
 
-                <label
-                    for="observacionRH"
-                    style="font-weight:600;"
-                >
-                    Observación
-                </label>
+                <div style="text-align:left;">
 
-                <textarea
-                    id="observacionRH"
-                    class="swal2-textarea"
-                    placeholder="Escribe el motivo..."
-                    style="
-                        width:100%;
-                        min-height:120px;
-                        margin:10px 0 0 0;
-                        resize:vertical;
-                    "
-                ></textarea>
+                    <p>
+                        Indica el motivo por el cual
+                        no se aprueba esta solicitud.
+                    </p>
 
-            </div>
+                    <label
+                        for="observacionRH"
+                        style="font-weight:600;"
+                    >
+                        Observación
+                    </label>
 
-        `,
+                    <textarea
+                        id="observacionRH"
+                        class="swal2-textarea"
+                        placeholder="Escribe el motivo..."
+                        style="
+                            width:100%;
+                            min-height:120px;
+                            margin:10px 0 0 0;
+                            resize:vertical;
+                        "
+                    ></textarea>
 
-        showCancelButton:
-            true,
+                </div>
 
-        confirmButtonText:
-            'No aprobar solicitud',
+            `,
 
-        cancelButtonText:
-            'Cancelar',
+            showCancelButton:
+                true,
 
-        confirmButtonColor:
-            '#dc3545',
+            confirmButtonText:
+                'No aprobar solicitud',
+
+            cancelButtonText:
+                'Cancelar',
+
+            confirmButtonColor:
+                '#dc3545',
+
+            cancelButtonColor:
+                '#6c757d',
+
+            preConfirm:
+                function () {
+
+                    const campo =
+                        document.getElementById(
+                            'observacionRH'
+                        );
 
 
-        preConfirm:
-            function () {
-
-                const campo =
-                    document.getElementById(
-                        'observacionRH'
-                    );
+                    const observacion =
+                        campo
+                            ? campo.value.trim()
+                            : '';
 
 
-                const observacion =
-                    campo
-                        ? campo.value.trim()
-                        : '';
+                    if (!observacion) {
+
+                        Swal.showValidationMessage(
+                            'Debes indicar una observación.'
+                        );
+
+                        return false;
+
+                    }
 
 
-                if (!observacion) {
+                    return {
 
-                    Swal.showValidationMessage(
-                        'Debes indicar una observación.'
-                    );
+                        observacion:
+                            observacion
 
-                    return false;
+                    };
 
                 }
 
-
-                return {
-                    observacion:
-                        observacion
-                };
-
-            }
-
-    });
+        });
 
 
-    if (!resultado.isConfirmed) {
-        return;
+        if (!resultado.isConfirmed) {
+
+            return;
+
+        }
+
+
+        enviarDecisionRH(
+            id,
+            'rechazar',
+            resultado.value.observacion
+        );
+
     }
-
-
-    enviarDecisionRH(
-        id,
-        'rechazar',
-        resultado.value.observacion
-    );
 
 }
 /**

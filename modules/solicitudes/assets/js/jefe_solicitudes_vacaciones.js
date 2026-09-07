@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-
         items.forEach(function (elemento) {
 
             elemento.classList.remove(
@@ -81,48 +80,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
-
         item.classList.add(
             'seleccionado'
         );
 
-
-        var nombre =
-            item.dataset.nombre || '';
-
-        var puesto =
-            item.dataset.puesto || '';
-
-        var departamento =
-            item.dataset.departamento || '';
-
-        var cuadrilla =
-            item.dataset.cuadrilla || '';
-
-        var grupo =
-            item.dataset.grupo || '';
-
-        var fechaSolicitud =
-            item.dataset.fechaSolicitud || '';
-
-        var fechaInicio =
-            item.dataset.fechaInicio || '';
-
-        var dias =
-            item.dataset.dias || '';
-
-        var id =
-            item.dataset.id || '';
-
-        var estatus =
-            item.dataset.estatus || '';
-
-        var estatusClase =
-            item.dataset.estatusClase || 'estatus-default';
-
-        var estatusIcono =
-            item.dataset.estatusIcono || 'glyphicon-question-sign';
-
+        var nombre = item.dataset.nombre || '';
+        var puesto = item.dataset.puesto || '';
+        var departamento = item.dataset.departamento || '';
+        var cuadrilla = item.dataset.cuadrilla || '';
+        var grupo = item.dataset.grupo || '';
+        var fechaSolicitud = item.dataset.fechaSolicitud || '';
+        var fechaInicio = item.dataset.fechaInicio || '';
+        var dias = item.dataset.dias || '';
+        var id = item.dataset.id || '';
+        var estatus = item.dataset.estatus || '';
+        var estatusClase = item.dataset.estatusClase || 'estatus-default';
+        var estatusIcono = item.dataset.estatusIcono || 'glyphicon-question-sign';
 
         /*
         |--------------------------------------------------------------------------
@@ -212,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             class="
                                 btn
                                 btn-vacaciones
-                                btn-rechazar-rh
+                                btn-rechazar-jefe
                             "
                             data-id="${id}"
                         >
@@ -226,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 btn
                                 btn-vacaciones
                                 btn-vacaciones-primary
-                                btn-aprobar-rh
+                                btn-aprobar-jefe
                             "
                             data-id="${id}"
                         >
@@ -242,59 +215,67 @@ document.addEventListener('DOMContentLoaded', function () {
 
         `;
 
-    /*
-    |--------------------------------------------------------------------------
-    | BOTÓN APROBAR
-    |--------------------------------------------------------------------------
-    */
+        /*
+        |--------------------------------------------------------------------------
+        | BOTÓN APROBAR
+        |--------------------------------------------------------------------------
+        */
 
-    const botonAprobar =
-        detalle.querySelector(
-            '.btn-aprobar-rh'
-        );
+        const botonAprobar =
+            detalle.querySelector(
+                '.btn-aprobar-jefe'
+            );
+
+        if (botonAprobar) {
+
+            botonAprobar.addEventListener(
+                'click',
+                function (e) {
+
+                    e.stopPropagation();
+
+                    confirmarDecisionJefe(
+                        id,
+                        'aprobar'
+                    );
+
+                }
+            );
+
+        }
 
 
-    if (botonAprobar) {
+        /*
+        |--------------------------------------------------------------------------
+        | BOTÓN RECHAZAR
+        |--------------------------------------------------------------------------
+        */
 
-        botonAprobar.addEventListener(
-            'click',
-            function (e) {
+        const botonRechazar =
+            detalle.querySelector(
+                '.btn-rechazar-jefe'
+            );
 
-                e.stopPropagation();
+        if (botonRechazar) {
 
-                confirmarFirmaVacacionesRH(id);
+            botonRechazar.addEventListener(
+                'click',
+                function (e) {
 
-            }
-        );
+                    e.stopPropagation();
+
+                    confirmarDecisionJefe(
+                        id,
+                        'rechazar'
+                    );
+
+                }
+            );
+
+        }
 
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | BOTÓN RECHAZAR
-    |--------------------------------------------------------------------------
-    */
-
-    const botonRechazar =
-        detalle.querySelector(
-            '.btn-rechazar-rh'
-        );
-
-
-    if (botonRechazar) {
-        botonRechazar.addEventListener(
-            'click',
-            function (e) {
-                e.stopPropagation();
-                confirmarDecisionRH(
-                    id,
-                    'rechazar'
-                );
-            }
-        );
-    }
-
-    }
     function limpiarDetalle() {
 
         if (!detalle) {
@@ -496,16 +477,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 .then(function (html) {
 
-
                     /*
                     |--------------------------------------------------------------------------
                     | INSERTAR RESULTADO
                     |--------------------------------------------------------------------------
                     */
 
-                    contenedorLista.innerHTML =
-                        html;
-
+                    contenedorLista.innerHTML =html;
 
                     /*
                     |--------------------------------------------------------------------------
@@ -526,19 +504,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         error
                     );
 
-
                     contenedorLista.innerHTML =
-
                         '<div class="vacaciones-vacio">' +
-
                             '<span class="glyphicon glyphicon-warning-sign"></span>' +
-
                             '<p>' +
-
                                 'No fue posible cargar las solicitudes.' +
-
                             '</p>' +
-
                         '</div>';
 
                 });

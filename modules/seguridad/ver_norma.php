@@ -531,8 +531,14 @@ foreach ($puntos as $p) {
     <!-- ENCABEZADO DE NORMA -->
     <div class="norma-header">
         <div class="norma-header-imagen">
+            <!-- IMAGEN -->
+            <?php
+                $foto = !empty($norma['imagen'])
+                    ? BASE_URL . '/uploads/normas/' . $norma['imagen']
+                    : BASE_URL . '/uploads/normas/no_image.jpg';
+            ?>
             <?php if (!empty($norma['imagen'])): ?>
-                <img src="<?php echo remove_junk($norma['imagen']); ?>" alt="Norma">
+                <img src="<?php echo $foto; ?>" alt="Norma">
             <?php else: ?>
                 <span class="glyphicon glyphicon-picture"></span>
             <?php endif; ?>
@@ -554,7 +560,7 @@ foreach ($puntos as $p) {
             Volver
         </a>
         <a href="nueva_inspeccion.php?id=<?php echo (int)$norma['ID']; ?>" class="btn btn-default btn-volver">
-            <span class="glyphicon glyphicon-arrow-left"></span>
+            <span class="glyphicon glyphicon-plus"></span>
             Realizar inspeccion
         </a>
     </div>

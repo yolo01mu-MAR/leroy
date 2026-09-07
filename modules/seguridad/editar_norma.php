@@ -637,11 +637,17 @@ if (isset($_POST['actualizar_norma'])) {
             <span class="preview-label">Así se verá</span>
             <div class="preview-card">
                 <div class="preview-thumb">
+                    <!-- IMAGEN -->
+                    <?php
+                        $foto = !empty($norma['imagen'])
+                            ? BASE_URL . '/uploads/normas/' . $norma['imagen']
+                            : BASE_URL . '/uploads/normas/no_image.jpg';
+                    ?>
                     <?php if (!empty($norma['imagen'])): ?>
-                        <img src="<?php echo remove_junk($norma['imagen']); ?>" id="preview-live-img" alt="Portada">
+                        <img src="<?php echo $foto; ?>" id="preview-live-img" alt="Portada">
                     <?php else: ?>
                         <span class="glyphicon glyphicon-picture" id="preview-live-icon" style="font-size:20px; color:#94a3b8;"></span>
-                        <img src="" id="preview-live-img" style="display:none;" alt="Portada">
+                        <img src="<?php echo $foto; ?>" id="preview-live-img" style="display:none;" alt="Portada">
                     <?php endif; ?>
                 </div>
                 <div class="preview-info">
@@ -691,10 +697,10 @@ if (isset($_POST['actualizar_norma'])) {
                     <div class="img-upload-row">
                         <div class="img-preview">
                             <?php if (!empty($norma['imagen'])): ?>
-                                <img src="<?php echo remove_junk($norma['imagen']); ?>" id="preview-img" alt="Portada">
+                                <img src="<?php echo $foto; ?>" id="preview-img" alt="Portada">
                             <?php else: ?>
                                 <span class="glyphicon glyphicon-picture" id="preview-icon" style="font-size: 22px; color: #94a3b8;"></span>
-                                <img src="" id="preview-img" style="display:none;" alt="Portada">
+                                <img src="<?php echo $foto; ?>" id="preview-img" style="display:none;" alt="Portada">
                             <?php endif; ?>
                         </div>
                         <label class="dropzone" id="dropzone" for="input-imagen">
@@ -781,7 +787,7 @@ if (isset($_POST['actualizar_norma'])) {
                 <strong id="contadorPuntosNum"><?php echo count($puntos); ?></strong> requisito(s) en este formulario
             </span>
             <div>
-                <a href="ver_norma.php?id=<?php echo $id_norma; ?>" class="btn btn-default">
+                <a href="normas.php" class="btn btn-default">
                     Cancelar
                 </a>
                 <button type="submit" name="actualizar_norma" class="btn btn-primary btn-guardar">

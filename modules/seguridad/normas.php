@@ -664,7 +664,7 @@ foreach ($all_normas as $norma) {
                                 title="Ver documentos"
                             >
                                 <span class="glyphicon glyphicon-folder-open"></span>
-                                DOCUMENTOS
+                                INSPECCIONES
                             </a>
 
                             <a

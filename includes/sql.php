@@ -1680,7 +1680,7 @@ function find_participantes_capacitacion($id_capacitacion){
 function count_inventario(){
     global $db;
 
-    $sql = "SELECT COUNT(*) AS total FROM producto";
+    $sql = "SELECT COUNT(*) AS total FROM almacen_producto";
     $result = $db->query($sql);
     $row = $db->fetch_assoc($result);
 
@@ -1698,15 +1698,14 @@ function find_productos_paginated($limit, $offset){
               pd.id_media,
               coalesce(m.file_name,'no_media.jpg') AS foto,
               pd.des_gral,
-              pd.des_detallada,
-              pt.nombre AS categoria,
+              pf.denominacion AS categoria,
               p.stock_total AS stock,
               p.fecha_registro AS fecha
-            FROM producto p
-            INNER JOIN producto_desc pd ON pd.id_producto = p.id
+            FROM almacen_producto p
+            INNER JOIN almacen_producto_desc pd ON pd.id_producto = p.id
             LEFT JOIN media m ON m.id = pd.id_media
-            INNER JOIN producto_tipo pt ON pt.id = pd.id_tipo
-            INNER JOIN producto_seccion ps ON ps.id = p.id_seccion
+            left JOIN almacen_producto_familia pf ON pf.id = pd.id_familia
+            left JOIN almacen_producto_seccion ps ON ps.id = p.id_seccion
             ORDER BY p.id ASC
             LIMIT {$limit} OFFSET {$offset}";
 
@@ -1737,7 +1736,7 @@ function find_producto($id){
 function find_categorias(){
     global $db;
 
-    $sql = "SELECT * from producto_categoria";
+    $sql = "SELECT * from almacen_producto_familia";
 
     return find_by_sql($sql);
 }
@@ -2089,5 +2088,13 @@ function find_all_normas(){
             sn.ID ASC";
 
   return find_by_sql($sql);
+}
+
+function get_coordinador_seguridad() {
+
+    $sql = "SELECT * FROM users WHERE user_level = 12 ORDER BY id ASC";
+
+    return find_by_sql($sql);
+
 }
 ?>

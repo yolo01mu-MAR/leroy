@@ -1,0 +1,14 @@
+#firmaCanvas{
+
+    width:100%;
+    height:250px;
+
+    border:2px dashed #bdbdbd;
+
+    border-radius:8px;
+
+    background:#fff;
+
+    cursor:crosshair;
+
+}

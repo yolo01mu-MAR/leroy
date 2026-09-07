@@ -55,6 +55,9 @@ if (empty($result_norma)) {
 
 $norma = $result_norma[0];
 
+$departamentos = get_dep_plantilla();
+$responsables = get_coordinador_seguridad();
+
 $page_title = 'NUEVA INSPECCIÓN: ' . remove_junk($norma['codigo_norma']);
 
 
@@ -531,7 +534,6 @@ if (isset($_POST['crear_inspeccion'])) {
 
 
                 <!-- ÁREA -->
-
                 <div class="col-xs-12 col-sm-4">
 
                     <div class="form-group">
@@ -544,16 +546,28 @@ if (isset($_POST['crear_inspeccion'])) {
                             name="id_dep_plantilla"
                             id="id_dep_plantilla"
                             class="form-control"
+                            required
                         >
 
                             <option value="">
                                 SELECCIONAR
                             </option>
 
-                            <!--
-                                AQUÍ CONECTAREMOS LA CONSULTA
-                                DE dep_plantilla DE LE ROY.
-                            -->
+                            <?php foreach ($departamentos as $departamento): ?>
+
+                                <option
+                                    value="<?php echo (int)$departamento['id']; ?>"
+                                >
+
+                                    <?php
+                                    echo remove_junk(
+                                        $departamento['nombre']
+                                    );
+                                    ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
 
                         </select>
 
@@ -563,7 +577,6 @@ if (isset($_POST['crear_inspeccion'])) {
 
 
                 <!-- RESPONSABLE -->
-
                 <div class="col-xs-12 col-sm-4">
 
                     <div class="form-group">
@@ -576,16 +589,28 @@ if (isset($_POST['crear_inspeccion'])) {
                             name="id_responsable"
                             id="id_responsable"
                             class="form-control"
+                            required
                         >
 
                             <option value="">
                                 SELECCIONAR
                             </option>
 
-                            <!--
-                                AQUÍ CONECTAREMOS LOS USUARIOS
-                                RESPONSABLES DEL SISTEMA.
-                            -->
+                            <?php foreach ($responsables as $responsable): ?>
+
+                                <option
+                                    value="<?php echo (int)$responsable['id']; ?>"
+                                >
+
+                                    <?php
+                                    echo remove_junk(
+                                        $responsable['name']
+                                    );
+                                    ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
 
                         </select>
 

@@ -104,7 +104,7 @@
                 <option value="0">Todos los tipos</option>
                 <?php foreach ($tipos as $t): ?>
                   <option value="<?php echo (int)$t['id']; ?>" <?php echo ($tipo_id === (int)$t['id']) ? 'selected' : ''; ?>>
-                    <?php echo remove_junk($t['nombre']); ?>
+                    <?php echo remove_junk($t['denominacion']); ?>
                   </option>
                 <?php endforeach; ?>
               </select>
@@ -140,7 +140,7 @@
               </tr>
               <?php else: foreach ($products as $product):?>
               <tr>
-                <td class="text-center"><?php echo count_id();?></td>
+                <td class="text-center"><?php echo remove_junk($product['id']); ?></td>
                 <td>
                   <?php if($product['id_media'] === '1'): ?>
                     <img class="img-avatar img-circle" src="uploads/products/no_image.jpg" alt="">
@@ -153,14 +153,13 @@
                     <?php if (!empty($product['numero_pieza'])): ?>
                       <span class="inv-desc">Pieza #: <?php echo remove_junk($product['numero_pieza']); ?></span>
                     <?php endif; ?>
-                    <span class="inv-desc"><?php echo remove_junk($product['des_detallada']); ?></span>
                 </td>
                 <td class="text-center">
                   <span class="inv-categoria"><?php echo remove_junk($product['categoria']); ?></span>
                 </td>
                 <td class="text-center">
                   <span class="inv-stock <?php echo ((int)$product['stock'] <= 5) ? 'low' : ''; ?>">
-                    <?php echo remove_junk($product['stock']); ?>
+                    <?php echo remove_junk($product['stock'] ?? 'Sin registrar'); ?>
                   </span>
                 </td>
                 <td class="text-center"> <?php echo read_date($product['fecha']); ?></td>

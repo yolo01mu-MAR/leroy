@@ -221,7 +221,7 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <a href="product.php" class="btn btn-default">
+                        <a href="alm_inventario.php" class="btn btn-default">
                             <i class="glyphicon glyphicon-arrow-left"></i>
                             Cancelar
                         </a>

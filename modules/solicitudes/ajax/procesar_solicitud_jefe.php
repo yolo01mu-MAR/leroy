@@ -183,13 +183,9 @@ if ($accion === 'aprobar') {
 */
 
 if ($accion === 'aprobar') {
-
     $nuevo_estatus = 'PENDIENTE_RH';
-
 } else {
-
     $nuevo_estatus = 'RECHAZADA_JEFE';
-
 }
 
 
@@ -248,26 +244,10 @@ if (!$resultado_update) {
 
 if ($accion === 'aprobar') {
 
-    $nombre_colaborador =
-    remove_junk(
-        $solicitud['nombre_colaborador']
-    );
-
-    $fecha_inicio =
-        date(
-            'd/m/Y',
-            strtotime($solicitud['fecha_inicio'])
-        );
-
-    $fecha_fin =
-        date(
-            'd/m/Y',
-            strtotime($solicitud['fecha_fin'])
-        );
-
-    $dias =
-        (int)$solicitud['dias'];
-
+    $nombre_colaborador = remove_junk($solicitud['nombre_colaborador']);
+    $fecha_inicio = date('d/m/Y', strtotime($solicitud['fecha_inicio']));
+    $fecha_fin = date('d/m/Y',  strtotime($solicitud['fecha_fin']));
+    $dias = (int)$solicitud['dias'];
 
     /*
     |--------------------------------------------------------------------------
@@ -281,7 +261,6 @@ if ($accion === 'aprobar') {
         '?id=' .
         $id .
         '&estatus=PENDIENTE_RH';
-
 
     /*
     |--------------------------------------------------------------------------
@@ -298,7 +277,6 @@ if ($accion === 'aprobar') {
         $fecha_fin .
         '.';
 
-
     $destinatarios_nomina =
         notificar_por_responsabilidad(
             'NOMINA',
@@ -307,7 +285,6 @@ if ($accion === 'aprobar') {
             'Nueva solicitud de vacaciones',
             $mensaje_nomina
         );
-
 
     /*
     |--------------------------------------------------------------------------
@@ -351,9 +328,7 @@ if ($accion === 'aprobar') {
     |
     */
 
-    $destinatarios_correo =
-        $destinatarios_nomina;
-
+    $destinatarios_correo = $destinatarios_nomina;
 
     /*
     |--------------------------------------------------------------------------
@@ -370,22 +345,12 @@ if ($accion === 'aprobar') {
     ) {
 
         $destinatarios_correo[] = [
-
-            'id' =>
-                (int)$solicitud['jefe_id'],
-
-            'nombre' =>
-                $solicitud['nombre_jefe'],
-
-            'email' =>
-                trim(
-                    $solicitud['email_jefe']
-                )
-
+            'id' => (int)$solicitud['jefe_id'],
+            'nombre' => $solicitud['nombre_jefe'],
+            'email' => trim($solicitud['email_jefe'])
         ];
 
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -397,46 +362,23 @@ if ($accion === 'aprobar') {
 
         $contenido_correo =
             generar_correo_vacaciones([
-
-                'titulo' =>
-                    'Nueva solicitud de vacaciones',
-
-                'nombre_colaborador' =>
-                    $nombre_colaborador,
-
-                'mensaje' =>
-                    'La solicitud de vacaciones fue aprobada por su jefe y se encuentra pendiente de revisión por RH.',
-
-                'fecha_inicio' =>
-                    $fecha_inicio,
-
-                'fecha_fin' =>
-                    $fecha_fin,
-
-                'dias' =>
-                    $dias,
-
-                'estado' =>
-                    'Pendiente de revisión',
-
-                'estado_color' =>
-                    'azul',
-
-                'url' =>
-                    $url_solicitud,
-
-                'texto_boton' =>
-                    'Ver solicitud'
-
+                'titulo' => 'Nueva solicitud de vacaciones',
+                'nombre_colaborador' => $nombre_colaborador,
+                'mensaje' => 'La solicitud de vacaciones fue aprobada por su jefe y se encuentra pendiente de revisión por RH.',
+                'fecha_inicio' => $fecha_inicio,
+                'fecha_fin' => $fecha_fin,
+                'dias' => $dias,
+                'estado' => 'Pendiente de revisión',
+                'estado_color' => 'azul',
+                'url' => $url_solicitud,
+                'texto_boton' => 'Ver solicitud'
             ]);
-
 
         enviar_correo_a_usuarios(
             $destinatarios_correo,
             'Nueva solicitud de vacaciones',
             $contenido_correo
         );
-
 
     } catch (Throwable $e) {
 

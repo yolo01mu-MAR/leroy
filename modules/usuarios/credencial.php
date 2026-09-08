@@ -124,7 +124,7 @@ if (!file_exists($foto)) {
 */
 
 
-$template = __DIR__ . '/plantilla.pptx';
+$template = __DIR__ . '/../../plantilla.pptx';
 
 if (!file_exists($template)) {
     die('No existe plantilla.pptx');

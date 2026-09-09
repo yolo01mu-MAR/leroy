@@ -10,7 +10,6 @@ $scripts = [
 
 page_require_level(5);
 
-
 /*
 |--------------------------------------------------------------------------
 | ESTATUS
@@ -38,7 +37,6 @@ $estatus_meta = [
     ]
 
 ];
-
 
 /*
 |--------------------------------------------------------------------------
@@ -233,73 +231,59 @@ function iniciales_colaborador($nombre)
                                     >
                                 </div>
                                 <!-- SOLICITUDES -->
-                                <?php if (empty($solicitudes)): ?>
-                                    <div class="vacaciones-vacio">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                        <p>No hay solicitudes con este filtro.</p>
-                                    </div>
-                                <?php else: ?>
-                                    <div id="listaSolicitudes">
+                                <div id="listaSolicitudes">
+                                    <?php if (empty($solicitudes)): ?>
+                                        <div class="vacaciones-vacio">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                            <p>No hay solicitudes con este filtro.</p>
+                                        </div>
+                                    <?php else: ?>
                                         <?php foreach ($solicitudes as $solicitud): ?>
                                             <?php
                                             $meta = $estatus_meta[$solicitud['estatus']]
-                                                ?? ['label' => $solicitud['estatus'],
+                                                ?? [
+                                                    'label' => $solicitud['estatus'],
                                                     'clase' => 'estatus-default',
                                                     'icono' => 'glyphicon-question-sign'
                                                 ];
                                             ?>
                                             <div
                                                 class="vacaciones-item"
-
                                                 data-id="<?= (int)$solicitud['id']; ?>"
-
+                                                
                                                 data-nombre="<?= htmlspecialchars(
-                                                    remove_junk(
-                                                        $solicitud['nombre']
-                                                    ),
+                                                    remove_junk($solicitud['nombre']),
                                                     ENT_QUOTES
                                                 ); ?>"
 
                                                 data-puesto="<?= htmlspecialchars(
-                                                    remove_junk(
-                                                        $solicitud['puesto']
-                                                    ),
+                                                    remove_junk($solicitud['puesto']),
                                                     ENT_QUOTES
                                                 ); ?>"
 
                                                 data-departamento="<?= htmlspecialchars(
-                                                    remove_junk(
-                                                        $solicitud['departamentos']
-                                                    ),
+                                                    remove_junk($solicitud['departamentos']),
                                                     ENT_QUOTES
                                                 ); ?>"
 
                                                 data-cuadrilla="<?= htmlspecialchars(
-                                                    remove_junk(
-                                                        $solicitud['dep_cuadrilla']
-                                                    ),
+                                                    remove_junk($solicitud['dep_cuadrilla']),
                                                     ENT_QUOTES
                                                 ); ?>"
 
                                                 data-grupo="<?= htmlspecialchars(
-                                                    remove_junk(
-                                                        $solicitud['grupos']
-                                                    ),
+                                                    remove_junk($solicitud['grupos']),
                                                     ENT_QUOTES
                                                 ); ?>"
 
                                                 data-fecha-solicitud="<?= date(
                                                     'd/m/Y',
-                                                    strtotime(
-                                                        $solicitud['fecha_solicitud']
-                                                    )
+                                                    strtotime($solicitud['fecha_solicitud'])
                                                 ); ?>"
 
                                                 data-fecha-inicio="<?= date(
                                                     'd/m/Y',
-                                                    strtotime(
-                                                        $solicitud['fecha_inicio']
-                                                    )
+                                                    strtotime($solicitud['fecha_inicio'])
                                                 ); ?>"
 
                                                 data-dias="<?= (int)$solicitud['dias']; ?>"
@@ -319,66 +303,40 @@ function iniciales_colaborador($nombre)
                                                     ENT_QUOTES
                                                 ); ?>"
                                             >
-                                                <!-- AVATAR -->
-                                                <div class="vacaciones-avatar">
 
+                                                <div class="vacaciones-avatar">
                                                     <?= iniciales_colaborador(
                                                         $solicitud['nombre']
                                                     ); ?>
-
                                                 </div>
-
-                                                <!-- INFORMACIÓN -->
                                                 <div class="vacaciones-item-info">
-
                                                     <div class="vacaciones-item-nombre">
-
-                                                        <?= remove_junk(
-                                                            $solicitud['nombre']
-                                                        ); ?>
-
+                                                        <?= remove_junk($solicitud['nombre']); ?>
                                                     </div>
-
                                                     <div class="vacaciones-item-sub">
-
                                                         <?= (int)$solicitud['dias']; ?>
-
                                                         día<?= (int)$solicitud['dias'] === 1
                                                             ? ''
                                                             : 's'; ?>
-
                                                         · desde
-
-                                                        <?= date(
-                                                            'd/m/Y',
-                                                            strtotime(
-                                                                $solicitud['fecha_inicio']
-                                                            )
-                                                        ); ?>
-
+                                                        <?= date('d/m/Y', strtotime($solicitud['fecha_inicio'])); ?>
                                                     </div>
-
                                                 </div>
-
-                                                <!-- ESTATUS -->
                                                 <span class="vacaciones-status <?= $meta['clase']; ?>">
                                                     <span class="glyphicon <?= $meta['icono']; ?>"></span>
                                                     <?= $meta['label']; ?>
                                                 </span>
                                             </div>
                                         <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
                             </div>
 
                             <!-- DETALLE -->
                             <div class="vacaciones-detalle" id="detalleSolicitud">
                                 <div class="vacaciones-detalle-vacio">
                                     <span class="glyphicon glyphicon-hand-left"></span>
-                                    <p>
-                                        Selecciona una solicitud
-                                        para ver el detalle.
-                                    </p>
+                                    <p>Selecciona una solicitud para ver el detalle.</p>
                                 </div>
                             </div>
                         </div>

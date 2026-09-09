@@ -164,7 +164,7 @@ function tableExists($table){
 
       return false;
   }
-    function validar_password_kiosco($usuario_id, $password){
+  function validar_password_kiosco($usuario_id, $password){
 
     global $db;
 

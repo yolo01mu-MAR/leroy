@@ -1,82 +1,595 @@
 /**
  * ============================================================
- * ESTADO RH
+ * SOLICITUDES DE VACACIONES RH
  * ============================================================
  */
 
-let solicitudesRH = [];
-let estatusRHActual = 'PENDIENTE_RH';
-
-
-/**
- * ============================================================
- * INICIALIZACIÓN
- * ============================================================
- */
+let solicitudes = [];
+let estatusActual = 'PENDIENTE_RH';
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    registrarSolicitudesRH();
+    /*
+    |--------------------------------------------------------------------------
+    | ELEMENTOS PRINCIPALES
+    |--------------------------------------------------------------------------
+    */
 
-});
+    var items    = document.querySelectorAll('.vacaciones-item');
+    var detalle  = document.getElementById('detalleSolicitud');
+    var buscador = document.getElementById('buscarColaborador');
+    var lista    = document.getElementById('listaSolicitudes');
+    var filtros  = document.querySelectorAll('.vacaciones-tab');
 
+    /*
+    |--------------------------------------------------------------------------
+    | INICIALES
+    |--------------------------------------------------------------------------
+    */
 
-/**
- * ============================================================
- * REGISTRAR VISTA RH
- * ============================================================
- */
+    function obtenerIniciales(nombre) {
 
-function registrarSolicitudesRH() {
+        if (!nombre) {
+            return '?';
+        }
 
-    const lista =
-        document.getElementById('listaSolicitudes');
+        var partes = nombre
+            .trim()
+            .split(/\s+/)
+            .slice(0, 2);
 
-    const detalle =
-        document.getElementById('detalleSolicitud');
+        return partes
+            .map(function (parte) {
+                return parte
+                    .charAt(0)
+                    .toUpperCase();
+            })
+            .join('');
+    }
 
-    if (!lista || !detalle) {
+    /*
+    |--------------------------------------------------------------------------
+    | MOSTRAR DETALLE
+    |--------------------------------------------------------------------------
+    */
 
-        console.warn(
-            'Vista de solicitudes RH no encontrada.'
+    function mostrarDetalle(item) {
+
+        if (!item || !detalle) {
+            return;
+        }
+
+        items.forEach(function (elemento) {
+
+            elemento.classList.remove(
+                'seleccionado'
+            );
+
+        });
+
+        item.classList.add(
+            'seleccionado'
         );
 
-        return;
+        var nombre = item.dataset.nombre || '';
+        var puesto = item.dataset.puesto || '';
+        var departamento = item.dataset.departamento || '';
+        var cuadrilla = item.dataset.cuadrilla || '';
+        var grupo = item.dataset.grupo || '';
+        var fechaSolicitud = item.dataset.fechaSolicitud || '';
+        var fechaInicio = item.dataset.fechaInicio || '';
+        var dias = item.dataset.dias || '';
+        var id = item.dataset.id || '';
+        var estatus = item.dataset.estatus || '';
+        var estatusClase = item.dataset.estatusClase || 'estatus-default';
+        var estatusIcono = item.dataset.estatusIcono || 'glyphicon-question-sign';
+
+        /*
+        |--------------------------------------------------------------------------
+        | HTML DEL DETALLE
+        |--------------------------------------------------------------------------
+        */
+
+        detalle.innerHTML = `
+
+            <div class="detalle-encabezado">
+                <div class="detalle-avatar">
+                    ${obtenerIniciales(nombre)}
+                </div>
+                <div>
+                    <div class="detalle-nombre">
+                        ${nombre}
+                    </div>
+                    <div class="detalle-puesto">
+                        ${puesto}
+                    </div>
+                </div>
+            </div>
+            <div class="detalle-datos">
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Estatus
+                    </div>
+                    <div class="detalle-dato-valor">
+                        <span class="vacaciones-status ${estatusClase}">
+                            <span class="glyphicon ${estatusIcono}"></span>
+                            ${estatus}
+                        </span>
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Fecha solicitud
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${fechaSolicitud}
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Inicio vacaciones
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${fechaInicio}
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Días solicitados
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${dias}
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Departamento
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${departamento}
+                    </div>
+                </div>
+                <div class="detalle-dato">
+                    <div class="detalle-dato-label">
+                        Cuadrilla
+                    </div>
+                    <div class="detalle-dato-valor">
+                        ${grupo} · ${cuadrilla}
+                    </div>
+                </div>
+            </div>
+
+            ${
+                estatus === 'PENDIENTE_RH' ||
+                estatus === 'Pendientes'
+                ?
+
+                `
+                    <div class="detalle-acciones">
+
+                        <button
+                            type="button"
+                            class="
+                                btn
+                                btn-vacaciones
+                                btn-rechazar-jefe
+                            "
+                            data-id="${id}"
+                        >
+                            <span class="glyphicon glyphicon-remove"></span>
+                            No aprobar
+                        </button>
+
+                        <button
+                            type="button"
+                            class="
+                                btn
+                                btn-vacaciones
+                                btn-vacaciones-primary
+                                btn-aprobar-jefe
+                            "
+                            data-id="${id}"
+                        >
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Aprobar
+                        </button>
+
+                    </div>
+                `
+                :
+                ''
+            }
+
+        `;
+
+        /*
+        |--------------------------------------------------------------------------
+        | BOTÓN APROBAR
+        |--------------------------------------------------------------------------
+        */
+
+    const botonAprobar = detalle.querySelector('.btn-aprobar-jefe');
+
+    if (botonAprobar) {
+
+        botonAprobar.addEventListener(
+            'click',
+            function (e) {
+
+                e.stopPropagation();
+
+                // Evitar doble clic
+                if (botonAprobar.disabled) {
+                    return;
+                }
+
+                // Desactivar botón
+                botonAprobar.disabled = true;
+
+                // Cambiar contenido a "Cargando..."
+                botonAprobar.innerHTML = `
+                    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+                    Aprobando...
+                `;
+
+                // Abrir flujo de aprobación
+                confirmarDecisionRH(
+                    id,
+                    'aprobar'
+                );
+
+            }
+        );
+
+    }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | BOTÓN RECHAZAR
+        |--------------------------------------------------------------------------
+        */
+
+        const botonRechazar =
+            detalle.querySelector(
+                '.btn-rechazar-jefe'
+            );
+
+        if (botonRechazar) {
+
+            botonRechazar.addEventListener(
+                'click',
+                function (e) {
+
+                    e.stopPropagation();
+
+                    confirmarDecisionRH(
+                        id,
+                        'rechazar'
+                    );
+
+                }
+            );
+
+        }
+
+    }
+
+    function limpiarDetalle() {
+
+        if (!detalle) {
+            return;
+        }
+
+
+        detalle.innerHTML =
+
+            '<div class="vacaciones-detalle-vacio">' +
+
+                '<span class="glyphicon glyphicon-hand-left"></span>' +
+
+                '<p>' +
+                    'Selecciona una solicitud' +
+                '</p>' +
+
+                '<small>' +
+                    'Aquí aparecerán los detalles de la solicitud.' +
+                '</small>' +
+
+            '</div>';
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | REGISTRAR SOLICITUDES
+    |--------------------------------------------------------------------------
+    */
+
+    function registrarSolicitudes() {
+
+        items =
+            document.querySelectorAll(
+                '.vacaciones-item'
+            );
+
+
+        items.forEach(function (item) {
+
+            item.addEventListener(
+                'click',
+                function () {
+
+                    mostrarDetalle(item);
+
+                }
+            );
+
+        });
+
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ABRIR SOLICITUD DESDE URL
+    |--------------------------------------------------------------------------
+    */
+
+    function abrirSolicitudDesdeURL() {
+
+        var parametros =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        var solicitudId =
+            parametros.get('id');
+
+
+        if (!solicitudId) {
+            return;
+        }
+
+
+        var solicitud =
+            document.querySelector(
+                '.vacaciones-item[data-id="' +
+                solicitudId +
+                '"]'
+            );
+
+
+        if (!solicitud) {
+
+            console.warn(
+                'No se encontró la solicitud:',
+                solicitudId
+            );
+
+            return;
+
+        }
+
+
+        mostrarDetalle(
+            solicitud
+        );
 
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | FILTROS
+    | FILTROS AJAX
     |--------------------------------------------------------------------------
     */
 
-    document
-        .querySelectorAll('.vacaciones-tab')
-        .forEach(function (tab) {
+    filtros.forEach(function (filtro) {
 
-            tab.addEventListener(
-                'click',
-                function (e) {
 
-                    e.preventDefault();
+        filtro.addEventListener(
+            'click',
+            function (e) {
 
-                    const estatus =
-                        this.dataset.estatus;
+                e.preventDefault();
 
-                    if (!estatus) {
-                        return;
-                    }
 
-                    aplicarFiltroRH(
-                        estatus
+                var estatus =
+                    filtro.dataset.estatus;
+                    
+                
+                    limpiarDetalle();
+
+                /*
+                |--------------------------------------------------------------------------
+                | TAB ACTIVO
+                |--------------------------------------------------------------------------
+                */
+
+                filtros.forEach(function (item) {
+
+                    item.classList.remove(
+                        'activo'
                     );
 
-                }
-            );
+                });
 
-        });
+
+                filtro.classList.add(
+                    'activo'
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | CARGANDO
+                |--------------------------------------------------------------------------
+                */
+
+                lista.innerHTML = 
+
+                    '<div class="vacaciones-vacio">' +
+
+                        '<span class="glyphicon glyphicon-refresh"></span>' +
+
+                        '<p>' +
+
+                            'Cargando solicitudes...' +
+
+                        '</p>' +
+
+                    '</div>';
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | AJAX
+                |--------------------------------------------------------------------------
+                */
+
+                var datos =
+                    new FormData();
+
+
+                datos.append(
+                    'estatus',
+                    estatus
+                );
+
+
+                fetch(
+                    'ajax/filtro_solicitudes_rh.php',
+                    {
+                        method: 'POST',
+                        body: datos
+                    }
+                )
+
+                .then(function (respuesta) {
+
+                    if (!respuesta.ok) {
+
+                        throw new Error(
+                            'HTTP ' +
+                            respuesta.status
+                        );
+
+                    }
+
+                    return respuesta.json();
+
+                })
+
+                .then(function (respuesta) {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | VALIDAR RESPUESTA
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (!respuesta.success) {
+
+                        lista.innerHTML =
+                            '<div class="vacaciones-vacio">' +
+
+                                '<span class="glyphicon glyphicon-warning-sign"></span>' +
+
+                                '<p>' +
+
+                                    (
+                                        respuesta.message ||
+                                        'No fue posible cargar las solicitudes.'
+                                    ) +
+
+                                '</p>' +
+
+                            '</div>';
+
+                        return;
+
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | INSERTAR RESULTADO
+                    |--------------------------------------------------------------------------
+                    */
+
+                    lista.innerHTML =
+                        respuesta.html;
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | REGISTRAR NUEVOS ITEMS
+                    |--------------------------------------------------------------------------
+                    */
+
+                    registrarSolicitudes();
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | CONTADOR PENDIENTES
+                    |--------------------------------------------------------------------------
+                    */
+
+                    var tabPendientes =
+                        document.querySelector(
+                            '.vacaciones-tab[data-estatus="PENDIENTE_RH"]'
+                        );
+
+
+                    if (tabPendientes) {
+
+                        var contador =
+                            tabPendientes.querySelector(
+                                '.vacaciones-contador'
+                            );
+
+
+                        if (respuesta.total_pendientes > 0) {
+
+                            if (!contador) {
+
+                                contador =
+                                    document.createElement('span');
+
+                                contador.className =
+                                    'vacaciones-contador';
+
+                                tabPendientes.appendChild(
+                                    contador
+                                );
+
+                            }
+
+                            contador.textContent =
+                                respuesta.total_pendientes;
+
+                        } else {
+
+                            if (contador) {
+
+                                contador.remove();
+
+                            }
+
+                        }
+
+                    }
+
+                })
+
+            }
+        );
+
+    }); 
 
 
     /*
@@ -85,999 +598,69 @@ function registrarSolicitudesRH() {
     |--------------------------------------------------------------------------
     */
 
-    const buscador =
-        document.getElementById(
-            'buscarColaborador'
-        );
-
-
     if (buscador) {
 
         buscador.addEventListener(
-            'input',
+            'keyup',
             function () {
 
-                buscarColaboradorRH(
-                    this.value
-                );
+                var texto =
+                    buscador.value
+                        .trim()
+                        .toLowerCase();
 
-            }
-        );
 
-    }
+                items.forEach(
+                    function (item) {
 
+                        var nombre =
+                            (
+                                item.dataset.nombre ||
+                                ''
+                            ).toLowerCase();
 
-    /*
-    |--------------------------------------------------------------------------
-    | ESTATUS INICIAL
-    |--------------------------------------------------------------------------
-    */
 
-    const tabActiva =
-        document.querySelector(
-            '.vacaciones-tab.activo'
-        );
+                        var puesto =
+                            (
+                                item.dataset.puesto ||
+                                ''
+                            ).toLowerCase();
 
 
-    if (tabActiva) {
+                        var departamento =
+                            (
+                                item.dataset.departamento ||
+                                ''
+                            ).toLowerCase();
 
-        estatusRHActual =
-            tabActiva.dataset.estatus
-            || 'PENDIENTE_RH';
 
-    }
+                        var coincide =
+                            nombre.includes(texto) ||
+                            puesto.includes(texto) ||
+                            departamento.includes(texto);
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | REGISTRAR SOLICITUDES EXISTENTES
-    |--------------------------------------------------------------------------
-    */
-
-    registrarItemsRH();
-
-}
-
-function registrarItemsRH() {
-
-    document
-        .querySelectorAll('.vacaciones-item')
-        .forEach(function (item) {
-
-            item.addEventListener(
-                'click',
-                function () {
-
-                    seleccionarSolicitudRH(
-                        this
-                    );
-
-                }
-            );
-
-        });
-
-}
-/**
- * ============================================================
- * APLICAR FILTRO RH
- * ============================================================
- */
-
-function aplicarFiltroRH(estatus) {
-
-    estatusRHActual = estatus;
-
-    /*
-    |--------------------------------------------------------------------------
-    | MARCAR TAB ACTIVO
-    |--------------------------------------------------------------------------
-    */
-
-    document
-        .querySelectorAll('.vacaciones-tab')
-        .forEach(function (tab) {
-
-            tab.classList.remove(
-                'activo'
-            );
-
-        });
-
-
-    const tabActivo =
-        document.querySelector(
-            '.vacaciones-tab[data-estatus="' +
-            estatus +
-            '"]'
-        );
-
-
-    if (tabActivo) {
-
-        tabActivo.classList.add(
-            'activo'
-        );
-
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | CONTENEDOR
-    |--------------------------------------------------------------------------
-    */
-
-    const lista =
-        document.getElementById(
-            'listaSolicitudes'
-        );
-
-    const detalle =
-        document.getElementById(
-            'detalleSolicitud'
-        );
-
-
-    if (!lista) {
-
-        console.error(
-            'No existe #listaSolicitudes'
-        );
-
-        return;
-
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | LIMPIAR DETALLE
-    |--------------------------------------------------------------------------
-    */
-
-    if (detalle) {
-
-        detalle.innerHTML = `
-
-            <div class="vacaciones-detalle-vacio">
-
-                <span
-                    class="glyphicon glyphicon-hand-left"
-                ></span>
-
-                <p>
-                    Selecciona una solicitud
-                    para ver el detalle.
-                </p>
-
-            </div>
-
-        `;
-
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | LOADING
-    |--------------------------------------------------------------------------
-    */
-
-    lista.innerHTML = `
-
-        <div
-            class="vacaciones-cargando"
-            style="
-                padding:30px;
-                text-align:center;
-            "
-        >
-
-            <span
-                class="
-                    glyphicon
-                    glyphicon-refresh
-                    glyphicon-refresh-animate
-                "
-            ></span>
-
-            <p>
-                Cargando solicitudes...
-            </p>
-
-        </div>
-
-    `;
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | AJAX
-    |--------------------------------------------------------------------------
-    */
-
-    const datos =
-        new FormData();
-
-    datos.append(
-        'estatus',
-        estatus
-    );
-
-
-    $.ajax({
-
-        url: 'ajax/filtro_solicitudes_rh.php',
-        type: 'POST',
-        data: datos,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-
-        success:
-            function (respuesta) {
-
-                if (!respuesta.success) {
-
-                    lista.innerHTML = `
-
-                        <div
-                            class="vacaciones-vacio"
-                        >
-
-                            <span
-                                class="
-                                    glyphicon
-                                    glyphicon-warning-sign
-                                "
-                            ></span>
-
-                            <p>
-                                ${
-                                    respuesta.message ||
-                                    'No fue posible cargar las solicitudes.'
-                                }
-                            </p>
-
-                        </div>
-
-                    `;
-
-                    return;
-
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | ACTUALIZAR LISTA
-                |--------------------------------------------------------------------------
-                */
-
-                lista.innerHTML =
-                    respuesta.html;
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | ACTUALIZAR CONTADOR
-                |--------------------------------------------------------------------------
-                */
-
-                const tabPendientes =
-                    document.querySelector(
-                        '.vacaciones-tab[data-estatus="PENDIENTE_RH"]'
-                    );
-
-
-                if (tabPendientes) {
-
-                    let contador =
-                        tabPendientes.querySelector(
-                            '.vacaciones-contador'
-                        );
-
-
-                    if (
-                        respuesta.total_pendientes > 0
-                    ) {
-
-                        if (!contador) {
-
-                            contador =
-                                document.createElement(
-                                    'span'
-                                );
-
-                            contador.className =
-                                'vacaciones-contador';
-
-                            tabPendientes.appendChild(
-                                contador
-                            );
-
-                        }
-
-
-                        contador.textContent =
-                            respuesta.total_pendientes;
-
-                    } else {
-
-                        if (contador) {
-
-                            contador.remove();
-
-                        }
+                        item.style.display =
+                            coincide
+                                ? ''
+                                : 'none';
 
                     }
-
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | REGISTRAR NUEVOS ITEMS
-                |--------------------------------------------------------------------------
-                */
-
-                registrarItemsRH();
-
-            },
-
-
-        error:
-            function (xhr) {
-
-                console.error(
-                    'ERROR FILTRO RH:',
-                    xhr.status,
-                    xhr.responseText
                 );
 
-
-                lista.innerHTML = `
-
-                    <div
-                        class="vacaciones-vacio"
-                    >
-
-                        <span
-                            class="
-                                glyphicon
-                                glyphicon-warning-sign
-                            "
-                        ></span>
-
-                        <p>
-                            No fue posible cargar
-                            las solicitudes.
-                        </p>
-
-                    </div>
-
-                `;
-
-            }
-
-    });
-
-}
-// SELECCIONAR SOLICITUD
-function seleccionarSolicitudRH(item) {
-
-    document
-        .querySelectorAll('.vacaciones-item')
-        .forEach(function (elemento) {
-
-            elemento.classList.remove(
-                'seleccionado'
-            );
-
-        });
-
-
-    item.classList.add(
-        'seleccionado'
-    );
-
-
-    mostrarDetalleRH(
-        item
-    );
-
-}
-/**
- * ============================================================
- * MOSTRAR DETALLE RH
- * ============================================================
- */
-
-function mostrarDetalleRH(item) {
-
-    const detalle =
-        document.getElementById(
-            'detalleSolicitud'
-        );
-
-
-    if (!detalle || !item) {
-        return;
-    }
-
-
-    const id =
-        item.dataset.id;
-
-    const nombre =
-        item.dataset.nombre || '';
-
-    const puesto =
-        item.dataset.puesto || '';
-
-    const departamento =
-        item.dataset.departamento || '';
-
-    const cuadrilla =
-        item.dataset.cuadrilla || '';
-
-    const grupo =
-        item.dataset.grupo || '';
-
-    const fechaSolicitud =
-        item.dataset.fechaSolicitud || '';
-
-    const fechaInicio =
-        item.dataset.fechaInicio || '';
-
-    const dias =
-        item.dataset.dias || '0';
-
-    const estatus =
-        item.dataset.estatus || '';
-
-    const estatusClase =
-        item.dataset.estatusClase ||
-        'estatus-default';
-
-    const estatusIcono =
-        item.dataset.estatusIcono ||
-        'glyphicon-question-sign';
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DETALLE
-    |--------------------------------------------------------------------------
-    */
-
-    detalle.innerHTML = `
-
-        <div class="detalle-encabezado">
-            <div class="detalle-avatar">
-                ${obtenerInicialesRH(nombre)}
-            </div>
-            <div>
-                <div class="detalle-nombre">
-                    ${nombre}
-                </div>
-                <div class="detalle-puesto">
-                    ${puesto}
-                </div>
-            </div>
-        </div>
-        <div class="detalle-datos">
-            <div class="detalle-dato">
-                <div class="detalle-dato-label">
-                    Estatus
-                </div>
-                <div class="detalle-dato-valor">
-                    <span class="vacaciones-status ${estatusClase}">
-                        <span class="glyphicon ${estatusIcono}"></span>
-                        ${estatus}
-                    </span>
-                </div>
-            </div>
-            <div class="detalle-dato">
-                <div class="detalle-dato-label">
-                    Fecha solicitud
-                </div>
-                <div class="detalle-dato-valor">
-                    ${fechaSolicitud}
-                </div>
-            </div>
-            <div class="detalle-dato">
-                <div class="detalle-dato-label">
-                    Inicio vacaciones
-                </div>
-                <div class="detalle-dato-valor">
-                    ${fechaInicio}
-                </div>
-            </div>
-            <div class="detalle-dato">
-                <div class="detalle-dato-label">
-                    Días solicitados
-                </div>
-                <div class="detalle-dato-valor">
-                    ${dias}
-                </div>
-            </div>
-            <div class="detalle-dato">
-                <div class="detalle-dato-label">
-                    Departamento
-                </div>
-                <div class="detalle-dato-valor">
-                    ${departamento}
-                </div>
-            </div>
-            <div class="detalle-dato">
-                <div class="detalle-dato-label">
-                    Cuadrilla
-                </div>
-                <div class="detalle-dato-valor">
-                    ${grupo} · ${cuadrilla}
-                </div>
-            </div>
-        </div>
-
-
-        ${
-            estatus === 'En RH' ||
-            estatus === 'Pendientes'
-            ?
-
-            `
-                <div class="detalle-acciones">
-
-                    <button
-                        type="button"
-                        class="
-                            btn
-                            btn-vacaciones
-                            btn-rechazar-rh
-                        "
-                        data-id="${id}"
-                    >
-                        <span class="glyphicon glyphicon-remove"></span>
-                        No aprobar
-                    </button>
-                    <button
-                        type="button"
-                        class="
-                            btn
-                            btn-vacaciones
-                            btn-vacaciones-primary
-                            btn-aprobar-rh
-                        "
-                        data-id="${id}"
-                    >
-                        <span class="glyphicon glyphicon-ok"></span>
-                        Aprobar
-                    </button>
-                </div>
-            `
-            :
-            ''
-        }
-
-    `;
-    /*
-    |--------------------------------------------------------------------------
-    | BOTÓN APROBAR
-    |--------------------------------------------------------------------------
-    */
-
-    const botonAprobar = detalle.querySelector('.btn-aprobar-rh');
-
-    if (botonAprobar) {
-        botonAprobar.addEventListener(
-            'click',
-            function (e) {
-                e.stopPropagation();
-                confirmarDecisionRH(
-                    id,
-                    'aprobar'
-                );
             }
         );
+
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | BOTÓN RECHAZAR
+    | INICIALIZAR
     |--------------------------------------------------------------------------
     */
 
-    const botonRechazar = detalle.querySelector('.btn-rechazar-rh');
+    registrarSolicitudes();
+    abrirSolicitudDesdeURL();
 
-    if (botonRechazar) {
-        botonRechazar.addEventListener(
-            'click',
-            function (e) {
-                e.stopPropagation();
-                confirmarDecisionRH(
-                    id,
-                    'rechazar'
-                );
-            }
-        );
-    }
-
-}
-/**
- * ============================================================
- * OBTENER INICIALES
- * ============================================================
- */
-
-function obtenerInicialesRH(nombre) {
-
-    if (!nombre) {
-        return '?';
-    }
-
-    const partes = nombre
-        .trim()
-        .split(/\s+/);
-
-    return partes
-        .slice(0, 2)
-        .map(function (parte) {
-
-            return parte
-                .charAt(0)
-                .toUpperCase();
-
-        })
-        .join('');
-
-}
-/**
- * ============================================================
- * NO APROBAR SOLICITUD RH
- * ============================================================
- */
-
-/**
- * ============================================================
- * CONFIRMAR DECISIÓN RH
- * ============================================================
- */
-
-async function confirmarDecisionRH(id, accion) {
-
-    //===========================================================
-    // APROBAR
-    //===========================================================
-
-    if (accion === 'aprobar') {
-
-        const resultado = await Swal.fire({
-
-            icon: 'question',
-
-            title: 'Aprobar solicitud',
-
-            text:
-                '¿Estás seguro de que deseas aprobar esta solicitud?',
-
-            showCancelButton: true,
-
-            confirmButtonText:
-                'Sí, aprobar',
-
-            cancelButtonText:
-                'Cancelar',
-
-            confirmButtonColor:
-                '#198754',
-
-            cancelButtonColor:
-                '#6c757d'
-
-        });
-
-
-        if (!resultado.isConfirmed) {
-
-            return;
-
-        }
-
-
-        enviarDecisionRH(
-            id,
-            'aprobar',
-            ''
-        );
-
-        return;
-
-    }
-
-
-    //===========================================================
-    // RECHAZAR
-    //===========================================================
-
-    if (accion === 'rechazar') {
-
-        const resultado = await Swal.fire({
-
-            title:
-                'No aprobar solicitud',
-
-            width:
-                '600px',
-
-            html: `
-
-                <div style="text-align:left;">
-
-                    <p>
-                        Indica el motivo por el cual
-                        no se aprueba esta solicitud.
-                    </p>
-
-                    <label
-                        for="observacionRH"
-                        style="font-weight:600;"
-                    >
-                        Observación
-                    </label>
-
-                    <textarea
-                        id="observacionRH"
-                        class="swal2-textarea"
-                        placeholder="Escribe el motivo..."
-                        style="
-                            width:100%;
-                            min-height:120px;
-                            margin:10px 0 0 0;
-                            resize:vertical;
-                        "
-                    ></textarea>
-
-                </div>
-
-            `,
-
-            showCancelButton:
-                true,
-
-            confirmButtonText:
-                'No aprobar solicitud',
-
-            cancelButtonText:
-                'Cancelar',
-
-            confirmButtonColor:
-                '#dc3545',
-
-            cancelButtonColor:
-                '#6c757d',
-
-            preConfirm:
-                function () {
-
-                    const campo =
-                        document.getElementById(
-                            'observacionRH'
-                        );
-
-
-                    const observacion =
-                        campo
-                            ? campo.value.trim()
-                            : '';
-
-
-                    if (!observacion) {
-
-                        Swal.showValidationMessage(
-                            'Debes indicar una observación.'
-                        );
-
-                        return false;
-
-                    }
-
-
-                    return {
-
-                        observacion:
-                            observacion
-
-                    };
-
-                }
-
-        });
-
-
-        if (!resultado.isConfirmed) {
-
-            return;
-
-        }
-
-
-        enviarDecisionRH(
-            id,
-            'rechazar',
-            resultado.value.observacion
-        );
-
-    }
-
-}
-/**
- * ============================================================
- * ENVIAR DECISIÓN
- * ============================================================
- */
-
-function enviarDecisionRH(
-    id,
-    accion,
-    observacion
-) {
-
-    const datos = new FormData();
-
-    datos.append(
-        'id',
-        id
-    );
-
-    datos.append(
-        'accion',
-        accion
-    );
-
-    datos.append(
-        'observacion',
-        observacion
-    );
-
-
-    $.ajax({
-
-        url: 'ajax/procesar_solicitud_rh.php',
-        type: 'POST',
-        data: datos,
-        processData: false,
-        contentType: false,
-        dataType:'json',
-
-        success:
-            function (respuesta) {
-
-                if (respuesta.success) {
-
-                    Swal.fire({
-
-                        icon:
-                            'success',
-
-                        title:
-                            accion === 'aprobar'
-                                ? 'Solicitud aprobada'
-                                : 'Solicitud no aprobada',
-
-                        text:
-                            respuesta.message,
-
-                        confirmButtonText:
-                            'Aceptar'
-
-                    }).then(function () {
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | ACTUALIZAR BANDEJA
-                        |--------------------------------------------------------------------------
-                        */
-
-                        const filtroActivo =
-                            document.querySelector(
-                                '.vacaciones-tab.activo'
-                            );
-
-
-                        if (filtroActivo) {
-                            filtroActivo.click();
-                        }
-
-                    });
-
-                    return;
-                }
-
-
-                Swal.fire({
-
-                    icon:'warning',
-                    title:'No se puede realizar la acción',
-                    text:
-                        respuesta.message ||
-                        'No fue posible procesar la solicitud.'
-
-                });
-
-            },
-
-
-        error:
-            function (xhr) {
-
-                console.error(
-                    'ERROR AJAX RH:',
-                    xhr.status,
-                    xhr.responseText
-                );
-
-
-                Swal.fire({
-
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No fue posible procesar la solicitud.'
-
-                });
-
-            }
-
-    });
-
-}
-/**
- * ============================================================
- * BUSCAR COLABORADOR RH
- * ============================================================
- */
-
-function buscarColaboradorRH(texto) {
-
-    const busqueda =
-        texto
-            .trim()
-            .toLowerCase();
-
-
-    document
-        .querySelectorAll('.vacaciones-item')
-        .forEach(function (item) {
-
-            const nombre =
-                (
-                    item.dataset.nombre || ''
-                ).toLowerCase();
-
-            const puesto =
-                (
-                    item.dataset.puesto || ''
-                ).toLowerCase();
-
-            const departamento =
-                (
-                    item.dataset.departamento || ''
-                ).toLowerCase();
-
-
-            const coincide =
-                nombre.includes(busqueda) ||
-                puesto.includes(busqueda) ||
-                departamento.includes(busqueda);
-
-
-            item.style.display =
-                coincide
-                    ? ''
-                    : 'none';
-
-        });
-
-}
+});

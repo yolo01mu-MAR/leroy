@@ -62,7 +62,6 @@ if ($accion === 'aprobar' && trim($firma) === '') {
     exit;
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | BUSCAR SOLICITUD
@@ -89,7 +88,6 @@ $sql = "
 ";
 
 $resultado = find_by_sql($sql);
-
 
 if (empty($resultado)) {
 
@@ -155,9 +153,7 @@ if ($accion === 'aprobar') {
 
     ];
 
-    $resultado_firma = guardar_firma(
-        $datos_firma
-    );
+    $resultado_firma = guardar_firma($datos_firma);
 
     if (
         !isset($resultado_firma['ok']) ||
@@ -224,7 +220,6 @@ $sql_update = " UPDATE vacaciones
 global $db;
 
 $resultado_update = $db->query($sql_update);
-
 
 if (!$resultado_update) {
 

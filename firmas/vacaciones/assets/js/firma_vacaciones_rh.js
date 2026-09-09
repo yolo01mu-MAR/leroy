@@ -110,23 +110,12 @@ async function confirmarDecisionRH(id, accion) {
 
         $.ajax({
 
-            url:
-                '../solicitudes/ajax/procesar_solicitud_rh.php',
-
-            type:
-                'POST',
-
-            data:
-                datos,
-
-            processData:
-                false,
-
-            contentType:
-                false,
-
-            dataType:
-                'json',
+            url: '../solicitudes/ajax/procesar_solicitud_rh.php',
+            type: 'POST',
+            data: datos,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
 
             success:
                 function (respuesta) {
@@ -135,17 +124,10 @@ async function confirmarDecisionRH(id, accion) {
 
                         Swal.fire({
 
-                            icon:
-                                'success',
-
-                            title:
-                                'Solicitud no aprobada',
-
-                            text:
-                                respuesta.message,
-
-                            confirmButtonText:
-                                'Aceptar'
+                            icon: 'success',
+                            title: 'Solicitud no aprobada',
+                            text: respuesta.message,
+                            confirmButtonText: 'Aceptar'
 
                         }).then(function () {
 
@@ -166,12 +148,8 @@ async function confirmarDecisionRH(id, accion) {
 
                         Swal.fire({
 
-                            icon:
-                                'warning',
-
-                            title:
-                                'No se puede realizar la acción',
-
+                            icon: 'warning',
+                            title: 'No se puede realizar la acción',
                             text:
                                 respuesta.message ||
                                 'No fue posible procesar la solicitud.'
@@ -193,14 +171,9 @@ async function confirmarDecisionRH(id, accion) {
 
                     Swal.fire({
 
-                        icon:
-                            'error',
-
-                        title:
-                            'Error',
-
-                        text:
-                            'No fue posible procesar la solicitud.'
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No fue posible procesar la solicitud.'
 
                     });
 
@@ -220,14 +193,11 @@ async function confirmarDecisionRH(id, accion) {
 
     let firma;
 
-
     const resultado = await Swal.fire({
 
-        title:
-            'Aprobar solicitud',
+        title: 'Aprobar solicitud',
 
-        width:
-            '700px',
+        width: '700px',
 
         html: `
             <div style="text-align:left;">
@@ -256,17 +226,9 @@ async function confirmarDecisionRH(id, accion) {
             </div>
         `,
 
-        showCancelButton:
-            true,
-
-        confirmButtonText:
-            'Firmar y aprobar',
-
-        cancelButtonText:
-            'Cancelar',
-
-        confirmButtonColor:
-            '#198754',
+        showCancelButton: true,
+        confirmButtonText: 'Firmar y aprobar',
+        cancelButtonText: 'Cancelar',
 
 
         /*
@@ -278,28 +240,14 @@ async function confirmarDecisionRH(id, accion) {
         didOpen:
             function () {
 
-                firma =
-                    new FirmaElectronica({
-
-                        canvas:
-                            'canvasFirmaRH',
-
-                        modulo:
-                            FirmaModulo.VACACIONES,
-
-                        registroId:
-                            id,
-
-                        tipo:
-                            FirmaTipo.RH,
-
-                        usuarioId:
-                            window.usuarioRhId,
-
-                        height:
-                            250
-
-                    });
+                firma = new FirmaElectronica({
+                    canvas: 'canvasFirmaRH',
+                    modulo: FirmaModulo.VACACIONES,
+                    registroId:  id,
+                    tipo: FirmaTipo.RH,
+                    usuarioId: window.usuarioRhId,
+                    height: 250
+                });
 
             },
 
@@ -314,14 +262,11 @@ async function confirmarDecisionRH(id, accion) {
             function () {
 
                 if (
-                    !firma ||
-                    !firma.tieneFirma()
+                    !firma || !firma.tieneFirma()
                 ) {
-
                     Swal.showValidationMessage(
                         'Debe capturar una firma.'
                     );
-
                     return false;
                 }
 
@@ -363,23 +308,12 @@ async function confirmarDecisionRH(id, accion) {
 
     $.ajax({
 
-        url:
-            '../solicitudes/ajax/procesar_solicitud_rh.php',
-
-        type:
-            'POST',
-
-        data:
-            datos,
-
-        processData:
-            false,
-
-        contentType:
-            false,
-
-        dataType:
-            'json',
+        url: '../solicitudes/ajax/procesar_solicitud_rh.php',
+        type: 'POST',
+        data: datos,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
 
         success:
             function (respuesta) {
@@ -387,18 +321,10 @@ async function confirmarDecisionRH(id, accion) {
                 if (respuesta.success) {
 
                     Swal.fire({
-
-                        icon:
-                            'success',
-
-                        title:
-                            'Solicitud aprobada',
-
-                        text:
-                            respuesta.message,
-
-                        confirmButtonText:
-                            'Aceptar'
+                        icon: 'success',
+                        title: 'Solicitud aprobada',
+                        text: respuesta.message,
+                        confirmButtonText: 'Aceptar'
 
                     }).then(function () {
 
@@ -418,17 +344,9 @@ async function confirmarDecisionRH(id, accion) {
                 } else {
 
                     Swal.fire({
-
-                        icon:
-                            'warning',
-
-                        title:
-                            'No se puede realizar la acción',
-
-                        text:
-                            respuesta.message ||
-                            'No fue posible procesar la solicitud.'
-
+                        icon: 'warning',
+                        title: 'No se puede realizar la acción',
+                        text: respuesta.message || 'No fue posible procesar la solicitud.'
                     });
 
                 }
@@ -445,16 +363,9 @@ async function confirmarDecisionRH(id, accion) {
                 );
 
                 Swal.fire({
-
-                    icon:
-                        'error',
-
-                    title:
-                        'Error',
-
-                    text:
-                        'No fue posible procesar la aprobación.'
-
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No fue posible procesar la aprobación.'
                 });
 
             }

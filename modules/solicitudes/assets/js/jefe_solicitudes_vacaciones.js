@@ -221,28 +221,40 @@ document.addEventListener('DOMContentLoaded', function () {
         |--------------------------------------------------------------------------
         */
 
-        const botonAprobar =
-            detalle.querySelector(
-                '.btn-aprobar-jefe'
-            );
+    const botonAprobar = detalle.querySelector('.btn-aprobar-jefe');
 
-        if (botonAprobar) {
+    if (botonAprobar) {
 
-            botonAprobar.addEventListener(
-                'click',
-                function (e) {
+        botonAprobar.addEventListener(
+            'click',
+            function (e) {
 
-                    e.stopPropagation();
+                e.stopPropagation();
 
-                    confirmarDecisionJefe(
-                        id,
-                        'aprobar'
-                    );
-
+                // Evitar doble clic
+                if (botonAprobar.disabled) {
+                    return;
                 }
-            );
 
-        }
+                // Desactivar botón
+                botonAprobar.disabled = true;
+
+                // Cambiar contenido a "Cargando..."
+                botonAprobar.innerHTML = `
+                    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+                    Aprobando...
+                `;
+
+                // Abrir flujo de aprobación
+                confirmarDecisionJefe(
+                    id,
+                    'aprobar'
+                );
+
+            }
+        );
+
+    }
 
 
         /*

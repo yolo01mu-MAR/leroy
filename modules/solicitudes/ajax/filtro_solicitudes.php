@@ -275,122 +275,86 @@ foreach ($solicitudes as $solicitud):
 
 ?>
 
-<div
-    class="vacaciones-item"
+    <div
+        class="vacaciones-item"
 
-    data-id="<?= (int)$solicitud['id']; ?>"
+        data-id="<?= (int)$solicitud['id']; ?>"
 
-    data-nombre="<?= htmlspecialchars(
-        remove_junk($solicitud['nombre']),
-        ENT_QUOTES
-    ); ?>"
+        data-nombre="<?= htmlspecialchars(
+            remove_junk($solicitud['nombre']),
+            ENT_QUOTES
+        ); ?>"
 
-    data-puesto="<?= htmlspecialchars(
-        remove_junk($solicitud['puesto']),
-        ENT_QUOTES
-    ); ?>"
+        data-puesto="<?= htmlspecialchars(
+            remove_junk($solicitud['puesto']),
+            ENT_QUOTES
+        ); ?>"
 
-    data-departamento="<?= htmlspecialchars(
-        remove_junk($solicitud['departamentos']),
-        ENT_QUOTES
-    ); ?>"
+        data-departamento="<?= htmlspecialchars(
+            remove_junk($solicitud['departamentos']),
+            ENT_QUOTES
+        ); ?>"
 
-    data-cuadrilla="<?= htmlspecialchars(
-        remove_junk($solicitud['dep_cuadrilla']),
-        ENT_QUOTES
-    ); ?>"
+        data-cuadrilla="<?= htmlspecialchars(
+            remove_junk($solicitud['dep_cuadrilla']),
+            ENT_QUOTES
+        ); ?>"
 
-    data-grupo="<?= htmlspecialchars(
-        remove_junk($solicitud['grupos']),
-        ENT_QUOTES
-    ); ?>"
+        data-grupo="<?= htmlspecialchars(
+            remove_junk($solicitud['grupos']),
+            ENT_QUOTES
+        ); ?>"
 
-    data-fecha-solicitud="<?= date(
-        'd/m/Y',
-        strtotime($solicitud['fecha_solicitud'])
-    ); ?>"
+        data-fecha-solicitud="<?= date(
+            'd/m/Y',
+            strtotime($solicitud['fecha_solicitud'])
+        ); ?>"
 
-    data-fecha-inicio="<?= date(
-        'd/m/Y',
-        strtotime($solicitud['fecha_inicio'])
-    ); ?>"
+        data-fecha-inicio="<?= date(
+            'd/m/Y',
+            strtotime($solicitud['fecha_inicio'])
+        ); ?>"
 
-    data-dias="<?= (int)$solicitud['dias']; ?>"
+        data-dias="<?= (int)$solicitud['dias']; ?>"
 
-    data-estatus="<?= htmlspecialchars(
-        $solicitud['estatus'],
-        ENT_QUOTES
-    ); ?>"
+        data-estatus="<?= htmlspecialchars(
+            $solicitud['estatus'],
+            ENT_QUOTES
+        ); ?>"
 
-    data-estatus-clase="<?= htmlspecialchars(
-        $meta['clase'],
-        ENT_QUOTES
-    ); ?>"
+        data-estatus-clase="<?= htmlspecialchars(
+            $meta['clase'],
+            ENT_QUOTES
+        ); ?>"
 
-    data-estatus-icono="<?= htmlspecialchars(
-        $meta['icono'],
-        ENT_QUOTES
-    ); ?>"
->
-
-
-    <!-- AVATAR -->
-
-    <div class="vacaciones-avatar">
-
-        <?= iniciales_colaborador(
-            $solicitud['nombre']
-        ); ?>
-
-    </div>
-
-
-    <!-- INFORMACIÓN -->
-
-    <div class="vacaciones-item-info">
-
-        <div class="vacaciones-item-nombre">
-
-            <?= remove_junk(
-                $solicitud['nombre']
-            ); ?>
-
+        data-estatus-icono="<?= htmlspecialchars(
+            $meta['icono'],
+            ENT_QUOTES
+        ); ?>"
+    >
+        <!-- AVATAR -->
+        <div class="vacaciones-avatar">
+            <?= iniciales_colaborador($solicitud['nombre']); ?>
         </div>
-
-
-        <div class="vacaciones-item-sub">
-
-            <?= (int)$solicitud['dias']; ?>
-
-            día<?= (int)$solicitud['dias'] === 1
-                ? ''
-                : 's'; ?>
-
-            · desde
-
-            <?= date(
-                'd/m/Y',
-                strtotime(
-                    $solicitud['fecha_inicio']
-                )
-            ); ?>
-
+        <!-- INFORMACIÓN -->
+        <div class="vacaciones-item-info">
+            <div class="vacaciones-item-nombre">
+                <?= remove_junk($solicitud['nombre']); ?>
+            </div>
+            <div class="vacaciones-item-sub">
+                <?= (int)$solicitud['dias']; ?>
+                día<?= (int)$solicitud['dias'] === 1
+                    ? ''
+                    : 's'; ?>
+                · desde
+                <?= date('d/m/Y', strtotime($solicitud['fecha_inicio'])); ?>
+            </div>
         </div>
-
+        <!-- ESTATUS -->
+        <span class="vacaciones-status <?= $meta['clase']; ?>">
+            <span class="glyphicon <?= $meta['icono']; ?>"></span>
+            <?= $meta['label']; ?>
+        </span>
     </div>
-
-
-    <!-- ESTATUS -->
-
-    <span class="vacaciones-status <?= $meta['clase']; ?>">
-
-        <span class="glyphicon <?= $meta['icono']; ?>"></span>
-
-        <?= $meta['label']; ?>
-
-    </span>
-
-
-</div>
 
 <?php endforeach; ?>

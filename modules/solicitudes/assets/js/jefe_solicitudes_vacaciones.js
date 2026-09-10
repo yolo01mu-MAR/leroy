@@ -420,7 +420,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 });
 
-
                 filtro.classList.add(
                     'activo'
                 );

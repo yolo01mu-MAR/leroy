@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../../app/bootstrap.php';
 
 page_require_level(5);
 
+header('Content-Type: application/json; charset=utf-8');
 
 /*
 |--------------------------------------------------------------------------
@@ -56,15 +57,21 @@ $estatus = $_POST['estatus'] ?? 'PENDIENTE_JEFE';
 $estatus_permitidos = [
     'TODAS',
     'PENDIENTE_JEFE',
-    'APROBADAS_JEFE',
-    'RECHAZADAS'
+    'PENDIENTE_RH',
+    'APROBADA',
+    'RECHAZADA_JEFE',
+    'RECHAZADA_RH'
 ];
 
 
 if (!in_array($estatus, $estatus_permitidos, true)) {
 
-    $estatus = 'PENDIENTE_JEFE';
+    echo json_encode([
+        'success' => false,
+        'message' => 'Estatus no válido.'
+    ]);
 
+    exit;
 }
 
 
@@ -78,77 +85,53 @@ $condicion = '';
 
 switch ($estatus) {
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | PENDIENTES
-    |--------------------------------------------------------------------------
-    */
-
     case 'PENDIENTE_JEFE':
-
         $condicion = "
             AND v.estatus = 'PENDIENTE_JEFE'
         ";
-
         break;
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | APROBADAS POR EL JEFE
-    |--------------------------------------------------------------------------
-    |
-    | Incluye:
-    |
-    | PENDIENTE_RH
-    | APROBADA
-    |
-    */
-
-    case 'APROBADAS_JEFE':
-
+    case 'PENDIENTE_RH':
         $condicion = "
-            AND v.estatus IN (
-                'PENDIENTE_RH',
-                'APROBADA'
-            )
+            AND v.estatus = 'PENDIENTE_RH'
         ";
-
         break;
 
+    case 'APROBADA':
+        $condicion = "
+            AND v.estatus = 'APROBADA'
+        ";
+        break;
 
-    /*
-    |--------------------------------------------------------------------------
-    | RECHAZADAS
-    |--------------------------------------------------------------------------
-    */
+    case 'RECHAZADA_JEFE':
+        $condicion = "
+            AND v.estatus = 'RECHAZADA_JEFE'
+        ";
+        break;
 
-    case 'RECHAZADAS':
+    case 'RECHAZADA_RH':
+        $condicion = "
+            AND v.estatus = 'RECHAZADA_RH'
+        ";
+        break;
 
+    case 'TODAS':
         $condicion = "
             AND v.estatus IN (
+                'PENDIENTE_JEFE',
+                'PENDIENTE_RH',
+                'APROBADA',
                 'RECHAZADA_JEFE',
                 'RECHAZADA_RH'
             )
         ";
-
         break;
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | TODAS
-    |--------------------------------------------------------------------------
-    */
-
-    case 'TODAS':
     default:
-
-        $condicion = '';
-
+        $condicion = "
+            AND v.estatus = 'PENDIENTE_JEFE'
+        ";
         break;
-
 }
 
 

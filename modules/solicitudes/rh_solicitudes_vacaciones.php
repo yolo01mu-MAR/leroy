@@ -114,9 +114,7 @@ $sql_pendientes = "
     WHERE estatus = 'PENDIENTE_RH'
 ";
 
-$resultado_pendientes = find_by_sql(
-    $sql_pendientes
-);
+$resultado_pendientes = find_by_sql($sql_pendientes);
 
 $total_pendientes = (int)(
     $resultado_pendientes[0]['total'] ?? 0

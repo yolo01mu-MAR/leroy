@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../app/bootstrap.php';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 try {
 
@@ -17,35 +17,138 @@ try {
         throw new Exception('Ingrese su número de nómina.');
     }
 
-    if ($password === '') {
-        throw new Exception('Ingrese su contraseña.');
-    }
-
-    // Validar que la nómina sea numérica
     if (!ctype_digit($nomina)) {
         throw new Exception('El número de nómina no es válido.');
     }
 
-    $usuario = authenticate($nomina, $password);
+    global $db;
 
-    if (!$usuario) {
+    $nominaEscapada = $db->escape($nomina);
+
+    $sql = "
+        SELECT
+            id,
+            username,
+            password,
+            last_login
+        FROM users
+        WHERE username = '{$nominaEscapada}'
+        LIMIT 1
+    ";
+
+    $resultado = $db->query($sql);
+
+    if (!$resultado || !$db->num_rows($resultado)) {
+        throw new Exception('Número de nómina o contraseña incorrectos.');
+    }
+
+    $usuario = $db->fetch_assoc($resultado);
+
+    $usuario_id = (int)$usuario['id'];
+    $lastLogin = $usuario['last_login'] ?? null;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SIN CONTRASEÑA
+    |--------------------------------------------------------------------------
+    | Se permite entrar únicamente en modo CONSULTA.
+    |
+    | Si nunca ha iniciado sesión (last_login NULL),
+    | se obliga a cambiar la contraseña.
+    |--------------------------------------------------------------------------
+    */
+
+    if ($password === '') {
+
+        if (empty($lastLogin)) {
+
+            echo json_encode([
+                'ok' => true,
+                'requiere_cambio_password' => true,
+                'usuario_id' => $usuario_id,
+                'modo' => 'CAMBIO_PASSWORD',
+                'mensaje' => 'Es tu primer acceso. Debes establecer una contraseña antes de continuar.'
+            ]);
+
+            exit;
+        }
+
+        echo json_encode([
+            'ok' => true,
+            'requiere_cambio_password' => false,
+            'usuario_id' => $usuario_id,
+            'modo' => 'CONSULTA',
+            'mensaje' => 'Acceso de consulta autorizado.'
+        ]);
+
+        exit;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CON CONTRASEÑA
+    |--------------------------------------------------------------------------
+    */
+
+    $usuarioAutenticado = authenticate(
+        $nomina,
+        $password
+    );
+
+    if (!$usuarioAutenticado) {
+
         throw new Exception(
-            'Número de nómina o contraseña incorrectos.'
+            'Número de nómina o contraseña son incorrectos.'
         );
     }
 
-    if ((int)$usuario['id'] !== (int)$nomina) {
+    if ((int)$usuarioAutenticado['id'] !== $usuario_id) {
+
         throw new Exception(
             'No fue posible validar al colaborador.'
         );
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | SI ES PRIMER ACCESO
+    |--------------------------------------------------------------------------
+    */
+
+    if (empty($lastLogin)) {
+
+        echo json_encode([
+            'ok' => true,
+            'requiere_cambio_password' => true,
+            'usuario_id' => $usuario_id,
+            'modo' => 'CAMBIO_PASSWORD',
+            'mensaje' =>
+                'Es tu primer acceso. Debes establecer una nueva contraseña.'
+        ]);
+
+        exit;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | AUTENTICAR KIOSCO
+    |--------------------------------------------------------------------------
+    */
+
     $_SESSION['kiosco']['autenticado'] = true;
-    $_SESSION['kiosco']['empleado_id'] = (int)$usuario['id'];
+    $_SESSION['kiosco']['empleado_id'] = $usuario_id;
     $_SESSION['kiosco']['ultimo_movimiento'] = time();
+
 
     echo json_encode([
         'ok' => true,
+        'requiere_cambio_password' => false,
+        'usuario_id' => $usuario_id,
+        'modo' => 'AUTENTICADO',
         'mensaje' => 'Identidad validada correctamente.'
     ]);
 

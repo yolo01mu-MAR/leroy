@@ -21,6 +21,12 @@
     <div class="row justify-content-center align-items-center vh-100">
         <div class="col-lg-6">
             <div class="card card-login">
+                <!-- MENSAJES -->
+                <div class="row home-message-wrapper">
+                    <div class="col-md-12">
+                        <?php echo display_msg($msg); ?>
+                    </div>
+                </div>
                 <div class="card-body p-5">
                     <div class="text-center mb-4">
                         <img src="<?= BASE_URL ?>/libs/images/leroy.png" class="logo">

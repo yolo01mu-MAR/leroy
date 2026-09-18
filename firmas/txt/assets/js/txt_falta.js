@@ -5,19 +5,19 @@ async function confirmarSolicitudTxt(asistencia, fecha){
     if (!kioscoAutenticado) {
 
         const modalElement =
-            document.getElementById("modalPasswordTxt");
+            document.getElementById("modalPassword");
 
         const modalPassword =
             bootstrap.Modal.getOrCreateInstance(modalElement);
 
         const inputPassword =
-            document.getElementById("passwordTxt");
+            document.getElementById("passwordKiosco");
 
         const errorPassword =
-            document.getElementById("errorPasswordTxt");
+            document.getElementById("errorPassword");
 
         const btnValidar =
-            document.getElementById("btnValidarPasswordTxt");
+            document.getElementById("btnValidarPassword");
 
         // Limpiar modal
         inputPassword.value = "";

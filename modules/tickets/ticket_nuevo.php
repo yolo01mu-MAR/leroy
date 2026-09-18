@@ -6,7 +6,7 @@ $scripts = [
 ];
 
 require_once __DIR__ . '/../../app/bootstrap.php';
-// require_once('includes/ticket_helpers.php');
+require_once('includes/ticket_helpers.php');
 page_require_level(5);
 
 $usuario = current_user();

@@ -1,21 +1,23 @@
 <?php
-    $page_title = 'Lista de encargados';
+    $page_title = 'Historial de Vacaciones';
     require_once __DIR__ . '/../../app/bootstrap.php';
 
     // Checkin What level user has permission to view this page
-    page_require_level(5);
-    require_permiso('personal.jefes_planilla');
+    // page_require_level(5);
+    // require_permiso('personal.jefes_planilla');
 
     $scripts = [
-        'buscar_usuario_saldo'
+        'buscar_historial'
     ];
 
     $estatusMap = [
-        'VIGENTE'    => ['texto' => 'VIGENTE',  'class' => 'label-success'],
-        'FINALIZADO' => ['texto' => 'INACTIVO', 'class' => 'label-default'],
+        'APROBADA'    => ['texto' => 'APROBADA',  'class' => 'label-warning'],
+        'FINALIZADA'  => ['texto' => 'FINALIZADA', 'class' => 'label-success'],
+        'CANCELADA'   => ['texto' => 'CANCELADA', 'class' => 'label-danger'],
+        'DESCONOCIDO' => ['texto' => 'DESCONOCIDO', 'class' => 'label-secondary'],
     ];
 
-    $empleadosSaldos = get_saldo_vacaciones();
+    $empleadosSaldos = find_all_solicitudes_aprobadas();
 
 ?>
 <?php include_once BASE_PATH . '/layouts/header.php'; ?>
@@ -30,7 +32,7 @@
             <div class="panel-heading clearfix">
                 <strong>
                     <span class="glyphicon glyphicon-th"></span>
-                    SALDO DE VACACIONES
+                    Historial de Vacaciones
                 </strong>
                 <!-- Buscador Generico -->
                 <div class="pull-right buscador-panel">
@@ -48,18 +50,15 @@
             </div>
             <div class="panel-body">
                 <table class="table table-bordered table-striped">
-                    <a href="" class="btn btn-roy pull-right">Actualizar</a>
-                    <br>
                     <thead>
                     <tr>
                         <th class="text-center" style="width: 50px;">Nomina</th>
                         <th class="text-center">Nombre</th>
-                        <th class="text-center" style="width: 15%;">Ingreso</th>
-                        <th class="text-center" style="width: 10%;">Periodo Inicio</th>
-                        <th class="text-center" style="width: 10%;">Periodo Fin</th>
-                        <th class="text-center" style="width: 100px;">Estado</th>
-                        <th class="text-center" style="width: 100px;">Se generó</th>
-                        <th class="text-center" style="width: 100px;">Se actualizó</th>
+                        <th class="text-center">Fecha de solicitud</th>
+                        <th class="text-center">Periodo Inicio</th>
+                        <th class="text-center">Periodo Fin</th>
+                        <th class="text-center" style="width: 100px;">Dias</th>
+                        <th class="text-center" style="width: 100px;">Estatus</th>
                     </tr>
                     </thead>
                     <tbody id="tabla-resultados">
@@ -69,27 +68,25 @@
                             <!-- Nombre -->
                              <td class="text-center"><?php echo remove_junk(ucwords($emp['nombre'])); ?></td>
                             <!-- Ingreso -->
-                            <td class="text-center"><?php echo remove_junk(ucwords($emp['ingreso'])); ?></td>
+                            <td class="text-center"><?php echo remove_junk(ucwords($emp['fecha_solicitud'])); ?></td>
                             <!-- Periodo -->
                             <td class="text-center"><?php echo remove_junk(ucwords($emp['inicio'])); ?></td>
                             <td class="text-center"><?php echo remove_junk(ucwords($emp['fin'])); ?></td>
+                            <td class="text-center"><?php echo remove_junk(ucwords($emp['dias'])); ?></td>
                             <!-- Estado -->
                             <?php
-                            $estatusId = remove_junk(ucwords($emp['estatus']));
-                            if (isset($estatusMap[$estatusId])) {
-                                $e = $estatusMap[$estatusId];
-                                echo "<td class='text-center'>
-                                        <span class='label {$e['class']}'>{$e['texto']}</span>
-                                    </td>";
-                            } else {
-                                echo "<td class='text-center'>
-                                        <span class='label label-default'>DESCONOCIDO</span>
-                                    </td>";
-                            }
+                                $estatus = remove_junk(ucwords($emp['estatus']));
+                                if (isset($estatusMap[$estatus])) {
+                                    $e = $estatusMap[$estatus];
+                                    echo "<td class='text-center'>
+                                            <span class='label {$e['class']}'>{$e['texto']}</span>
+                                        </td>";
+                                } else {
+                                    echo "<td class='text-center'>
+                                            <span class='label label-default'>DESCONOCIDO</span>
+                                        </td>";
+                                }
                             ?>
-                            <!-- Actualizaciones -->
-                            <td class="text-center"><?php echo remove_junk(ucwords($emp['creates'])); ?></td>
-                            <td class="text-center"><?php echo remove_junk(ucwords($emp['updates'])); ?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

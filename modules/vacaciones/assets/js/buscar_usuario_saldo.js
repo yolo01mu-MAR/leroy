@@ -41,13 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 300);
     });
 
-
-    /* ---------------------------------------------------- */
-    /* MODAL DE DETALLE                                      */
-    /* Este bloque se ejecuta aquí (y no en la vista) porque  */
-    /* jQuery/Bootstrap ya están cargados para cuando este    */
-    /* archivo corre (se incluye vía $scripts en el footer). */
-    /* ---------------------------------------------------- */
  
     if (typeof $ === 'undefined') {
         console.error(

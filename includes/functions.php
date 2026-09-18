@@ -164,4 +164,51 @@ function verificar_rotacion_turno() {
 
   return false; // no hubo cambio
 }
+
+// =========================================================
+// COLORES POR CLASIFICACIÓN SEGURIDAD E HIGIENE
+// =========================================================
+function color_clasificacion($clasificacion){
+    
+    $clas = strtolower(trim($clasificacion));
+
+    $mapa = [
+        'seguridad' => [
+            'bg'     => '#eff6ff',
+            'color'  => '#2563eb',
+            'border' => '#bfdbfe',
+            'icon'   => 'glyphicon-warning-sign'
+        ],
+
+        'organizacion' => [
+            'bg'     => '#f5f3ff',
+            'color'  => '#7c3aed',
+            'border' => '#ddd6fe',
+            'icon'   => 'glyphicon-cog'
+        ],
+
+        'organización' => [
+            'bg'     => '#f5f3ff',
+            'color'  => '#7c3aed',
+            'border' => '#ddd6fe',
+            'icon'   => 'glyphicon-cog'
+        ],
+
+        'salud' => [
+            'bg'     => '#ecfdf5',
+            'color'  => '#059669',
+            'border' => '#a7f3d0',
+            'icon'   => 'glyphicon-heart'
+        ]
+    ];
+
+    return isset($mapa[$clas])
+        ? $mapa[$clas]
+        : [
+            'bg'     => '#f8fafc',
+            'color'  => '#64748b',
+            'border' => '#e2e8f0',
+            'icon'   => 'glyphicon-tag'
+        ];
+}
 ?>

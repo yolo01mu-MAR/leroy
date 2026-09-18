@@ -1149,9 +1149,9 @@ function find_asistencia_filtrada() {
   return find_by_sql($sql);
 }
 /*--------------------------------------------------------------*/
-/* Funciones usadas para Saldo Vacaciones
+/* Funciones usadas para Saldo y periodo de vacaciones Vacaciones
 /*--------------------------------------------------------------*/
-function get_saldo_vacaciones(){
+function get_periodo_vacaciones(){
   
   $sql = "SELECT 
             vs.usuario_id AS nomina,
@@ -1164,6 +1164,25 @@ function get_saldo_vacaciones(){
             vs.updated_at AS updates
           FROM vacaciones_saldo vs
           INNER JOIN users u ON vs.usuario_id = u.id";
+
+  return find_by_sql($sql);
+
+}
+function get_saldo_vacaciones(){
+  
+  $sql = "SELECT 
+            vu.id AS nomina,
+            vu.nombre,
+            vu.puesto,
+            vu.grupos,
+            vu.departamento,
+            vu.fecha_ingreso AS ingreso,
+            vu.dias_otorgados AS otorgados,
+            vu.dias_disfrutados AS disfrutados,
+            vu.dias_pendientes AS pendientes,
+            vu.dias_disponibles AS disponibles
+          FROM vw_vacaciones_usuario vu
+          ORDER BY vu.id ASC ";
 
   return find_by_sql($sql);
 
@@ -2096,5 +2115,72 @@ function get_coordinador_seguridad() {
 
     return find_by_sql($sql);
 
+}
+
+function get_norma_clasificaciones($id_norma){
+  global $db;
+
+  $sql = "SELECT 
+              sn.id, 
+              sn.id_clasificacion, 
+              sc.nombre AS clasificacion,
+              sn.codigo_norma, 
+              sn.nombre_norma, 
+              sn.imagen
+          FROM seguridad_normas sn
+          INNER JOIN seguridad_clasificacion sc ON sc.id = sn.id_clasificacion
+          WHERE sn.id = 1
+          LIMIT 1";
+
+  return find_by_sql($sql);
+}
+
+function get_puntos_norma($id_norma){
+  global $db;
+
+  $sql = "SELECT 
+              snp.id,
+              snp.`no` AS punto,
+              snp.desc_requisito AS requisito,
+              snp.tipo_comprobacion AS comprobacion,
+              snp.desc_evidencia AS evidencia
+          FROM seguridad_normas_p snp
+          WHERE snp.id_norma = {$id_norma}
+          ORDER BY snp.`no` ASC";
+
+  return find_by_sql($sql);
+}
+
+function find_clasificaciones_normas(){
+  
+  global $db;
+  
+  $sql = "SELECT id, nombre FROM seguridad_clasificacion ORDER BY nombre ASC";
+
+  return find_by_sql($sql);
+}
+
+// Funciones para el historial de vacaciones
+function find_all_solicitudes_aprobadas(){
+  
+  global $db;
+  
+  $sql = "SELECT
+            v.usuario_id AS nomina,
+            u.name AS nombre,
+            v.fecha_solicitud,
+            v.fecha_inicio AS inicio,
+            v.fecha_fin AS fin,
+            v.dias,
+            v.estatus
+          FROM vacaciones v
+            INNER JOIN users u ON u.id = v.usuario_id
+          WHERE v.estatus IN 
+          ('APROBADA',
+          'FINALIZADA',
+          'CANCELADA')
+          ORDER BY v.fecha_solicitud DESC";
+
+  return find_by_sql($sql);
 }
 ?>

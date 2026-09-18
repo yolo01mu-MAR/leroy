@@ -13,6 +13,7 @@ class  Media {
   const ALMACEN  = 'almacen';
   const TICKETS  = 'tickets';
   const EQUIPOS  = 'equipos';
+  const NORMAS   = 'normas';
 
   /* Ruta donde se almacenará el archivo */
   public $uploadPath;
@@ -27,14 +28,14 @@ class  Media {
   public $userId = null;
 
   private $paths = [
-    self::GENERAL  => UPLOADS_PATH . DS . 'general',
-    self::USERS    => UPLOADS_PATH . DS . 'users',
-    self::PRODUCTS => UPLOADS_PATH . DS . 'products',
-    self::ALMACEN  => UPLOADS_PATH . DS . 'almacen',
-    self::TICKETS  => UPLOADS_PATH . DS . 'tickets',
-    self::EQUIPOS  => UPLOADS_PATH . DS . 'equipos',
+      self::GENERAL  => UPLOADS_PATH . DS . 'general',
+      self::USERS    => UPLOADS_PATH . DS . 'users',
+      self::PRODUCTS => UPLOADS_PATH . DS . 'products',
+      self::ALMACEN  => UPLOADS_PATH . DS . 'almacen',
+      self::TICKETS  => UPLOADS_PATH . DS . 'tickets',
+      self::EQUIPOS  => UPLOADS_PATH . DS . 'equipos',
+      self::NORMAS   => UPLOADS_PATH . DS . 'normas',
   ];
-
 
   public $errors = array();
   public $upload_errors = array(

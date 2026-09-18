@@ -35,12 +35,6 @@
       }
     }
   ?>
-<!-- 
-  <script type="text/javascript" src="libs/js/buscar_usuario.js"></script>
-  <script type="text/javascript" src="libs/js/edit_reporte_produccion.js"></script>
-  <script type="text/javascript" src="libs/js/equipos_asignados.js"></script>
-  <script type="text/javascript" src="libs/js/equipo_inventario.js"></script>
-   -->
 
   <hr>
   <!-- MODAL AGREGAR REPORTE -->

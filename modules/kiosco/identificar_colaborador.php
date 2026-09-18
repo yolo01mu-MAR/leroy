@@ -115,16 +115,19 @@
                                 </button>
                             </div>
                             <div class="text-center mt-3">
-                                <small class="text-muted">
-                                    Tus datos serán utilizados únicamente
-                                    para validar tu identidad.
-                                </small>
+                                <p class="mb-1">¿Olvidaste tu contraseña?</p>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-link"
+                                    onclick="mostrarModalOlvidePassword()">
+                                    Haz click aquí
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="text-center mt-4">
-                        <button class="btn"
-                                onclick="volver()">
+                        <button class="btn" onclick="volver()">
                             ← Regresar
                         </button>
                     </div>
@@ -133,11 +136,99 @@
         </div>
     </div>
 </div>
+<!-- MODAL OLVIDÉ MI CONTRASEÑA -->
+<div
+    class="modal fade"
+    id="modalOlvidePassword"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <i class="bi bi-key"></i>
+                    Recuperar contraseña
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p class="text-muted">
+                    Ingresa tu número de nómina para solicitar
+                    el restablecimiento de tu contraseña.
+                </p>
+
+                <div class="mb-3">
+
+                    <label
+                        for="nominaOlvidada"
+                        class="form-label">
+                        Número de nómina
+                    </label>
+
+                    <input
+                        type="number"
+                        class="form-control form-control-lg"
+                        id="nominaOlvidada"
+                        placeholder="Ej. 19009"
+                        autocomplete="off">
+
+                </div>
+
+                <div
+                    id="errorOlvidePassword"
+                    class="alert alert-danger d-none">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="btnOlvidePassword"
+                    onclick="solicitarCambioPassword()">
+
+                    <i class="bi bi-send"></i>
+                    Solicitar cambio
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const BASE_URL = <?= json_encode(BASE_URL) ?>;
+</script>
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script src="libs/js/identificar_colaborador.js"></script>
 <script src="<?= BASE_URL ?>/libs/js/leer_codigo_barras.js"></script>
+<script src="<?= BASE_URL ?>/libs/js/recuperar_password.js"></script>
 </body>
 </html>

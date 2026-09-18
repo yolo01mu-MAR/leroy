@@ -1,0 +1,580 @@
+:root {
+    --primary-color: #0f172a;
+    --accent-color: #2563eb;
+    --bg-subtle: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-muted: #64748b;
+
+    --norma-color: #2563eb;
+    --norma-bg: #eff6ff;
+    --norma-border: #bfdbfe;
+
+    --radius: 14px;
+}
+
+
+/* =========================================================
+   CONTENEDOR
+========================================================= */
+
+.ver-norma-container {
+    margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+.norma-header {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-top: 4px solid var(--norma-color);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    margin-bottom: 22px;
+
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   IMAGEN DE NORMA
+========================================================= */
+
+.norma-header-imagen {
+    width: 76px;
+    height: 76px;
+
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+
+    background: var(--bg-subtle);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.norma-header-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.norma-header-imagen .glyphicon {
+    font-size: 26px;
+    color: #cbd5e1;
+}
+
+
+/* =========================================================
+   INFORMACIÓN DE LA NORMA
+========================================================= */
+
+.norma-header-info {
+    flex: 1;
+    min-width: 220px;
+}
+
+.norma-header-codigo {
+    display: block;
+
+    font-size: 12.5px;
+    font-weight: 700;
+
+    color: var(--accent-color);
+
+    letter-spacing: .5px;
+
+    margin-bottom: 5px;
+}
+
+.norma-header-nombre {
+    margin: 0;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    line-height: 1.35;
+
+    color: var(--primary-color);
+}
+
+
+/* =========================================================
+   CLASIFICACIÓN
+========================================================= */
+
+.norma-header-clasificacion {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 10px;
+    padding: 5px 10px;
+
+    border-radius: 6px;
+
+    font-size: 10.5px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: .3px;
+
+    background: var(--norma-bg);
+    color: var(--norma-color);
+
+    border: 1px solid var(--norma-border);
+}
+
+
+/* =========================================================
+   BOTONES DEL ENCABEZADO
+========================================================= */
+
+.btn-volver {
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    padding: 9px 14px;
+
+    flex-shrink: 0;
+}
+
+.btn-volver .glyphicon {
+    margin-right: 4px;
+}
+
+
+/* =========================================================
+   BARRA DE REQUISITOS
+========================================================= */
+
+.requisitos-toolbar {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 16px;
+}
+
+.puntos-header-title {
+    font-size: 13px;
+    font-weight: 700;
+
+    color: #475569;
+
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.puntos-header-title .glyphicon {
+    margin-right: 6px;
+}
+
+
+/* =========================================================
+   BUSCADOR
+========================================================= */
+
+.search-req-box {
+    position: relative;
+
+    flex: 1 1 240px;
+
+    max-width: 320px;
+}
+
+.search-req-box .glyphicon {
+    position: absolute;
+
+    left: 12px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+.search-req-input {
+    width: 100%;
+
+    padding: 8px 12px 8px 34px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--border-color);
+
+    outline: none;
+
+    font-size: 13px;
+
+    background: #ffffff;
+
+    transition: border-color .2s ease,
+                box-shadow .2s ease;
+}
+
+.search-req-input:focus {
+    border-color: var(--accent-color);
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================================================
+   TIMELINE DE REQUISITOS
+========================================================= */
+
+.requisitos-timeline {
+    position: relative;
+
+    padding-left: 6px;
+}
+
+.requisito-item {
+    position: relative;
+
+    display: flex;
+
+    gap: 16px;
+
+    padding-bottom: 18px;
+}
+
+
+/* Línea vertical */
+
+.requisito-item:not(:last-child)::before {
+    content: '';
+
+    position: absolute;
+
+    left: 21px;
+    top: 44px;
+    bottom: -2px;
+
+    width: 2px;
+
+    background: var(--border-color);
+}
+
+
+/* =========================================================
+   NÚMERO DEL REQUISITO
+========================================================= */
+
+.requisito-punto {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: var(--primary-color);
+
+    border: 1px solid var(--border-color);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    flex-shrink: 0;
+
+    z-index: 1;
+
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+
+/* =========================================================
+   TARJETA DEL REQUISITO
+========================================================= */
+
+.requisito-card {
+    background: #ffffff;
+
+    border: 1px solid var(--border-color);
+
+    border-radius: var(--radius);
+
+    padding: 16px 20px;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+.requisito-card:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px rgba(15, 23, 42, 0.05);
+
+    border-color: #cbd5e1;
+}
+
+
+/* =========================================================
+   TEXTO DEL REQUISITO
+========================================================= */
+
+.requisito-titulo {
+    margin: 0;
+
+    font-size: 14.5px;
+    font-weight: 600;
+
+    line-height: 1.55;
+
+    color: var(--primary-color);
+}
+
+
+/* =========================================================
+   INFORMACIÓN SECUNDARIA
+========================================================= */
+
+.requisito-meta {
+    display: flex;
+
+    gap: 24px;
+
+    flex-wrap: wrap;
+
+    margin-top: 14px;
+}
+
+.requisito-label {
+    display: block;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    color: #94a3b8;
+
+    text-transform: uppercase;
+    letter-spacing: .5px;
+
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   TIPO DE COMPROBACIÓN
+========================================================= */
+
+.requisito-tipo {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 9px;
+
+    border-radius: 6px;
+
+    background: var(--bg-subtle);
+
+    border: 1px solid var(--border-color);
+
+    color: #475569;
+
+    font-size: 10.5px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   EVIDENCIA
+========================================================= */
+
+.requisito-evidencia-texto {
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 12.5px;
+
+    line-height: 1.6;
+
+    max-width: 480px;
+}
+
+
+/* =========================================================
+   BÚSQUEDA SIN RESULTADOS
+========================================================= */
+
+.requisito-item.oculto {
+    display: none;
+}
+
+.sin-resultados-busqueda,
+.sin-puntos {
+    background: #ffffff;
+
+    border: 1px dashed var(--border-color);
+
+    border-radius: var(--radius);
+
+    text-align: center;
+
+    padding: 45px 20px;
+
+    color: var(--text-muted);
+}
+
+.sin-resultados-busqueda {
+    display: none;
+}
+
+.sin-puntos .glyphicon,
+.sin-resultados-busqueda .glyphicon {
+    display: block;
+
+    font-size: 30px;
+
+    margin-bottom: 10px;
+
+    color: #cbd5e1;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .norma-header {
+        padding: 18px;
+
+        gap: 14px;
+    }
+
+    .norma-header-imagen {
+        width: 62px;
+        height: 62px;
+    }
+
+    .norma-header-info {
+        min-width: 0;
+
+        flex: 1 1 calc(100% - 80px);
+    }
+
+    .norma-header-nombre {
+        font-size: 16px;
+    }
+
+    .norma-header-codigo {
+        font-size: 11px;
+    }
+
+    .norma-header-clasificacion {
+        font-size: 9.5px;
+
+        margin-top: 7px;
+    }
+
+    .btn-volver {
+        width: 100%;
+
+        text-align: center;
+    }
+
+
+    /* Requisitos */
+
+    .requisitos-toolbar {
+        align-items: stretch;
+    }
+
+    .puntos-header-title {
+        width: 100%;
+    }
+
+    .search-req-box {
+        width: 100%;
+
+        max-width: none;
+
+        flex: none;
+    }
+
+
+    /* Timeline */
+
+    .requisito-item {
+        gap: 10px;
+    }
+
+    .requisito-punto {
+        width: 36px;
+        height: 36px;
+
+        font-size: 11px;
+    }
+
+    .requisito-item:not(:last-child)::before {
+        left: 17px;
+
+        top: 36px;
+    }
+
+    .requisito-card {
+        padding: 13px 15px;
+    }
+
+    .requisito-titulo {
+        font-size: 13.5px;
+    }
+
+    .requisito-meta {
+        gap: 14px;
+    }
+
+    .requisito-label {
+        font-size: 9px;
+    }
+
+    .requisito-evidencia-texto {
+        font-size: 12px;
+    }
+}

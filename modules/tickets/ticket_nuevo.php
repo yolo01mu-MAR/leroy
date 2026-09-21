@@ -7,7 +7,6 @@ $scripts = [
 
 require_once __DIR__ . '/../../app/bootstrap.php';
 require_once('includes/ticket_helpers.php');
-page_require_level(5);
 
 $usuario = current_user();
 $usuario_id = $usuario['id'];
@@ -126,7 +125,7 @@ $categoriasConEquipo = [2, 6];
 ?>
 <?php include_once BASE_PATH . '/layouts/header.php'; ?>
 <link rel="stylesheet" href="assets/css/ticket.css"/>
-<link rel="stylesheet" href="style.css">
+<!-- <link rel="stylesheet" href="style.css"> -->
 <div class="row">
    <div class="col-md-12">
      <?php echo display_msg($msg); ?>

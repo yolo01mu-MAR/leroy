@@ -10,22 +10,34 @@
     function obtenerSemanaISO($anio = null, $semana = null) {
 
         if ($anio === null || $semana === null) {
+
             $dto = new DateTime();
-            $semana = $dto->format('W');
-            $anio   = $dto->format('o');
+
+            $semana = (int)$dto->format('W');
+            $anio   = (int)$dto->format('o');
         }
 
         $dto = new DateTime();
         $dto->setISODate($anio, $semana);
-
         $lunes = $dto->format('Y-m-d');
-        $domingo = date('Y-m-d', strtotime("$lunes +6 days"));
+
+        // Cambiar a domingo
+        $domingo = date(
+            'Y-m-d',
+            strtotime($lunes . ' -1 day')
+        );
+
+        $sabado = date(
+            'Y-m-d',
+            strtotime($domingo . ' +6 days')
+        );
+
 
         return [
-            'semana'   => $semana,
-            'anio'     => $anio,
-            'lunes'    => $lunes,
-            'domingo'  => $domingo
+            'semana'  => $semana,
+            'anio'    => $anio,
+            'domingo' => $domingo,
+            'sabado'  => $sabado
         ];
     }
     function resumen_filtros_asistencia() {

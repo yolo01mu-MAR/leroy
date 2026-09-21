@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const buscador   = document.getElementById("buscador");
   const tabla      = document.getElementById("tabla-resultados");
-  const paginacion = document.getElementById("paginacion");
 
   const tablaOriginal = tabla.innerHTML; 
   let timeout = null;
@@ -19,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      paginacion.style.display = 'none';
+      // paginacion.style.display = 'none';
 
       fetch("ajax/buscar_usuario.php?q=" + encodeURIComponent(texto))
         .then(res => res.text())

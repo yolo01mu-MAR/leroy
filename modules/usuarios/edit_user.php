@@ -33,7 +33,6 @@
   $estatusClass = $estatusMap[$estatusId]['class'] ?? 'label-default';
 
   // Nivel "empleado" (sin usuario/contraseña propios, entra por kiosco).
-  // Ajusta este valor si tu id de nivel "empleado" es distinto de 3.
   const NIVEL_EMPLEADO = 3;
 
   // -----------------------------------------------------------------

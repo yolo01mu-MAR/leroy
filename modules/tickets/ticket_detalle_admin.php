@@ -11,63 +11,6 @@ require_once('includes/ticket_helpers.php');
 $id = (int)$_GET['id'];
 $usuario = current_user();
 
-// // -------------------------------------------------------
-// // MANDA MENSAJE AL USUARIO
-// // -------------------------------------------------------
-// if(isset($_POST['btnSeguimiento'])){
-
-//     $resultado = agregar_seguimiento(
-//         $id,
-//         $usuario['id'],
-//         $_POST['comentario'],
-//         $ticket['estatus_id']
-//     );
-
-//     $session->msg(
-//         $resultado['ok'] ? 's' : 'd',
-//         $resultado['mensaje']
-//     );
-
-//     redirect("ticket_detalle_admin.php?id=".$id,false);
-// }
-// //-----------------------------------------------------
-// // SOLICITAR RESPUESTA
-// //-----------------------------------------------------
-// if(isset($_POST['btnSolicitar'])){
-
-//     $resultado = solicitar_respuesta(
-//         $id,
-//         $usuario['id'],
-//         $_POST['comentario']
-//     );
-
-//     $session->msg(
-//         $resultado['ok'] ? 's' : 'd',
-//         $resultado['mensaje']
-//     );
-
-//     redirect("ticket_detalle_admin.php?id=".$id,false);
-
-// }
-// //-----------------------------------------------------
-// // MARCAR COMO RESUELTO
-// //-----------------------------------------------------
-// if(isset($_POST['btnResolver'])){
-
-//     $resultado = resolver_ticket(
-//         $id,
-//         $usuario['id'],
-//         $_POST['comentario']
-//     );
-
-//     $session->msg(
-//         $resultado['ok'] ? 's' : 'd',
-//         $resultado['mensaje']
-//     );
-
-//     redirect("ticket_detalle_admin.php?id=".$id,false);
-// }
-
 $ticket = get_detalle_ticket($id);
 
 if (empty($ticket)) {

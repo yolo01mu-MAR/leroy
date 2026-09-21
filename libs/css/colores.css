@@ -1,0 +1,155 @@
+:root {
+
+   /* ========================================
+   COLORES BASE
+       ======================================== */
+
+   --color-primary: #FAB12F;
+   --color-primary-hover: #FA812F;
+
+   --color-secondary: #FA812F;
+   --color-secondary-hover: #E96F24;
+
+
+   /* ========================================
+   COLORES DE ESTATUS
+       ======================================== */
+
+   --color-aprobado: #3A7D44;
+   --color-pendiente: #FAB12F;
+   --color-rechazado: #DD0303;
+
+   --color-danger: #DD0303;
+   --color-danger-hover: #B80202;
+
+   --color-info: #3A7CA5;
+
+
+   /* ========================================
+   FONDOS GENERALES
+       ======================================== */
+
+   --color-background: #F4F6F8;       
+   --color-surface: #FFFFFF;           
+   --color-surface-secondary: #EBF0F5;
+
+   /* ========================================
+   NAVBAR / HEADER
+       ======================================== */
+
+   --navbar-background: #FFFFFF;
+   --navbar-hover: #FEF3E2;
+   --navbar-active: #FAB12F;
+
+   --navbar-text: #1F2933;
+   --navbar-text-secondary: #5F6B76;
+
+   --navbar-border: #E5D8C5;
+
+
+   /* ========================================
+   MENÚ LATERAL
+       ======================================== */
+
+   --menu-background: #292722;
+   --menu-hover: #3A352D;
+
+   --menu-text: #FFFFFF;
+   --menu-text-secondary: #D6D3CE;
+
+   --menu-active: #FAB12F;
+   --menu-active-hover: #FA812F;
+
+   --menu-icon: #D6D3CE;
+   --menu-icon-active: #1F2933;
+
+
+   /* ========================================
+   FOOTER
+       ======================================== */
+
+   --footer-background: #292722;
+   --footer-hover: #3A352D;
+
+   --footer-text: #FFFFFF;
+   --footer-text-secondary: #D6D3CE;
+
+   --footer-border: #3A352D;
+
+
+   /* ========================================
+   TEXTOS
+       ======================================== */
+
+   --color-text-primary: #1F2933;
+   --color-text-secondary: #5F6B76;
+   --color-text-light: #FFFFFF;
+
+
+   /* ========================================
+   ELEMENTOS
+       ======================================== */
+
+   --color-border: #E2E8F0;
+   --color-shadow: rgba(0, 0, 0, 0.10);
+   --color-disabled: #D1D5DB;
+
+   /* ========================================
+   SOMBRAS
+       ======================================== */
+
+   --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.08);
+   --shadow-menu: 3px 0 15px rgba(0, 0, 0, 0.12);
+   --shadow-navbar: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+   /* ========================================
+   SWICHES OPCION
+       ======================================== */
+
+   --color-switch-bg: #F0EEE9;        
+   --color-switch-active: #F3CD97;    
+   --color-switch-border: #E5D8C5;
+   
+   /* ========================================
+   TIPOGRAFÍAS
+   ======================================== */
+
+   --font-family: 'Segoe UI', Arial, sans-serif;
+
+   /* Títulos principales de páginas */
+   --font-title-size: 28px;
+   --font-title-weight: 700;
+
+   /* Subtítulos */
+   --font-subtitle-size: 22px;
+   --font-subtitle-weight: 600;
+
+   /* Encabezados de secciones y tarjetas */
+   --font-heading-size: 18px;
+   --font-heading-weight: 600;
+
+   /* Texto principal */
+   --font-body-size: 16px;
+   --font-body-weight: 400;
+
+   /* Texto secundario / descripciones */
+   --font-secondary-size: 14px;
+   --font-secondary-weight: 400;
+
+   /* Etiquetas de formularios */
+   --font-label-size: 14px;
+   --font-label-weight: 500;
+
+   /* Botones */
+   --font-button-size: 15px;
+   --font-button-weight: 600;
+
+   /* Menú y navegación */
+   --font-menu-size: 15px;
+   --font-menu-weight: 500;
+
+   /* Información pequeña */
+   --font-small-size: 12px;
+   --font-small-weight: 400;
+
+}

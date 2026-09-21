@@ -86,6 +86,7 @@ function enviarAjax(formulario, accion){
         data: datos,
         processData: false,
         contentType: false,
+        dataType: 'json',
 
         success: function(respuesta){
 

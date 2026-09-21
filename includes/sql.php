@@ -2161,7 +2161,7 @@ function find_clasificaciones_normas(){
 }
 
 // Funciones para el historial de vacaciones
-function find_all_solicitudes_aprobadas(){
+function find_all_solicitudes_aprobadas($semana, $anio){
   
   global $db;
   
@@ -2169,17 +2169,20 @@ function find_all_solicitudes_aprobadas(){
             v.usuario_id AS nomina,
             u.name AS nombre,
             v.fecha_solicitud,
+            v.anio,
+            v.semana,
             v.fecha_inicio AS inicio,
             v.fecha_fin AS fin,
             v.dias,
             v.estatus
-          FROM vacaciones v
-            INNER JOIN users u ON u.id = v.usuario_id
+          FROM vw_vacaciones v
+          INNER JOIN users u ON u.id = v.usuario_id
           WHERE v.estatus IN 
           ('APROBADA',
           'FINALIZADA',
           'CANCELADA')
-          ORDER BY v.fecha_solicitud DESC";
+          AND v.semana = {$semana}
+          AND v.anio = {$anio}";
 
   return find_by_sql($sql);
 }

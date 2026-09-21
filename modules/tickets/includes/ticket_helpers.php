@@ -999,7 +999,6 @@
 
         return $db->query($sql);
     }
-
     function get_ticket_comentarios_nuevos($ticketId, $ultimoComentario){
 
         global $db;

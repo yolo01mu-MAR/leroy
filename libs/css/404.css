@@ -1,0 +1,108 @@
+@import url("colores.css");
+
+/* Reset y centrado total en la pantalla */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-background, #f4f6f8);
+  font-family: var(--font-family, "Segoe UI", Arial, sans-serif);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Tarjeta contenedora centrada */
+.error-card {
+  background-color: var(--color-surface, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-top: 6px solid var(--color-primary, #fab12f);
+  padding: 45px 35px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.error-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Estilo del número 404 */
+.error-number {
+  font-size: 100px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-text-primary, #1f2933);
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+
+/* Animación especial únicamente para el '0' */
+.animated-zero {
+  color: var(--color-primary, #fab12f);
+  display: inline-block;
+  animation: floatAndPulse 2.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes floatAndPulse {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.08) rotate(10deg);
+    color: var(--color-primary-hover, #fa812f);
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+/* Textos */
+.error-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-primary, #1f2933);
+  margin-bottom: 12px;
+}
+
+.error-msg {
+  font-size: 14px;
+  color: var(--color-text-secondary, #5f6b76);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* Botón estilo píldora/profesional */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-primary, #fab12f);
+  color: var(--color-text-light, #ffffff) !important;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 12px 30px;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(250, 177, 47, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: var(--color-primary-hover, #fa812f);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(250, 129, 47, 0.45);
+}

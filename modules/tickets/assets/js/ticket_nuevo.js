@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var hardwareOpciones     = document.getElementById('hardwareOpciones');
     var camposPeriferico     = document.getElementById('camposPeriferico');
 
-    // Ajusta estos IDs a tu catálogo real de ticket_categoria
+    // Catálogo real de ticket_categoria
     var categoriaEquipoPersonal = 2;
     var categoriaImpresora      = 6;
     var categoriaZebra          = 7;
@@ -70,27 +70,27 @@ document.addEventListener('DOMContentLoaded', function () {
     
     document.querySelectorAll("input[name='hardware_tipo']").forEach(function(radio){
 
-    radio.addEventListener("change", function(){
+        radio.addEventListener("change", function(){
 
-        camposEquipoPersonal.classList.remove("show");
-        camposPeriferico.classList.remove("show");
+            camposEquipoPersonal.classList.remove("show");
+            camposPeriferico.classList.remove("show");
 
-        document.querySelector("#camposEquipoPersonal select").required = false;
-        document.querySelector("#camposPeriferico select").required = false;
+            document.querySelector("#camposEquipoPersonal select").required = false;
+            document.querySelector("#camposPeriferico select").required = false;
 
-        if(this.value === "equipo"){
+            if(this.value === "equipo"){
 
-            camposEquipoPersonal.classList.add("show");
-            document.querySelector("#camposEquipoPersonal select").required = true;
+                camposEquipoPersonal.classList.add("show");
+                document.querySelector("#camposEquipoPersonal select").required = true;
 
-        }else{
+            }else{
 
-            camposPeriferico.classList.add("show");
-            document.querySelector("#camposPeriferico select").required = true;
+                camposPeriferico.classList.add("show");
+                document.querySelector("#camposPeriferico select").required = true;
 
-        }
+            }
+
+        });
 
     });
-
-});
 });

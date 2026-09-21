@@ -7,7 +7,7 @@ require_once('includes/ticket_helpers.php');
 $scripts = [
     'ticket_detalle_user'
 ];
-page_require_level(5);
+// page_require_level(5);
 
 $id = (int)$_GET['id'];
 $usuario = current_user();

@@ -2,7 +2,7 @@
   $page_title = 'Asistencia semanal';
 
   require_once __DIR__ . '/../../app/bootstrap.php';
-  require_once __DIR__ . '/../../includes/helpers.php';
+  require_once __DIR__ . '/includes/asistencia_helpers.php';
 
   page_require_level(5);
   require_permiso('asistencias.semanal');
@@ -27,8 +27,8 @@
 
   $semana  = $infoSemana['semana'];
   $anio    = $infoSemana['anio'];
-  $lunes   = $infoSemana['lunes'];
   $domingo = $infoSemana['domingo'];
+  $sabado  = $infoSemana['sabado'];
 
   $estadoAsistencia = [
     1 => ['icon' => 'glyphicon-ok',    'class' => 'estado-ok',    'title' => 'Asistió'],
@@ -160,8 +160,8 @@
         <div class="titulo-semana">
           <strong>
             Semana <?= $semana ?>
-            · <?= fecha_es($lunes, 'dd MMMM'); ?>
-            al <?= fecha_es($domingo, 'dd MMMM yyyy'); ?>
+            · <?= fecha_es($domingo, 'dd MMMM'); ?>
+            al <?= fecha_es($sabado, 'dd MMMM yyyy'); ?>
           </strong>
         </div>    
         <?php if ($resumen = resumen_filtros_asistencia()): ?>

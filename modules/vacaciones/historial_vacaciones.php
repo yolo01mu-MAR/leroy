@@ -7,7 +7,7 @@
     // require_permiso('personal.jefes_planilla');
 
     $scripts = [
-        'buscar_historial'
+        'buscador_historial_vacaciones'
     ];
 
     $estatusMap = [
@@ -17,10 +17,16 @@
         'DESCONOCIDO' => ['texto' => 'DESCONOCIDO', 'class' => 'label-secondary'],
     ];
 
-    $empleadosSaldos = find_all_solicitudes_aprobadas();
+    $semana_actual = (int)date('W');
+    $anio_actual   = (int)date('o');
+
+    $empleadosSaldos = find_all_solicitudes_aprobadas($semana_actual, $anio_actual
+    );
+
 
 ?>
 <?php include_once BASE_PATH . '/layouts/header.php'; ?>
+<link rel="stylesheet" href="assets/css/historial_vacaciones.css">
 <div class="row">
    <div class="col-md-12">
         <?php echo display_msg($msg); ?>
@@ -34,8 +40,8 @@
                     <span class="glyphicon glyphicon-th"></span>
                     Historial de Vacaciones
                 </strong>
-                <!-- Buscador Generico -->
-                <div class="pull-right buscador-panel">
+                <div class="pull-right filtro-historial">
+                    <!-- BUSCADOR -->
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-search"></span>
@@ -44,9 +50,51 @@
                             type="text"
                             id="buscador"
                             class="form-control"
-                            placeholder="Buscar por nómina o nombre">
+                            placeholder="Nómina o nombre"
+                            autocomplete="off">
+
+                    </div>
+                    <!-- SEMANA -->
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon">
+                            Semana
+                        </span>
+                        <input
+                            type="number"
+                            id="filtro_semana"
+                            class="form-control no-spinners"
+                            value="<?php echo $semana_actual; ?>"
+                            min="1"
+                            max="53"
+                            step="1"
+                            title="Número de semana">
+                    </div>
+                    <!-- AÑO -->
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon">
+                            Año
+                        </span>
+                        <input
+                            type="number"
+                            id="filtro_anio"
+                            class="form-control no-spinners"
+                            value="<?php echo $anio_actual; ?>"
+                            min="2020"
+                            max="2100"
+                            step="1"
+                            title="Año">
                     </div>
                 </div>
+                <!-- LIMPIAR -->
+                <button
+                    type="button"
+                    id="btn_limpiar_filtros"
+                    class="btn btn-default btn-sm"
+                    title="Limpiar filtros">
+
+                    <span class="glyphicon glyphicon-refresh"></span>
+
+                </button>
             </div>
             <div class="panel-body">
                 <table class="table table-bordered table-striped">
@@ -95,6 +143,14 @@
         </div>
     </div>
 </div>
+<!-- BOTON FLOTANTE -->
+ <button 
+    id="btn_generar_reporte" 
+    class="btn btn-primary btn-flotante" 
+    onclick="scrollToTop()">
+    Generar reporte
+
+</button>
 
 <!-- MODAL DE DETALLE -->
  
@@ -174,5 +230,8 @@
         </div>
     </div>
 </div>
-
+<script>
+    const semanaActual = <?php echo $semana_actual; ?>;
+    const anioActual = <?php echo $anio_actual; ?>;
+</script>
 <?php include_once BASE_PATH . '/layouts/footer.php'; ?>

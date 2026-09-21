@@ -296,24 +296,6 @@ if ($accion === 'aprobar') {
         ' tiene una solicitud de vacaciones pendiente de revisión por RH.'
     );
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | JEFE - NOTIFICACIÓN
-    |--------------------------------------------------------------------------
-    */
-
-    crear_notificacion(
-        $jefe_id,
-        $id,
-        'VACACIONES_ENVIADA_RH',
-        'Solicitud enviada a RH',
-        'La solicitud de vacaciones de ' .
-        $nombre_colaborador .
-        ' fue aprobada y enviada a RH para revisión.'
-    );
-
-
     /*
     |--------------------------------------------------------------------------
     | DESTINATARIOS DE CORREO

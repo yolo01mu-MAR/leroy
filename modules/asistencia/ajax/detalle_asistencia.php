@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../../../app/bootstrap.php';
-require_once __DIR__ . '/../../../includes/helpers.php';
+  require_once __DIR__ . '/../../../app/bootstrap.php';
+  require_once __DIR__ . '/../includes/asistencia_helpers.php';
 
 $id     = (int)$_GET['id'];
 $semana = $_GET['semana'];
@@ -8,12 +8,12 @@ $anio   = (int)$_GET['anio'];
 
 $infoSemana = obtenerSemanaISO($anio, $semana);
 
-$lunes   = $infoSemana['lunes'];
-$domingo = $infoSemana['domingo'];
+  $domingo = $infoSemana['domingo'];
+  $sabado  = $infoSemana['sabado'];
 
 $diasSemana = [];
 for ($i = 0; $i < 7; $i++) {
-  $fecha = date('Y-m-d', strtotime("$lunes +$i day"));
+  $fecha = date('Y-m-d', strtotime("$domingo +$i day"));
   $diasSemana[$fecha] = [
     'fecha' => $fecha,
     'estado' => 0
@@ -49,7 +49,7 @@ $estados = [
 ];
 
 // Nombres de días
-$diasNombres = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+$diasNombres = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
 /* ===============================
    RANGO DE FECHAS
@@ -71,11 +71,11 @@ $fin    = end($rows)['fecha'] ?? '';
 <!-- ===== TABLA ===== -->
 <div class="text-center">
     <h4>
-    <strong>
-            Semana <?= $semana ?>
-            · <?= fecha_es($lunes, 'dd MMMM'); ?>
-            al <?= fecha_es($domingo, 'dd MMMM yyyy'); ?>
-          </strong>
+      <strong>
+        Semana <?= $semana ?>
+        · <?= fecha_es($domingo, 'dd MMMM'); ?>
+        al <?= fecha_es($sabado, 'dd MMMM yyyy'); ?>
+      </strong>
     </h4>
     <div class="row text-center calendario-semana">
       <?php $i = 0; foreach ($diasSemana as $dia): ?>

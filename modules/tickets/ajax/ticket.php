@@ -1,9 +1,7 @@
 <?php
 
-require_once('../includes/load.php');
-require_once('../includes/ticket_helpers.php');
-
-page_require_level(5);
+require_once __DIR__ . '/../../../app/bootstrap.php';
+require_once __DIR__ . '/../includes/ticket_helpers.php';
 
 header('Content-Type: application/json');
 

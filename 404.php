@@ -6,7 +6,7 @@
     <title>404 - Página no encontrada | Le Roy</title>
     <!-- FontAwesome para iconos modernos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/libs/css/404.css?v=1.3">
+    <link rel="stylesheet" href="/asistenciaLEROY_NUEVO/libs/css/404.css?v=1.3">
 </head>
 <body>
 

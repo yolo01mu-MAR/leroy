@@ -1082,16 +1082,15 @@ function get_paros() {
 }
 function get_jefes_cuadrilla() {
   
-  $sql = "SELECT 
-            u.* 
-          FROM users u 
-            WHERE user_level = 2 
+  $sql = "SELECT u.*
+            FROM users u
+            WHERE u.user_level = 2
             AND EXISTS (
-              SELECT 1
-              FROM cuadrilla c
-              WHERE c.usuario_id = u.id
-            ) 
-          ORDER BY id asc";
+                SELECT 1
+                FROM encargado_cuadrilla ec
+                WHERE ec.encargado_id = u.id
+            )
+            ORDER BY u.id ASC";
 
   return find_by_sql($sql);
 }

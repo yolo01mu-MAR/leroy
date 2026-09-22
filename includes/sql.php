@@ -754,20 +754,21 @@ function find_jefe_planilla($jefe_id){
 
   $jefe_id = (int)$jefe_id;
 
-  $sql = "SELECT
+    $sql = "SELECT
             u.id        AS jefe_id,
             u.name      AS encargado,
             n.nombre    AS nave,
             d.zona     AS departamento,
             dp.nombre AS departamento_plantilla,
             g.nombre    AS grupoAcargo
-          FROM cuadrilla c
-          INNER JOIN users u ON c.usuario_id = u.id
+          FROM encargado_cuadrilla ec
+          INNER JOIN users u ON ec.encargado_id = u.id
+          INNER JOIN grupos g ON ec.grupo_id = g.id
+			 INNER JOIN cuadrilla c ON c.grupo_id = g.id
           INNER JOIN departamento_plantilla dp ON c.depPlantilla_id = dp.id
           INNER JOIN departamento d ON dp.departamento_id = d.ID
           INNER JOIN naves n ON d.nave_id= n.id
-          INNER JOIN grupos g ON c.grupo_id = g.id
-          WHERE c.usuario_id = {$jefe_id}
+          WHERE ec.encargado_id = {$jefe_id}
             AND u.user_level = 2
             AND u.statusLaboral_id = 1
           LIMIT 1";
@@ -783,19 +784,22 @@ function find_planilla_by_jefe($jefe_id){
 
   $jefe_id = (int)$jefe_id;
 
-  $sql = "SELECT
-            u.id,
-            u.name,
-            u.puesto,
-            g.nombre            AS grupo,
-            dp.nombre             AS departamento_plantilla,
-            u.statusLaboral_id
+  $sql = "SELECT 
+              u.id,
+              u.name,
+              u.puesto,
+              g.nombre AS grupo,
+              dp.nombre AS departamento_plantilla,
+              n.nombre AS nave,
+              u.statusLaboral_id
           FROM users u
-            INNER JOIN cuadrilla c ON u.cuadrilla_id = c.ID
-            INNER JOIN grupos g ON c.grupo_id = g.id
-            INNER JOIN departamento_plantilla dp ON c.depPlantilla_id = dp.id
-            INNER JOIN departamento d ON dp.departamento_id = d.ID
-          WHERE c.usuario_id = {$jefe_id}
+          INNER JOIN cuadrilla c ON u.cuadrilla_id = c.ID
+          INNER JOIN grupos g ON c.grupo_id = g.id
+          INNER JOIN departamento_plantilla dp ON c.depPlantilla_id = dp.id
+          INNER JOIN departamento d ON dp.departamento_id = d.ID
+          INNER JOIN naves n ON d.nave_id = n.ID
+          INNER JOIN encargado_cuadrilla ec ON ec.grupo_id = c.grupo_id AND ec.nave_id = n.ID
+          WHERE ec.encargado_id = {$jefe_id}
           ORDER BY u.id ASC";
 
 
@@ -844,7 +848,7 @@ function count_view_user_cuadrilla(){
     $sql = "SELECT 
                 COUNT(DISTINCT u.id) AS total
             FROM users u
-            INNER JOIN cuadrilla c ON c.usuario_id = u.id
+            INNER JOIN encargado_cuadrilla ec ON ec.encargado_id = u.id
             WHERE u.user_level = 2";
     $result = $db->query($sql);
     $row = $db->fetch_assoc($result);
@@ -871,8 +875,8 @@ function find_view_user_cuadrilla_paginated($limit, $offset){
             WHERE u.user_level = 2
             AND EXISTS (
               SELECT 1
-              FROM cuadrilla c
-              WHERE c.usuario_id = u.id
+              FROM encargado_cuadrilla ec
+              WHERE ec.encargado_id = u.id
             )
             ORDER BY u.id ASC
           LIMIT {$limit} OFFSET {$offset}";

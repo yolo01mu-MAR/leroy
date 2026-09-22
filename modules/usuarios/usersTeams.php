@@ -80,7 +80,7 @@
                   <?php echo remove_junk($jefe['nave']); ?>
                 </span>
                 <span class="label label-default">
-                  <?php echo remove_junk($jefe['departamento']); ?>
+                  Grupo a cargo: <?php echo remove_junk($jefe['grupoAcargo']); ?>
                 </span>
                 <span class="label label-success">
                   <?php echo count($planilla); ?> empleados

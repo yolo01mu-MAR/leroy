@@ -1,0 +1,130 @@
+@import "colores.css";
+
+/* Configuración General */
+body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-family);
+    font-size: var(--font-body-size);
+    font-weight: var(--font-body-weight);
+}
+
+/* Navbar */
+.custom-navbar {
+    background-color: var(--navbar-background);
+    border-color: var(--navbar-border) !important;
+    box-shadow: var(--shadow-navbar);
+}
+
+.custom-navbar .nav-link {
+    color: var(--navbar-text);
+    font-size: var(--font-menu-size);
+    font-weight: var(--font-menu-weight);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.custom-navbar .nav-link:hover {
+    background-color: var(--navbar-hover);
+    color: var(--navbar-text);
+}
+
+.custom-navbar .nav-link.active {
+    background-color: var(--navbar-active);
+    color: var(--color-text-primary);
+}
+
+/* Botón Principal */
+.btn-roy {
+    background-color: var(--color-primary);
+    color: var(--color-text-primary);
+    font-size: var(--font-button-size);
+    font-weight: var(--font-button-weight);
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-roy:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--color-text-light);
+}
+
+/* Carrusel */
+.carousel-item {
+    height: 550px;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    height: 100%;
+    filter: brightness(45%);
+}
+
+.carousel-caption {
+    bottom: 25%;
+}
+
+.carousel-caption h1 {
+    font-size: var(--font-title-size);
+    font-weight: var(--font-title-weight);
+    color: var(--color-text-light);
+}
+
+.carousel-caption p {
+    font-size: var(--font-subtitle-size);
+    font-weight: var(--font-subtitle-weight);
+    color: var(--color-text-light);
+}
+
+/* Tarjetas de Servicios */
+.servicio {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+}
+
+.servicio:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px var(--color-shadow);
+}
+
+.servicio i {
+    font-size: 60px;
+    color: var(--color-primary);
+}
+
+.servicio h3, 
+.servicio .card-title {
+    font-size: var(--font-heading-size);
+    font-weight: var(--font-heading-weight);
+    color: var(--color-text-primary);
+}
+
+.servicio p, 
+.servicio .card-text {
+    font-size: var(--font-secondary-size);
+    color: var(--color-text-secondary);
+}
+
+/* Pie de Página */
+footer {
+    background-color: var(--footer-background);
+    color: var(--footer-text);
+    border-top: 1px solid var(--footer-border);
+    font-size: var(--font-secondary-size);
+}
+
+footer a {
+    color: var(--footer-text-secondary);
+    transition: color 0.2s ease;
+}
+
+footer a:hover {
+    color: var(--footer-hover);
+}

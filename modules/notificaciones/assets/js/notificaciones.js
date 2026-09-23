@@ -16,8 +16,24 @@
             window.BASE_URL +
             '/modules/notificaciones/ajax/eliminar_notificacion.php',
 
-        intervalo: 30000
+        intervalo: 30000,
+
+        // ==========================================
+        // NOTIFICACIONES DEL NAVEGADOR
+        // ==========================================
+        navegador: {
+            habilitado: true,
+            titulo: 'LE ROY',
+            autoCierreMs: 8000,
+            tiposUrgentes: [
+                'VACACIONES_PENDIENTE'
+            ]
+        }
+
     };
+
+    let ultimoIdNotificacion = 0;
+    let notificacionesInicializadas = false;
 
 
     // =====================================================
@@ -70,8 +86,7 @@
             event.stopPropagation();
 
 
-            const abierto =
-                panel.classList.contains('abierto');
+            const abierto = panel.classList.contains('abierto');
 
 
             if (abierto) {
@@ -79,6 +94,8 @@
                 cerrarPanel();
 
             } else {
+
+                solicitarPermisoNotificaciones();
 
                 abrirPanel();
 
@@ -252,11 +269,58 @@
 
     }
 
+    async function solicitarPermisoNotificaciones() {
+
+        if (!('Notification' in window)) {
+
+            console.warn(
+                'Este navegador no soporta notificaciones.'
+            );
+
+            return;
+        };
+
+        if (Notification.permission === 'granted') {
+
+            console.log(
+                'Notificaciones ya están habilitadas.'
+            );
+
+            return;
+        }
+
+        if (Notification.permission === 'denied') {
+
+            console.warn(
+                'Las notificaciones están bloqueadas.'
+            );
+
+            return;
+        }
+
+        try {
+
+            const permiso =
+                await Notification.requestPermission();
+
+            console.log(
+                'Resultado permiso:',
+                permiso
+            );
+
+        } catch (error) {
+
+            console.error(
+                'Error solicitando permiso:',
+                error
+            );
+
+        }
+    }
 
     // =====================================================
     // OBTENER NOTIFICACIONES
     // =====================================================
-
     async function cargarNotificaciones() {
 
         try {
@@ -292,6 +356,10 @@
                 datos.total_no_leidas
             );
 
+            procesarNotificacionesNavegador(
+                datos.notificaciones
+            );
+
             renderizarNotificaciones(
                 datos.notificaciones
             );
@@ -304,6 +372,278 @@
             );
 
         }
+
+    }
+
+    // =====================================================
+    // NOTIFICACIONES DEL NAVEGADOR
+    // =====================================================
+    function procesarNotificacionesNavegador(
+        notificaciones
+    ) {
+
+        if (
+            !CONFIG.navegador.habilitado ||
+            !Array.isArray(notificaciones)
+        ) {
+            return;
+        }
+
+        const ordenadas = [...notificaciones].sort(
+            (a, b) =>
+                Number(a.id) - Number(b.id)
+        );
+
+        // ==========================================
+        // PRIMERA CONSULTA
+        // ==========================================
+
+        if (!notificacionesInicializadas) {
+
+            if (ordenadas.length > 0) {
+
+                ultimoIdNotificacion =
+                    Math.max(
+                        ...ordenadas.map(
+                            n => Number(n.id) || 0
+                        )
+                    );
+
+            } else {
+
+                ultimoIdNotificacion = 0;
+
+            }
+
+            notificacionesInicializadas = true;
+
+            return;
+        }
+
+
+        // ==========================================
+        // BUSCAR NUEVAS
+        // ==========================================
+
+        const nuevas =
+            ordenadas.filter(
+                notificacion =>
+                    Number(notificacion.id) >
+                    ultimoIdNotificacion
+            );
+
+
+        console.log(
+            'Notificaciones nuevas:',
+            nuevas
+        );
+
+
+        if (nuevas.length === 0) {
+            return;
+        }
+
+
+        // ==========================================
+        // ACTUALIZAR ÚLTIMO ID
+        // ==========================================
+
+        ultimoIdNotificacion =
+            Math.max(
+                ...nuevas.map(
+                    n => Number(n.id) || 0
+                )
+            );
+
+
+        // ==========================================
+        // MOSTRAR
+        // ==========================================
+
+        nuevas.forEach(
+            mostrarNotificacionNavegador
+        );
+
+    }
+
+    function esTipoUrgente(tipo) {
+
+        return CONFIG.navegador.tiposUrgentes.includes(tipo);
+
+    }
+
+    function mostrarNotificacionNavegador(
+        notificacion
+    ) {
+
+        // El navegador no soporta Notification
+        if (!('Notification' in window)) {
+
+            console.warn(
+                'Este navegador no soporta notificaciones.'
+            );
+
+            return;
+        }
+
+        // El usuario todavía no ha dado permiso
+        if (Notification.permission === 'default') {
+
+            Notification.requestPermission()
+                .then(function (permiso) {
+
+                    if (permiso === 'granted') {
+
+                        mostrarNotificacionNavegador(
+                            notificacion
+                        );
+
+                    }
+
+                })
+                .catch(function (error) {
+
+                    console.error(
+                        'No se pudo solicitar permiso:',
+                        error
+                    );
+
+                });
+
+            return;
+        }
+
+        // Permiso rechazado
+        if (Notification.permission !== 'granted') {
+            return;
+        }
+
+        const titulo =
+            notificacion.titulo ||
+            'Nueva notificación';
+
+        const mensaje =
+            notificacion.mensaje ||
+            'Tienes una nueva notificación en LE ROY.';
+
+        const urgente =
+            esTipoUrgente(notificacion.tipo);
+
+        const marcaTiempo =
+            notificacion.fecha_creacion
+                ? new Date(
+                    notificacion.fecha_creacion.replace(' ', 'T')
+                ).getTime()
+                : Date.now();
+
+        const navegador =
+            new Notification(
+                titulo,
+                {
+                    body: mensaje,
+                    icon:
+                        window.BASE_URL +
+                        '/assets/img/icon-192.png',
+                    badge:
+                        window.BASE_URL +
+                        '/assets/img/icon-badge.png',
+                    tag:
+                        'lero-notificacion-' +
+                        notificacion.id,
+                    renotify: true,
+                    requireInteraction: urgente,
+                    dir: 'auto',
+                    lang: 'es-MX',
+                    timestamp: marcaTiempo
+                }
+            );
+
+        navegador.onclick = function () {
+
+            window.focus();
+
+            abrirNotificacionNavegador(
+                notificacion
+            );
+
+            navegador.close();
+
+        };
+
+        // ==========================================
+        // AUTOCIERRE (solo si no es urgente)
+        // ==========================================
+
+        if (!urgente) {
+
+            setTimeout(
+                function () {
+                    navegador.close();
+                },
+                CONFIG.navegador.autoCierreMs
+            );
+
+        }
+
+    }
+
+    function abrirNotificacionNavegador(
+        notificacion
+    ) {
+
+        const tipo =
+            notificacion.tipo;
+
+        const solicitudId =
+            notificacion.solicitud_id;
+
+        if (!solicitudId) {
+            return;
+        }
+
+        let url = '';
+
+        switch (tipo) {
+
+            case 'VACACIONES_PENDIENTE':
+
+                url =
+                    window.BASE_URL +
+                    '/modules/solicitudes/jefe_solicitudes_vacaciones.php' +
+                    '?id=' +
+                    encodeURIComponent(
+                        solicitudId
+                    ) +
+                    '&estatus=PENDIENTE_JEFE';
+
+                break;
+
+
+            case 'VACACIONES_ENVIADA_RH':
+
+                url =
+                    window.BASE_URL +
+                    '/modules/solicitudes/rh_solicitudes_vacaciones.php' +
+                    '?id=' +
+                    encodeURIComponent(
+                        solicitudId
+                    ) +
+                    '&estatus=PENDIENTE_RH';
+
+                break;
+
+
+            default:
+
+                console.warn(
+                    'Tipo de notificación sin navegación:',
+                    tipo
+                );
+
+                return;
+        }
+
+        window.location.href = url;
 
     }
 

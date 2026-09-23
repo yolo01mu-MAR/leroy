@@ -432,17 +432,9 @@
                     ultimoIdNotificacion
             );
 
-
-        console.log(
-            'Notificaciones nuevas:',
-            nuevas
-        );
-
-
         if (nuevas.length === 0) {
             return;
         }
-
 
         // ==========================================
         // ACTUALIZAR ÚLTIMO ID

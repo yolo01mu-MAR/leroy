@@ -1,6 +1,38 @@
-/* ==========================================================
-   NUM NOMINA - SIN ESTILO PREDEFINIDO DE NUMBER
-   ========================================================== */
+@import "../../../../libs/css/colores.css";
+
+/* ===================
+   GENERAL Y TIPOGRAFÍA
+   =================== */
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+.page-title {
+    font-size: var(--font-title-size);
+    font-weight: var(--font-title-weight);
+    color: var(--color-text-primary);
+}
+
+/* ===================
+   TARJETA CONTENEDORA PRINCIPAL
+   =================== */
+.card {
+    background-color: var(--color-surface);
+    border-color: var(--color-border) !important;
+    box-shadow: var(--shadow-card);
+}
+
+/* ENVOLTORIO DE LA TABLA (Reduce el ancho percibido y genera sangría interna) */
+.tabla-contenedor-wrapper {
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+}
+
+/* ===================
+   INPUT SPINNERS
+   =================== */
 input.no-spinners::-webkit-outer-spin-button,
 input.no-spinners::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -13,38 +45,221 @@ input.no-spinners[type=number] {
     appearance: textfield;
 }
 
-/* ==========================================================
-   Ajustes para el filtro de semana
-   ========================================================== */
-#filtro_semana {
-    width: 90px;
-    text-align: center;
-    font-size: 16px;
+/* ===================
+   ENCABEZADO E ICONOS
+   =================== */
+.bg-primary-subtle {
+    background-color: var(--navbar-hover) !important;
 }
 
-.buscador-panel {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+.text-primary {
+    color: var(--color-primary-hover) !important;
 }
 
-/* ==========================================================
-   Botón Flotante GENERAR REPORTE
-   ========================================================== */
-.btn-flotante {
+/* ===================
+   SEPARADOR
+   =================== */
+
+/* Contenedor del icono principal */
+.icon-box-header {
+    background-color: var(--navbar-hover, #FFF7E8);
+
+    border: 1px solid var(--color-border, #E8E3DA);
+}
+
+/* Estilo del título */
+.page-title {
+    font-size: var(--font-title-size, 1.6rem);
+    font-weight: var(--font-title-weight, 700);
+    color: var(--color-text-primary, #1F2933);
+    letter-spacing: -0.3px;
+}
+
+/* Línea separadora decorativa */
+.header-divider {
+    position: relative;
+    height: 1px;
+    background-color: var(--color-border, #E8E3DA);
+    width: 100%;
+}
+
+/* Acento cromático en la esquina izquierda de la línea */
+.header-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--color-primary, #FAB12F);
+    border-radius: 2px;
+}
+
+/* ===================
+   FORMULARIOS Y FILTROS
+   =================== */
+.form-label {
+    font-size: var(--font-label-size);
+    font-weight: var(--font-label-weight);
+    color: var(--color-text-primary) !important;
+}
+
+.form-control {
+    font-size: var(--font-body-size);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.25rem rgba(250, 177, 47, 0.25);
+}
+
+.input-group-text {
+    border-color: var(--color-border);
+    background-color: var(--color-surface-secondary) !important;
+    color: var(--color-text-secondary) !important;
+    font-size: var(--font-body-size);
+}
+
+/* Botón limpiar filtros */
+#btn_limpiar_filtros {
+    border-color: var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+    font-size: var(--font-button-size);
+    font-weight: var(--font-button-weight);
+    transition: all 0.2s ease;
+}
+
+#btn_limpiar_filtros:hover {
+    background-color: var(--color-surface-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-disabled);
+}
+
+/* ===================
+   TABLAS Y RESULTADOS
+   =================== */
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-hover-bg: var(--table-row-hover);
+    --bs-table-hover-color: var(--table-text-color);
+    color: var(--table-text-color);
+}
+
+.table thead tr {
+    background-color: var(--table-header-bg) !important;
+    border-bottom: 2px solid var(--table-header-border);
+}
+
+.table th {
+    font-size: var(--font-secondary-size);
+    font-weight: var(--font-heading-weight);
+    color: var(--table-header-text);
+    letter-spacing: 0.5px;
+    background-color: var(--table-header-bg) !important;
+}
+
+.table td {
+    font-size: var(--font-secondary-size);
+    color: var(--table-text-color);
+    border-bottom-color: var(--table-border-color);
+    transition: background-color 0.2s ease; /* Transición suave al pasar el mouse */
+}
+
+/* Efecto Hover explícito en cada celda/fila */
+.table-hover tbody tr:hover td {
+    background-color: var(--table-row-hover) !important;
+}
+
+/* ===================
+   ESTATUS Y BADGES
+   =================== */
+.badge {
+    font-size: var(--font-small-size);
+    font-weight: 600;
+    padding: 0.45em 0.85em;
+}
+
+.badge.bg-success, 
+.badge.label-success,
+.badge-aprobado {
+    background-color: var(--color-aprobado) !important;
+    color: var(--color-text-light) !important;
+}
+
+.badge.bg-warning, 
+.badge.label-warning,
+.badge-pendiente {
+    background-color: var(--color-pendiente) !important;
+    color: var(--color-text-primary) !important;
+}
+
+.badge.bg-danger, 
+.badge.label-danger,
+.badge-rechazado {
+    background-color: var(--color-rechazado) !important;
+    color: var(--color-text-light) !important;
+}
+
+.badge.bg-info,
+.badge-info {
+    background-color: var(--color-info) !important;
+    color: var(--color-text-light) !important;
+}
+
+/* ===================
+   BOTÓN FLOTANTE
+   =================== */
+.btn-flotante, 
+#btn_generar_reporte {
     position: fixed;
     bottom: 25px;
     right: 25px;
-    z-index: 9999;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
+    z-index: 1050;
+    padding: 12px 24px;
+    font-size: var(--font-button-size);
+    font-weight: var(--font-button-weight);
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-primary) !important;
     border-radius: 50px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-    transition: all 0.3s ease;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-flotante:hover {
+.btn-flotante:hover, 
+#btn_generar_reporte:hover {
+    background-color: var(--color-primary-hover) !important;
+    border-color: var(--color-primary-hover) !important;
+    color: var(--color-text-light) !important;
     transform: translateY(-2px);
-    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ===================
+   MODAL
+   =================== */
+.modal-content {
+    background-color: var(--color-surface);
+    border-radius: 12px;
+    box-shadow: var(--shadow-card);
+}
+
+.modal-header {
+    background-color: var(--color-surface-secondary) !important;
+    border-bottom-color: var(--color-border);
+}
+
+.modal-title {
+    font-size: var(--font-heading-size);
+    font-weight: var(--font-heading-weight);
+    color: var(--color-text-primary);
+}
+
+.modal-footer {
+    background-color: var(--color-surface-secondary) !important;
+    border-top-color: var(--color-border);
 }

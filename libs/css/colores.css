@@ -76,6 +76,31 @@
 
    --footer-border: #3A352D;
 
+   /* ========================================
+   TABLAS
+   ======================================== */
+
+    /* Encabezado: Fondo gris claro neutro en lugar de amarillo claro */
+    --table-header-bg: #F8F9FA;
+    --table-header-text: #3F4750;
+
+    /* Filas */
+    --table-row-bg: #FFFFFF;
+    --table-row-alt-bg: #FCFBF8;
+
+    /* Hover: Un gris azulado suave en lugar de amarillo (#FFF9ED) */
+    --table-row-hover: #F1F3F5;
+
+    /* Bordes */
+    --table-border-color: #E8E3DA;
+
+    /* Textos */
+    --table-text-color: #1F2933;
+    --table-text-muted: #68737D;
+
+    /* Elementos especiales: Borde inferior del encabezado sutil */
+    --table-header-border: #E0E0E0; 
+    --table-divider: #EEEAE3;     
 
    /* ========================================
    TEXTOS

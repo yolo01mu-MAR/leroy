@@ -1,129 +1,507 @@
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .login-container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-    .logo-container {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .logo-container img {
-      max-width: 200px;
-      height: auto;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      color: #555;
-    }
-    input[type="text"],
-    input[type="password"],
-    button {
-      width: 100%;              /* mismo ancho para todos */
-      padding: 10px;
-      border-radius: 5px;
-      box-sizing: border-box;   /* evita que el padding desborde */
-    }
-    input[type="text"],
-    input[type="password"] {
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: #007bff;
-      border: none;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
+@import "colores.css";
 
-.password-wrapper {
+
+/* ========================================
+   PÁGINA
+   ======================================== */
+
+.login-page {
+
+  background-color: var(--color-background);
+
+  padding: 30px 15px;
+
+}
+
+
+/* ========================================
+   TARJETA LOGIN
+   ======================================== */
+
+.login-card {
+
   position: relative;
-}
 
-.password-wrapper input {
   width: 100%;
-  padding-right: 42px;
+
+  background-color: var(--color-surface);
+
+  border-radius: 18px;
+
+  border-top: 5px solid var(--color-primary) !important;
+
+  border-left: 1px solid var(--color-border) !important;
+  border-right: 1px solid var(--color-border) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+
+  box-shadow: var(--shadow-card);
+
+  overflow: hidden;
+
 }
 
-.toggle-password {
+
+/* ========================================
+   BOTÓN REGRESAR
+   ======================================== */
+
+.login-back {
+
   position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #555;
-  display: none;
-}
 
-.toggle-password svg {
-  width: 20px;
-  height: 20px;
-}
+  top: 22px;
 
-.toggle-password:hover {
-  color: #000;
-}
+  left: 24px;
 
-.eye-close {
-  display: none;
-}
+  z-index: 2;
 
-.toggle-password.show {
-  display: block;
-}
-
-.toggle-password.active .eye-open {
-  display: none;
-}
-
-.toggle-password.active .eye-close {
-  display: block;
 }
 
 
+.login-back .btn {
 
-/* ============================= */
-/* MENSAJES DE ERROR */
-/* ============================= */
+  color: var(--color-text-secondary);
+
+  font-size: 1.6rem;
+
+  line-height: 1;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+
+}
+
+
+.login-back .btn:hover {
+
+  color: var(--color-primary-hover);
+
+  transform: translateX(-2px);
+
+}
+
+
+/* ========================================
+   LOGO
+   ======================================== */
+
+.logo-img {
+
+  width: 155px;
+
+  max-width: 100%;
+
+  height: auto;
+
+}
+
+
+/* ========================================
+   TÍTULOS
+   ======================================== */
+
+.login-title {
+
+  color: var(--color-text-primary);
+
+  font-size: 1.65rem;
+
+  font-weight: 700;
+
+  letter-spacing: -0.4px;
+
+}
+
+
+.login-subtitle {
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.95rem;
+
+  line-height: 1.5;
+
+}
+
+
+/* ========================================
+   LABELS
+   ======================================== */
+
+.form-label {
+
+  color: var(--color-text-primary);
+
+  font-size: 0.9rem;
+
+  font-weight: 600;
+
+  margin-bottom: 7px;
+
+}
+
+
+/* ========================================
+   INPUT GROUP
+   ======================================== */
+
+.input-group-text {
+
+  background-color: var(--color-surface);
+
+  color: var(--color-text-secondary);
+
+  border-color: var(--color-border);
+
+  padding-left: 14px;
+
+  padding-right: 10px;
+
+}
+
+
+.form-control {
+
+  min-height: 48px;
+
+  color: var(--color-text-primary);
+
+  background-color: var(--color-surface);
+
+  border-color: var(--color-border);
+
+  font-size: 0.95rem;
+
+}
+
+
+.form-control::placeholder {
+
+  color: var(--color-text-secondary);
+
+  opacity: 0.75;
+
+}
+
+
+/* ========================================
+   FOCUS INPUT
+   ======================================== */
+
+.form-control:focus {
+
+  color: var(--color-text-primary);
+
+  background-color: var(--color-surface);
+
+  border-color: var(--color-primary-hover);
+
+  box-shadow: 0 0 0 0.2rem rgba(250, 129, 47, 0.15);
+
+}
+
+
+/* Cuando el input está enfocado,
+   también cambia el borde del icono */
+
+.input-group:focus-within .input-group-text {
+
+  border-color: var(--color-primary-hover);
+
+  color: var(--color-primary-hover);
+
+}
+
+
+/* ========================================
+   BOTÓN MOSTRAR CONTRASEÑA
+   ======================================== */
+
+.btn-password {
+
+  min-width: 48px;
+
+  border: 1px solid var(--color-border);
+
+  border-left: 0;
+
+  background-color: var(--color-surface);
+
+  color: var(--color-text-secondary);
+
+}
+
+
+.btn-password:hover {
+
+  color: var(--color-text-primary);
+
+  background-color: var(--color-background);
+
+}
+
+
+.btn-password:focus {
+
+  box-shadow: none;
+
+}
+
+
+/* ========================================
+   BOTÓN LOGIN
+   ======================================== */
+
+.btn-login {
+
+  min-height: 50px;
+
+  background-color: var(--color-primary);
+
+  border-color: var(--color-primary);
+
+  color: var(--color-text-primary);
+
+  font-size: 1rem;
+
+  font-weight: 600;
+
+  border-radius: 8px;
+
+  box-shadow: 0 3px 8px var(--color-shadow);
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
+
+}
+
+
+.btn-login:hover {
+
+  background-color: var(--color-primary-hover);
+
+  border-color: var(--color-primary-hover);
+
+  color: var(--color-text-primary);
+
+  box-shadow: 0 5px 12px var(--color-shadow);
+
+}
+
+
+.btn-login:active {
+
+  transform: scale(0.99);
+
+}
+
+
+/* ========================================
+   RECUPERAR CONTRASEÑA
+   ======================================== */
+
+.forgot-text {
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.9rem;
+
+}
+
+
+.forgot-link {
+
+  color: var(--color-primary-hover);
+
+  font-size: 0.9rem;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+}
+
+
+.forgot-link:hover {
+
+  color: var(--color-danger);
+
+  text-decoration: underline;
+
+}
+
+
+/* ========================================
+   TEXTO INFERIOR
+   ======================================== */
+
+.login-footer {
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.78rem;
+
+  opacity: 0.8;
+
+}
+
+
+/* ========================================
+   ALERTAS
+   ======================================== */
+
 .alert {
-  padding: 12px 15px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  font-size: 14px;
-  text-align: center;
-}.alert-danger,
+
+  border-radius: 8px;
+
+  font-size: 0.88rem;
+
+}
+
+
+.alert-danger,
 .error {
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
-}.alert-warning,
+
+  background-color: rgba(221, 3, 3, 0.08);
+
+  border-color: var(--color-danger);
+
+  color: var(--color-danger);
+
+}
+
+
+.alert-warning,
 .warning {
-  background-color: #fff3cd;
-  border: 1px solid #ffeeba;
-  color: #856404;
-}.alert .close {
+
+  background-color: rgba(250, 177, 47, 0.12);
+
+  border-color: var(--color-pendiente);
+
+  color: var(--color-text-primary);
+
+}
+
+
+.alert .close {
+
   display: none !important;
+
+}
+
+
+/* ========================================
+   MODAL
+   ======================================== */
+
+.modal-content {
+
+  border-radius: 14px;
+
+}
+
+
+.modal-header {
+
+  border-bottom: 1px solid var(--color-border);
+
+}
+
+
+.modal-title {
+
+  color: var(--color-text-primary);
+
+  font-weight: 700;
+
+}
+
+
+.modal-title i {
+
+  color: var(--color-primary-hover);
+
+}
+
+
+.modal-body .form-control {
+
+  min-height: 46px;
+
+}
+
+
+.btn-modal-primary {
+
+  background-color: var(--color-primary);
+
+  border-color: var(--color-primary);
+
+  color: var(--color-text-primary);
+
+  font-weight: 600;
+
+}
+
+
+.btn-modal-primary:hover {
+
+  background-color: var(--color-primary-hover);
+
+  border-color: var(--color-primary-hover);
+
+  color: var(--color-text-primary);
+
+}
+
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 576px) {
+
+  .login-page {
+
+    padding: 20px 12px;
+
+  }
+
+
+  .login-card {
+
+    border-radius: 15px;
+
+  }
+
+
+  .login-card .card-body {
+
+    padding: 2rem 1.4rem !important;
+
+  }
+
+
+  .logo-img {
+
+    width: 140px;
+
+  }
+
+
+  .login-title {
+
+    font-size: 1.5rem;
+
+  }
+
+
+  .login-back {
+    top: 18px;
+    left: 18px;
+  }
 }

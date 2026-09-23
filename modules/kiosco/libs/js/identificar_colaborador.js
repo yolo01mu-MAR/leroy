@@ -6,10 +6,8 @@ function volver(){
         window.location.href = "../../index.php";
         return;
     }
-
     // Si estamos dentro de una pantalla secundaria,
     // regresar al menú del kiosco
-
     if (typeof LectorQR !== "undefined" && LectorQR.detener) {
         LectorQR.detener();
     }
@@ -87,6 +85,14 @@ function mostrarPassword(){
     }
 
 }
+
+// Limpiar campos
+$('input[name="opcionAcceso"]').on('change', function() {
+    $("#nomina").val("");
+    $("#passwordNomina").val("");
+    $("#errorNomina").addClass("d-none").html("");
+    if (temporizadorError) clearTimeout(temporizadorError);
+});
 function consultaXnomina(){
 
     let nomina = $("#nomina").val().trim();

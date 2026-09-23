@@ -6,14 +6,14 @@
     <title>404 - Página no encontrada | Le Roy</title>
     <!-- FontAwesome para iconos modernos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="libs/css/404.css?v=1.3">
+    <link rel="stylesheet" href="/asistenciaLEROY_NUEVO/libs/css/404.css?v=1.3">
 </head>
 <body>
 
     <div class="error-card">
         <!-- Logo de la empresa -->
         <div class="brand-logo">
-            <img src="libs/images/logo.png" alt="Le Roy" onerror="this.style.display='none'"> 
+            <img src="/asistenciaLEROY_NUEVO/libs/images/logo.png" alt="Le Roy" onerror="this.style.display='none'"> 
             <!-- Si no encuentra la imagen del logo, simplemente no rompe el diseño -->
         </div>
 
@@ -30,11 +30,12 @@
 
         <!-- Acciones -->
         <div class="actions-wrapper">
-            <a href="/asistenciaLEROY_NUEVO/home.php" class="btn-back">
-                <i class="fa-solid fa-house"></i>
-                <span>Regresar al Inicio</span>
+            <a href="/asistenciaLEROY_NUEVO/home.php" 
+                class="btn-back" 
+                onclick="if (window.history.length > 1) { window.history.back(); return false; }">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Regresar a la página anterior</span>
             </a>
-            
         </div>
     </div>
 

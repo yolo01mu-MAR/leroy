@@ -1,185 +1,326 @@
-.btn-roy {
-    background-color: #f1c40f;
-    border-color: #d4ac0d;
-    color: #000;
-}
-.btn-roy:hover{
-    background:#d9b20d;
-}
-body{
-    background:#f5f6fa;
-}
-/* NAVBAR */
-.navbar{
-    box-shadow:0 2px 15px rgba(0,0,0,.15);
-}
-.navbar-brand{
-    font-weight:bold;
-    font-size:28px;
-}
-/* CARRUSEL */
-.carousel-item{
-    height:550px;
-}
-.carousel-item img{
-    object-fit:cover;
-    height:100%;
-    filter:brightness(45%);
-}
-.carousel-caption{
-    bottom:25%;
-}
-.carousel-caption h1{
-    font-size:55px;
-    font-weight:bold;
-}
-.carousel-caption p{
-    font-size:22px;
-}
-/* TARJETAS */
-.servicio{
-    transition:.3s;
-    border:none;
-    border-radius:15px;
-    cursor:pointer;
-}
-.servicio:hover{
-    transform:translateY(-8px);
-    box-shadow:0 15px 30px rgba(0,0,0,.20);
-}
-.servicio i{
-    font-size:60px;
-    color: #f1c40f;
-}
-footer{
-    background:#202124;
-    color:white;
-}
-.logo{
-    width:180px;
-}
-.card-login{
-    border:none;
-    border-radius:18px;
-    box-shadow:0 10px 35px rgba(0,0,0,.15);
-}
-.btn-identificar{
-    height:70px;
-    font-size:20px;
-    font-weight:600;
-    border-radius:12px;
-}
-#reader{
-    display:none;
-    margin:auto;
-    max-width:350px;
-}
-#consultaNomina{
-    display:none;
-}
-.titulo{
-    font-size:28px;
-    font-weight:bold;
-}
-.subtitulo{
-    color:#777;
-}
-#relojSesion{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    background:#212529;
-    color:white;
-    padding:10px 18px;
-    border-radius:30px;
-    font-size:18px;
-    font-weight:bold;
-    box-shadow:0 8px 20px rgba(0,0,0,.35);
-    z-index:9999;
-    transition:.3s;
-}
-#relojSesion i{
-    margin-right:8px;
-}
-.btn-roy {
-    background-color: #f1c40f;
-    border-color: #d4ac0d;
-    color: #000;
-}
-body{
-    background:#f5f6fa;
-}
-/* NAVBAR */
-.navbar{
-    box-shadow:0 2px 15px rgba(0,0,0,.15);
-}
-.navbar-brand{
-    font-weight:bold;
-    font-size:28px;
-}
-/* CARRUSEL */
-.carousel-item{
-    height:550px;
-}
-.carousel-item img{
-    object-fit:cover;
-    height:100%;
-    filter:brightness(45%);
-}
-.carousel-caption{
-    bottom:25%;
-}
-.carousel-caption h1{
-    font-size:55px;
-    font-weight:bold;
-}
-.carousel-caption p{
-    font-size:22px;
-}
-/* TARJETAS */
-.servicio{
-    transition:.3s;
-    border:none;
-    border-radius:15px;
-    cursor:pointer;
-}
-.servicio:hover{
-    transform:translateY(-8px);
-    box-shadow:0 15px 30px rgba(0,0,0,.20);
-}
-.servicio i{
-    font-size:60px;
-    color: #f1c40f;
-}
-footer{
-    background:#202124;
-    color:white;
-}
+@import "../../../../libs/css/colores.css";
+
 /* ==========================
-   NAVBAR PORTAL RH
+  ESTILOS GENERALES
 ========================== */
-
-.navbar .nav-link{
-
-    color:#212529;
-    font-weight:500;
-    border-radius:8px;
-    padding:.55rem 1rem;
-    transition:all .20s ease;
-
+body {
+  background: var(--color-surface-secondary);
 }
 
-.navbar .nav-link:hover{
-
-    background:#f1c40f;   /* Amarillo LE ROY */
-    color:#000 !important;
-
+/* NAVBAR */
+.navbar {
+  box-shadow: var(--shadow-card);
 }
 
-.navbar .nav-link.active{
+.navbar-brand {
+  font-weight: bold;
+  font-size: 28px;
+}
 
-    background:#f1c40f;
-    color:#000 !important;
-    font-weight:600;
+.navbar .nav-link {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.55rem 1rem;
+  transition: all 0.2s ease;
+}
 
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  background: var(--color-primary);
+  color: var(--color-text-primary) !important;
+  font-weight: 600;
+}
+
+/* CARRUSEL */
+.carousel-item {
+  height: 550px;
+}
+
+.carousel-item img {
+  object-fit: cover;
+  height: 100%;
+  filter: brightness(45%);
+}
+
+.carousel-caption {
+  bottom: 25%;
+}
+
+.carousel-caption h1 {
+  font-size: 55px;
+  font-weight: bold;
+}
+
+.carousel-caption p {
+  font-size: 22px;
+}
+
+/* TARJETAS Y FOOTER */
+.servicio {
+  transition: 0.3s;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.servicio:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px var(--color-shadow);
+}
+
+.servicio i {
+  font-size: 60px;
+  color: var(--color-primary);
+}
+
+footer {
+  background: var(--menu-background);
+  color: var(--color-text-light);
+}
+
+.logo {
+  width: 180px;
+}
+
+.titulo {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.subtitulo {
+  color: var(--color-text-secondary);
+}
+
+#relojSesion {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--menu-background);
+  color: var(--color-text-light);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: var(--shadow-card);
+  z-index: 9999;
+  transition: 0.3s;
+}
+
+#relojSesion i {
+  margin-right: 8px;
+}
+
+/* ==========================
+  LOGIN KIOSKO 
+========================== */
+body.identificar_colaborador {
+  font-family: Arial, sans-serif;
+  background: var(--color-background);
+  background-attachment: fixed !important;
+  color: var(--color-text-primary);
+  min-height: 100vh;
+}
+/* Contenedor Card Principal */
+.card-login {
+  background: var(--color-surface) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-card) !important;
+  border-top: 6px solid var(--color-primary) !important;
+  border-left: 1px solid var(--color-border) !important;
+  border-right: 1px solid var(--color-border) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  overflow: hidden; /* Evita que los bordes corten el acento superior */
+  position: relative;
+}
+
+/* Botón Regresar */
+.btn-back-top {
+  position: absolute;
+  top: 20px;
+  left: 22px;
+  color: var(--color-text-secondary);
+  font-size: 1.85rem;
+  line-height: 1;
+  padding: 6px;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+  text-decoration: none;
+  z-index: 10;
+}
+
+.btn-back-top:hover {
+  color: var(--color-danger);
+}
+
+/* Logo y Títulos */
+.logo-img {
+  max-width: 170px;
+  height: auto;
+}
+
+.title-text {
+  color: var(--color-text-primary);
+  font-size: 1.6rem;
+  letter-spacing: -0.3px;
+}
+
+.subtitle-text {
+  color: var(--color-text-secondary);
+}
+
+/* =====================================
+SWITCHES de Opción (Consulta / Trámites) 
+ ===================================== */
+
+.campo-password {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  width: 100% !important;
+  box-sizing: border-box;
+  transform: translateY(-8px);
+  transition:
+    max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    margin 0.35s ease;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.campo-password > * {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Oculto cuando está seleccionada la opción "Consulta" */
+#opcionConsulta:checked ~ .campo-password {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-8px);
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Desplegar suavemente cuando está seleccionada la opción "Trámites" */
+#opcionTramites:checked ~ .campo-password {
+  max-height: 160px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.btn-group {
+  background-color: var(--color-switch-bg);
+  padding: 4px;
+  border-radius: 12px;
+  display: flex !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+.btn-opcion {
+  flex: 1 1 50% !important;
+  width: 50% !important;
+  border: none !important;
+  background-color: transparent !important;
+  color: var(--color-text-secondary) !important;
+  font-weight: 500;
+  border-radius: 8px !important;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  white-space: nowrap; /* Evita saltos de línea en el texto */
+  text-align: center;
+}
+#opcionConsulta:checked ~ .btn-group label[for="opcionConsulta"],
+#opcionTramites:checked ~ .btn-group label[for="opcionTramites"] {
+  background-color: var(--color-switch-active) !important;
+  color: var(--color-text-primary) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--color-switch-border);
+}
+
+/* ====================================
+ BOTON ACEPTAR LOGIN KIOSKO
+ ==================================== */
+.btn-roy {
+  background-color: var(--color-primary) !important;
+  border: none !important;
+  color: var(--color-text-primary) !important;
+  font-weight: 700 !important;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease !important;
+}
+
+.btn-roy:hover,
+.btn-roy:focus {
+  background-color: var(--color-primary-hover) !important;
+}
+
+.btn-roy:active {
+  transform: scale(0.99);
+}
+
+/* Botones Grandes de Identificación */
+.btn-identificar {
+  height: 60px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+/* Campos de Formulario e Inputs */
+.custom-input:focus,
+.form-control:focus {
+  border-color: var(--color-secondary) !important;
+  box-shadow: 0 0 0 3px rgba(250, 129, 47, 0.2) !important;
+}
+
+.input-group:focus-within {
+  border-radius: 8px;
+}
+
+.input-group:focus-within .input-group-text {
+  border-color: var(--color-secondary) !important;
+}
+
+/* Componentes Ocultos / Dinámicos */
+#reader {
+  display: none;
+  margin: auto;
+  max-width: 350px;
+}
+
+#consultaNomina {
+  display: none;
+}
+/* Transición suave para la alerta de error del Login */
+#errorNomina {
+  border-radius: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: opacity 0.3s ease;
+}
+
+/* OLVIDASTE TU CONTRASEÑA */
+.link-forgot {
+  color: var(--color-info);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 6px;
+  transition: color 0.2s ease-in-out;
+}
+
+.link-forgot:hover {
+  color: var(--color-secondary-hover);
+  text-decoration: underline;
 }

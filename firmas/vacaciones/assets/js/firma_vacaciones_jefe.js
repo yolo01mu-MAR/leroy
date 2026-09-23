@@ -113,7 +113,7 @@ async function confirmarDecisionJefe(id, accion) {
 
         $.ajax({
 
-            url: '../solicitudes/ajax/procesar_solicitud.php',
+            url: '../solicitudes/ajax/procesar_solicitud_jefe.php',
             type: 'POST',
             data: datos,
             processData: false,

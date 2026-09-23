@@ -6,6 +6,16 @@
         <title>LE ROY</title>
         <link rel="shortcut icon" href="libs/images/logo.ico" type="image/x-icon">
 
+        <link rel="manifest" href="manifest.json">
+
+        <meta name="theme-color" content="#212529">
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="LE ROY">
+
+
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         
@@ -172,6 +182,7 @@
             <p class="small mb-0 opacity-75">Portal de Recursos Humanos.</p>
         </div>
     </footer>
+        <script type="text/javascript" src="libs/js/pwa.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

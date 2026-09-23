@@ -20,6 +20,7 @@ if(isset($nombrePartes[1])){
            echo ucfirst($user['name']);
             else echo "Asistencia LE ROY";?>
     </title>
+       
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 	  <link rel="shortcut icon" href="<?= BASE_URL ?>/libs/images/logo.ico" type="image/x-icon">

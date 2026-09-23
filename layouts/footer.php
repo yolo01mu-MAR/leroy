@@ -7,6 +7,7 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+
   <!-- Script librerias -->
   <script type="text/javascript" src="<?= BASE_URL ?>/libs/js/functions.js"></script>
   <script type="text/javascript" src="<?= BASE_URL ?>/libs/js/reloj.js"></script>

@@ -1,0 +1,22 @@
+{
+    "name": "Asistencia LE ROY",
+    "short_name": "LE ROY",
+    "description": "Portal Le Roy",
+    "start_url": "/asistenciaLEROY_NUEVO/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#212529",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/asistenciaLEROY_NUEVO/libs/images/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/asistenciaLEROY_NUEVO/libs/images/logo-mini.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

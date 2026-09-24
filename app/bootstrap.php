@@ -14,5 +14,14 @@ defined('BASE_URL') || define(
     '/asistenciaLEROY_NUEVO'
 );
 
-// Cargar núcleo actual
+// =====================================================
+// COMPOSER
+// =====================================================
+
+require_once BASE_PATH . '/vendor/autoload.php';
+
+// =====================================================
+// CARGAR NÚCLEO ACTUAL
+// =====================================================
+
 require_once BASE_PATH . '/includes/load.php';

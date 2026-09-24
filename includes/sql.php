@@ -2189,4 +2189,27 @@ function find_all_solicitudes_aprobadas($semana, $anio){
 
   return find_by_sql($sql);
 }
+// Funciones para el historial de vacaciones para el reporte
+function find_all_solicitudes_aprobadas_reporte($semana, $anio){
+  
+  global $db;
+  
+  $sql = "SELECT
+            v.usuario_id AS nomina,
+            u.name AS nombre,
+            v.fecha_solicitud,
+            v.anio,
+            v.semana,
+            v.fecha_inicio AS inicio,
+            v.fecha_fin AS fin,
+            v.dias,
+            v.estatus
+          FROM vw_vacaciones v
+          INNER JOIN users u ON u.id = v.usuario_id
+          WHERE v.estatus ='APROBADA'
+          AND v.semana = {$semana}
+          AND v.anio = {$anio}";
+
+  return find_by_sql($sql);
+}
 ?>

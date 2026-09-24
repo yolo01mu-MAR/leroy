@@ -38,7 +38,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <?= $pagina == 'user_soporte' ? 'active' : '' ?>" href="user_soporte.php">
-                                <i class="bi bi-gear"></i>
+                                <i class="bi bi-headset me-2"></i>
                                 Soporte
                             </a>
                         </li>

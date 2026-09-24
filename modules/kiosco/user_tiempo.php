@@ -16,51 +16,10 @@
 ?>
 <?php include_once 'layouts/header.php'; ?>
 <div class="row">
-<!-- PERFIL -->
-<div class="col-lg-4 mb-4">
-    <div class="card border-0 shadow-sm text-center">
-        <div class="card-body">
-            <?php 
-                $foto = !empty($empleado['image'])
-                    ? BASE_URL . '/uploads/users/' . $empleado['image']
-                    : BASE_URL . '/uploads/users/no_image.jpg';
-            ?>
-            <img src="<?php echo $foto; ?>"
-                class="rounded-circle border border-3 border-warning mb-3"
-                width="130"
-                height="130">
-            <h4 class="mb-0">
-                <?php echo remove_junk($empleado['nombre']); ?>
-            </h4>
-            <small class="text-muted">
-                <?php echo remove_junk($empleado['puesto']); ?>
-            </small>
-            <hr>
-            <div class="text-start">
-                <p class="mb-2">
-                    <b>Nómina:</b>
-                    <?php echo remove_junk($empleado['id']); ?>
-                </p>
-                <p class="mb-2">
-                    <b>Departamento:</b><br>
-                    <?php echo remove_junk($empleado['departamento'] ." - ". $empleado['lugar']); ?>
-                </p>
-                <p class="mb-2">
-                    <b>Grupo:</b>
-                    <?php echo remove_junk($empleado['grupos']); ?>
-                </p>
-                <p class="mb-2">
-                    <b>Fecha ingreso:</b>
-                    <?php echo remove_junk($empleado['fecha_ingreso']); ?>
-                </p>
-            </div>
-            <a class="btn btn-sm btn-outline-danger w-100 mt-3" onclick="Kiosco.cerrarSesion()">
-                <i class="bi bi-arrow-left"></i>
-                Cerrar sesion
-            </a>
+<!-- TARJETA PERFIL USUARIO -->
+        <div class="col-lg-4">
+            <?php include_once 'perfil_kiosco.php'; ?>
         </div>
-    </div>
-</div>
 
 <!-- CONTENIDO -->
 <div class="col-lg-8">

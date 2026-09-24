@@ -52,7 +52,7 @@
 
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle px-3" data-bs-toggle="dropdown">
-                                <i class="bi bi-file-earmark-text me-1"></i> Trámites
+                                <i class="bi bi-file-earmark-text me-1"></i>Realizar Trámites
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
                                 <li>
@@ -60,7 +60,7 @@
                                         href="modules/kiosco/identificar_colaborador.php?op=vacaciones" 
                                         class="dropdown-item py-2">
                                         <!-- <i class="bi bi-umbrella me-2 text-warning"></i>  -->
-                                        Vacaciones
+                                        Solicitar Vacaciones
                                     </a>
                                 </li>
                                 <li>
@@ -68,7 +68,7 @@
                                         href="modules/kiosco/identificar_colaborador.php?op=tiempo" 
                                         class="dropdown-item py-2">
                                         <!-- <i class="bi bi-clock-history me-2 text-warning"></i>  -->
-                                        Tiempo por tiempo
+                                        Solicitar Tiempo por tiempo
                                     </a>
                                 </li>
                             </ul>

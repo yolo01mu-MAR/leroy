@@ -147,33 +147,39 @@ $(function () {
 
         Swal.fire({
 
-            icon:"question",
-            title:"¿Enviar solicitud?",
+            icon: "question",
+            title: "¿Enviar solicitud?",
 
             html:
                 "<b>Inicio:</b> " + datos.inicioTexto +
                 "<br><b>Fin:</b> " + datos.finTexto +
                 "<br><b>Días:</b> " + datos.dias,
 
-            showCancelButton:true,
-            confirmButtonText:"Enviar",
-            cancelButtonText:"Cancelar",
-            confirmButtonColor:"#f1c40f",
-            cancelButtonColor:"#6c757d"
+            showCancelButton: true,
+            confirmButtonText: "Enviar",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#f1c40f",
+            cancelButtonColor: "#6c757d"
 
-        }).then((result)=>{
+        }).then((result) => {
 
-            if(!result.isConfirmed){
+            // USUARIO CANCELÓ LA CONFIRMACIÓN
+            if (!result.isConfirmed) {
+
+                $("#btnEnviar")
+                    .prop("disabled", false)
+                    .html('<i class="bi bi-send"></i> Enviar solicitud');
+
                 return;
             }
 
+            // USUARIO CONFIRMÓ
             $("#btnEnviar")
-                .prop("disabled",true)
-                .html('<span class="spinner-border spinner-border-sm"></span> Enviando...');
+                .prop("disabled", true)
+                .html(
+                    '<span class="spinner-border spinner-border-sm"></span> Preparando...'
+                );
 
-            // ============================================
-            // ABRIR FIRMA ELECTRÓNICA
-            // ============================================
             confirmarSolicitudVacaciones(
                 document.getElementById("formVacaciones")
             );
@@ -369,3 +375,32 @@ $(document).on(
 
     }
 );
+
+function cancelarCapturaVacaciones() {
+
+    Swal.fire({
+        icon: 'warning',
+        title: '¿Cancelar captura?',
+        text: 'Los datos que hayas capturado no se guardarán.',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, cancelar',
+        cancelButtonText: 'Continuar capturando',
+        confirmButtonColor: '#dc3545'
+    }).then((resultado) => {
+
+        if (resultado.isConfirmed) {
+
+            Swal.fire({
+                icon: 'info',
+                title: 'Captura cancelada',
+                text: 'La solicitud no fue enviada.',
+                timer: 1100,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = 'user_vacaciones.php';
+            });
+
+        }
+
+    });
+}

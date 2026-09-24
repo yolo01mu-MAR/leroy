@@ -79,8 +79,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Olvide mi contraseña
+                        <button
+                            type="button"
+                            class="btn btn-warning"
+                            onclick="mostrarModalRecuperarDesdeKiosco()">
+                            <i class="bi bi-key"></i>
+                            Olvidé mi contraseña
                         </button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             Cancelar
@@ -101,7 +105,14 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="libs/js/kiosco.js"></script>
-        
+
+        <script>
+            const BASE_URL = <?= json_encode(BASE_URL) ?>;
+            window.kioscoEmpleadoId = <?= (int)($_SESSION['kiosco']['empleado_id'] ?? 0) ?>;
+        </script>
+
+        <script src="<?= BASE_URL ?>/libs/js/recuperar_password.js"></script>
+
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 Kiosco.iniciar();

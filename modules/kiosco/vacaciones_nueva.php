@@ -289,7 +289,13 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end gap-2">
-                <a href="user_vacaciones.php" class="btn btn-outline-secondary">Cancelar</a>
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    onclick="cancelarCapturaVacaciones()">
+                    Cancelar
+                </button>
+
                 <button type="submit" class="btn btn-warning" id="btnEnviar" disabled>
                     <i class="bi bi-send"></i>
                     Enviar solicitud

@@ -15,6 +15,10 @@ async function confirmarSolicitudVacaciones(form){
         confirmButtonText: 'Firmar y enviar',
         cancelButtonText: 'Cancelar',
 
+        // EVITAR CIERRE ACCIDENTAL
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+
         didOpen: () => {
 
             firma = new FirmaElectronica({
@@ -40,6 +44,11 @@ async function confirmarSolicitudVacaciones(form){
     });
 
     if(!resultado.isConfirmed){
+
+        $("#btnEnviar")
+            .prop("disabled", false)
+            .html('<i class="bi bi-send"></i> Enviar solicitud');
+
         return;
     }
 
@@ -110,12 +119,8 @@ async function confirmarSolicitudVacaciones(form){
             Swal.fire({
 
                 icon: "warning",
-
                 title: "No se puede realizar la solicitud",
-
-                text: respuesta.mensaje ||
-                    "No fue posible registrar la solicitud.",
-
+                text: respuesta.mensaje || "No fue posible registrar la solicitud.",
                 confirmButtonColor: "#f1c40f"
 
             });

@@ -12,18 +12,9 @@ try {
     }
 
     $nomina = trim($_POST['nomina'] ?? '');
-
-    if ($nomina === '') {
-        throw new Exception('Ingrese su número de nómina.');
-    }
-
-    if (!ctype_digit($nomina)) {
-        throw new Exception('El número de nómina no es válido.');
-    }
+    $usuario_id = (int)($_POST['usuario_id'] ?? 0);
 
     global $db;
-
-    $nominaEscapada = $db->escape($nomina);
 
 
     /*
@@ -32,15 +23,50 @@ try {
     |--------------------------------------------------------------------------
     */
 
-    $sql = "
-        SELECT
-            id,
-            username,
-            name
-        FROM users
-        WHERE username = '{$nominaEscapada}'
-        LIMIT 1
-    ";
+    if ($usuario_id > 0) {
+
+        // KIOSCO
+        $sql = "
+            SELECT
+                id,
+                username,
+                name
+            FROM users
+            WHERE id = {$usuario_id}
+            LIMIT 1
+        ";
+
+    } else {
+
+        // LOGIN NORMAL
+
+        if ($nomina === '') {
+            throw new Exception('Ingrese su número de nómina.');
+        }
+
+        if (!ctype_digit($nomina)) {
+            throw new Exception('El número de nómina no es válido.');
+        }
+
+        $nominaEscapada = $db->escape($nomina);
+
+        $sql = "
+            SELECT
+                id,
+                username,
+                name
+            FROM users
+            WHERE username = '{$nominaEscapada}'
+            LIMIT 1
+        ";
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EJECUTAR BÚSQUEDA
+    |--------------------------------------------------------------------------
+    */
 
     $resultado = $db->query($sql);
 
@@ -67,8 +93,8 @@ try {
     $asunto = 'Restablecimiento de contraseña';
 
     $descripcion = "El colaborador solicitó el restablecimiento de su contraseña desde el Portal Le Roy.
-    Número de nómina: {$nomina}
-    Colaborador: {$usuario['name']}";
+Número de nómina: {$usuario['username']}
+Colaborador: {$usuario['name']}";
 
     $asunto = $db->escape($asunto);
     $descripcion = $db->escape($descripcion);

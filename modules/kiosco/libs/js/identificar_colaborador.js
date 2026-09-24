@@ -91,11 +91,18 @@ function mostrarPassword(){
 
 // Limpiar campos
 $('input[name="opcionAcceso"]').on('change', function() {
+    
+    if ($(this).data('omitirLimpieza')) {
+        $(this).removeData('omitirLimpieza');
+        return;
+    }
+
     $("#nomina").val("");
     $("#passwordNomina").val("");
     $("#errorNomina").addClass("d-none").html("");
-    if (temporizadorError) clearTimeout(temporizadorError);
+    if (typeof temporizadorError !== 'undefined' && temporizadorError) clearTimeout(temporizadorError);
 });
+
 function consultaXnomina(){
 
     let nomina = $("#nomina").val().trim();
@@ -146,8 +153,8 @@ function consultaXnomina(){
             title: "¿Quieres continuar?",
             text: "Sin contraseña solo podrás consultar tus trámites. Para solicitar algún trámite necesitas validar tu identidad.",
             showCancelButton: true,
-            confirmButtonText: "Ingresar contraseña",
-            cancelButtonText: "Solo consultar",
+            confirmButtonText: "Solo consultar",
+            cancelButtonText: "Ingresar contraseña",
             reverseButtons: true
         }).then((resultado) => {
 
@@ -157,9 +164,23 @@ function consultaXnomina(){
             |--------------------------------------------------------------------------
             */
 
-            if(resultado.isConfirmed){
+            if (resultado.isDismissed || resultado.isCancel) {
 
-                $("#passwordNomina").focus();
+                // SE SELECCIONA LA OPCION REALIZAR TRAMITE 
+                const $opcionTramite = $('input[name="opcionAcceso"]').eq(1);
+
+                // Se omite limpiar el input 
+                $opcionTramite.data('omitirLimpieza', true);
+
+                // Se da clic 
+                $opcionTramite.prop("checked", true).trigger("click").trigger("change");
+
+                // Se recupera el num nomina
+                $("#nomina").val(nomina);
+                
+                setTimeout(() => {
+                    $("#passwordNomina").focus();
+                }, 100);
 
                 return;
             }

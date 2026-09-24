@@ -111,36 +111,23 @@ const Calendario = {
         //================================================
 
         if (this.modo === "simple") {
-
             this.inicio = fecha;
-
             this.fin = fecha;
-
             this.pintar();
-
             this.emitir();
-
             return;
-
         }
 
 
         //================================================
         // PRIMER CLIC
         //================================================
-
         if (this.inicio === null) {
-
             this.inicio = fecha;
-
             this.fin = null;
-
             this.pintar();
-
             this.emitir();
-
             return;
-
         }
 
 
@@ -150,30 +137,18 @@ const Calendario = {
         //================================================
 
         if (this.fin !== null) {
-
             this.inicio = fecha;
-
             this.fin = null;
-
             this.pintar();
-
             this.emitir();
-
             return;
-
         }
-
 
         //================================================
         // SEGUNDO CLIC
         //================================================
-
-        let inicio =
-            this.inicio;
-
-        let fin =
-            fecha;
-
+        let inicio = this.inicio;
+        let fin = fecha;
 
         if (inicio > fin) {
 
@@ -188,12 +163,9 @@ const Calendario = {
         }
 
 
-        this.inicio =
-            inicio;
+        this.inicio = inicio;
 
-        this.fin =
-            fin;
-
+        this.fin = fin;
 
         this.pintar();
 
@@ -208,8 +180,7 @@ const Calendario = {
 
     pintar() {
 
-        $(".celda-dia")
-            .removeClass("seleccionado");
+        $(".celda-dia").removeClass("seleccionado");
 
 
         if (!this.inicio) {
@@ -219,12 +190,9 @@ const Calendario = {
         }
 
 
-        let inicio =
-            this.inicio;
+        let inicio = this.inicio;
 
-        let fin =
-            this.fin ?? this.inicio;
-
+        let fin = this.fin ?? this.inicio;
 
         if (inicio > fin) {
 

@@ -27,7 +27,7 @@ $buscar = isset($_GET['buscar'])
 // OBTENER INFORMACIÓN
 // ========================================
 
-$empleadosSaldos = find_all_solicitudes_aprobadas($semana, $anio);
+$empleadosSaldos = find_all_solicitudes_aprobadas_reporte($semana, $anio);
 
 
 // ========================================

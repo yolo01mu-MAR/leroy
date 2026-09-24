@@ -118,6 +118,18 @@
                 Kiosco.iniciar();
             });
         </script>
+
+        <script>
+            window.addEventListener("pageshow", function(event) {
+
+                if (event.persisted) {
+
+                    window.location.reload();
+
+                }
+
+            });
+        </script>
         
         <!-- SCRIPTS ESPECÍFICOS DE LA PÁGINA -->
         <?php if (!empty($scripts_kiosco)): ?>

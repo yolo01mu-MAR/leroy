@@ -6,8 +6,8 @@ function volver(){
         window.location.href = "../../index.php";
         return;
     }
-    // Si estamos dentro de una pantalla secundaria,
-    // regresar al menú del kiosco
+
+    // Detener escáner
     if (typeof LectorQR !== "undefined" && LectorQR.detener) {
         LectorQR.detener();
     }
@@ -26,8 +26,11 @@ function volver(){
         .prop("disabled", false)
         .html("Continuar");
 
-    $("#menuPrincipal").show();
+    // dejar disponible nuevamente el botón del escáner
+    $("#btnScanner")
+        .prop("disabled", false);
 
+    $("#menuPrincipal").show();
 }
 function mostrarScanner(){
 

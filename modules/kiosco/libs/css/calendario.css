@@ -80,13 +80,30 @@
     background:#f1f3f5;
     color:#adb5bd;
 }
-.celda-dia.seleccionado{
-
+/* Se selecciona el borde */
+.celda-dia.seleccionado {
     border:3px solid #0d6efd !important;
     box-shadow:0 0 0 3px rgba(13,110,253,.25);
     transform:scale(1.03);
-
 }
+/* Si se quiere pintar el numero cuando se selecciones */
+.celda-dia.seleccionado .dia-numero {
+    font-weight: bold;
+}
+
+/* Se confirma y se pinta todo */
+.celda-dia.confirmado {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border: 2px solid #0d6efd !important;
+}
+
+.celda-dia.confirmado .dia-numero {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+
 .celda-dia.otro-mes {
     opacity: 0.45;
     background: #f8f9fa;

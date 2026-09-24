@@ -178,51 +178,36 @@ const Calendario = {
     // PINTAR
     //==================================================
 
+   //==================================================
+    // PINTAR
+    //==================================================
+
     pintar() {
 
-        $(".celda-dia").removeClass("seleccionado");
-
+        // Limpiamos las clases visuales previas
+        $(".celda-dia").removeClass("seleccionado confirmado");
 
         if (!this.inicio) {
-
             return;
-
         }
 
-
         let inicio = this.inicio;
-
         let fin = this.fin ?? this.inicio;
 
         if (inicio > fin) {
-
-            [
-                inicio,
-                fin
-            ] = [
-                fin,
-                inicio
-            ];
-
+            [inicio, fin] = [fin, inicio];
         }
 
+        // Determinamos qué clase aplicar:
+        // Si this.fin es diferente de null, la selección está COMPLETA (confirmada)
+        const claseAplicar = (this.fin !== null) ? "confirmado" : "seleccionado";
 
         $(".celda-dia").each(function () {
+            const fecha = $(this).data("fecha");
 
-            const fecha =
-                $(this).data("fecha");
-
-
-            if (
-                fecha >= inicio &&
-                fecha <= fin
-            ) {
-
-                $(this)
-                    .addClass("seleccionado");
-
+            if (fecha >= inicio && fecha <= fin) {
+                $(this).addClass(claseAplicar);
             }
-
         });
 
     },

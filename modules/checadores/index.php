@@ -122,17 +122,36 @@ $dispositivos = find_by_sql($sql);
                                             <hr>
 
 
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary btn-block"
-                                                onclick="probarConexion(<?php echo $dispositivo['id']; ?>)"
-                                            >
+                                            <div class="row">
 
-                                                <span class="glyphicon glyphicon-transfer"></span>
+                                                <div class="col-sm-6">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-primary btn-block"
+                                                        onclick="probarConexion(<?php echo $dispositivo['id']; ?>)"
+                                                    >
+                                                        <span class="glyphicon glyphicon-transfer"></span>
+                                                        Probar conexión
+                                                    </button>
+                                                </div>
 
-                                                Probar conexión
+                                                <div class="col-sm-6">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-success btn-block"
+                                                        onclick="sincronizar(<?php echo $dispositivo['id']; ?>)"
+                                                    >
+                                                        <span class="glyphicon glyphicon-download-alt"></span>
+                                                        Sincronizar
+                                                    </button>
+                                                </div>
 
-                                            </button>
+                                            </div>
+
+                                            <div
+                                                id="resultado-sync-<?php echo $dispositivo['id']; ?>"
+                                                style="margin-top:15px;"
+                                            ></div>
 
 
                                         </div>
@@ -212,7 +231,90 @@ function probarConexion(id) {
         });
 
 }
+function sincronizar(id) {
 
+    const resultado = document.getElementById(
+        'resultado-sync-' + id
+    );
+
+    resultado.innerHTML = `
+        <div class="alert alert-info">
+            <span class="glyphicon glyphicon-refresh"></span>
+            Sincronizando...
+        </div>
+    `;
+
+
+    fetch('sincronizar.php?id=' + id)
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            if (!data.ok) {
+
+                resultado.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong>
+                        ${data.error || 'No fue posible sincronizar.'}
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            const r = data.resumen;
+
+
+            resultado.innerHTML = `
+                <div class="alert alert-success">
+
+                    <strong>
+                        Sincronización completada
+                    </strong>
+
+                    <hr style="margin:8px 0;">
+
+                    <div>
+                        Encontrados:
+                        <strong>${r.encontrados}</strong>
+                    </div>
+
+                    <div>
+                        Nuevos:
+                        <strong>${r.nuevos}</strong>
+                    </div>
+
+                    <div>
+                        Ya existentes:
+                        <strong>${r.existentes}</strong>
+                    </div>
+
+                    <div>
+                        Errores:
+                        <strong>${r.errores}</strong>
+                    </div>
+
+                </div>
+            `;
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            resultado.innerHTML = `
+                <div class="alert alert-danger">
+                    <strong>Error:</strong>
+                    No fue posible comunicarse con el servidor.
+                </div>
+            `;
+
+        });
+
+}
 </script>
 
 
